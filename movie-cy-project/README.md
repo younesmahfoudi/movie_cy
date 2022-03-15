@@ -57,5 +57,12 @@ npm run test:e2e # or `npm run test:e2e:ci` for headless testing
 ```sh
 npm run lint
 ```
+
+
+### Build the project 
+docker build -t movie_cy/docker-vuejs .
+
 ### To run the project 
 sudo docker run -it -p 8080:8080 --rm --name docker-vuejs-1 movie_cy/docker-vuejs
+
+
