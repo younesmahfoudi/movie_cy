@@ -20,7 +20,8 @@ Install in dev
     
 ## Demo
 
-swagger : http://127.0.0.1:81/docs
+swagger Docker : http://127.0.0.1:81/docs
+swagger dev : http://localhost:8000/docs
 
 ## Documentation
 
