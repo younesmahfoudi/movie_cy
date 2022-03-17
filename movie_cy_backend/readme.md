@@ -15,6 +15,7 @@ Install in dev
   source .venv/bin/activate
   export PYTHONPATH=$PWD
   pip install -r requirements.txt
+  python app/main.py
 ```
     
 ## Demo
