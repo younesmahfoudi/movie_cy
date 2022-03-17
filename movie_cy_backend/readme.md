@@ -7,6 +7,15 @@ Install fastapi with lite server in a docker
   docker build -t moviecyapi .
   docker run -d --name apicontainer -p 81:81 moviecyapi
 ```
+
+Install in dev
+
+```bash
+  cd movie_cy_api
+  source .venv/bin/activate
+  export PYTHONPATH=$PWD
+  pip install -r requirements.txt
+```
     
 ## Demo
 
