@@ -1,10 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import Connexion from "../views/Connexion.vue";
-import Profil from "../views/Profil.vue";
-import GroupCreation from "../views/GroupCreation.vue";
-import MovieGroupList from "../views/MovieGroupList.vue";
-import Register from "../views/Register.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,27 +12,36 @@ const router = createRouter({
     {
       path: "/connexion",
       name: "connexion",
-      component: Connexion,
+      component: () =>
+        import(/* webpackChunkName : "connexion" */ "../views/Connexion.vue"),
     },
     {
       path: "/groupCreation",
       name: "création de groupe",
-      component: GroupCreation,
+      component: () =>
+        import(
+          /* webpackChunkName : "groupCreation" */ "../views/GroupCreation.vue"
+        ),
     },
     {
       path: "/movieGroupList",
       name: "Liste de film",
-      component: MovieGroupList,
+      component: () =>
+        import(
+          /* webpackChunkName : "movieGroupList" */ "../views/MovieGroupList.vue"
+        ),
     },
     {
       path: "/profil",
       name: "profil",
-      component: Profil,
+      component: () =>
+        import(/* webpackChunkName : "profil" */ "../views/Profil.vue"),
     },
     {
       path: "/register",
       name: "register",
-      component: Register,
+      component: () =>
+        import(/* webpackChunkName : "register" */ "../views/Register.vue"),
     },
   ],
 });

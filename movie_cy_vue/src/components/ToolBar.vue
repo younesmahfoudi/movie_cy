@@ -1,8 +1,14 @@
 <template>
   <div class="button-list">
-    <el-button type="warning" class="darkGray" round>Profil</el-button>
-    <el-button type="warning" class="darkGray" round>Déconnexion</el-button>
+    <router-link to="/profil">
+      <el-button type="warning" class="darkGray" round>Profil</el-button>
+    </router-link>
+
+    <router-link to="/">
+      <el-button type="warning" class="darkGray" round>Déconnexion</el-button>
+    </router-link>
   </div>
+  <router-view />
 </template>
 
 <style lang="scss">
@@ -14,5 +20,6 @@
 
 .darkGray {
   color: $darkGray;
+  margin: 10px;
 }
 </style>
