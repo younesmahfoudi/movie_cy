@@ -7,4 +7,7 @@ import SideBar from "../components/SideBar.vue";
 </template>
 
 <style>
+body {
+  margin: 0px;
+}
 </style>
