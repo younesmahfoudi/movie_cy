@@ -1,6 +1,8 @@
 <script setup>
 import CreationGroupForm from "./components/CreationGroupForm.vue";
 import Connect from "./components/Connect.vue";
+import RegisterForm from "./components/RegisterForm.vue";
+
 
 
 
@@ -10,6 +12,7 @@ import Connect from "./components/Connect.vue";
 <div>
   <CreationGroupForm />
   <Connect/>
+  <RegisterForm/>
 </div>
 </template>
 

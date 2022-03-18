@@ -76,7 +76,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { ElMessageBox } from "element-plus";
-const dialogVisible = ref(true);
+const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");
 </script>
