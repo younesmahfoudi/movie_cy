@@ -1,9 +1,25 @@
 <script setup>
-import SideBar from "./components/SideBar.vue";
+import CreationGroupForm from "./components/CreationGroupForm.vue";
+import Connect from "./components/Connect.vue";
+import RegisterForm from "./components/RegisterForm.vue";
+
+
+
+
 </script>
 
 <template>
-  <SideBar />
+<div>
+  <CreationGroupForm />
+  <Connect/>
+  <RegisterForm/>
+</div>
 </template>
 
-<style></style>
+
+<style lang="scss">
+@import "src/assets/constant.scss";
+body{
+  font-family: $font;
+}
+</style>

@@ -1,0 +1,200 @@
+<template>
+  <div>
+    <el-button type="text" @click="dialogVisible = true">Connexion</el-button>
+
+    <el-dialog custom-class="dialog" v-model="dialogVisible" width="30%">
+      <img class="imgForm" src="./icon/utilIcon/logo.png" />
+
+      <span class="title"> Connexion</span>
+
+      <div class="formulaire">
+        <el-form model="formLogin" label-position="top">
+          <el-form-item
+            prop="email"
+            label="Adresse email"
+            :rules="[
+              {
+                required: true,
+                message: 'Entrer une adresse email.',
+                trigger: 'blur',
+              },
+              {
+                type: 'email',
+                message: 'Entrer une adresse email correcte.',
+                trigger: ['blur', 'change'],
+              },
+            ]"
+          >
+            <el-input
+              input-style="border-radius:20px; font-family:'Raleway', sans-serif; font-weight: bold;"
+              name="email"
+              v-model="inputMail"
+              placeholder="Adresse email"
+            />
+          </el-form-item>
+
+          <el-form-item
+            prop="password"
+            label="Mot de passe"
+            :rules="[
+              {
+                required: true,
+                message: 'Entrer un mot de passe.',
+                trigger: 'blur',
+              },
+            ]"
+          >
+            <el-input
+              input-style="border-radius:20px ; font-family:'Raleway', sans-serif; font-weight: bold;"
+              name="password"
+              v-model="inputMdp"
+              type="password"
+              placeholder="Mot de passe"
+              show-password
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <template #footer>
+        <div style="display: flex">
+          <span class="dialog-footer">
+            <el-button
+              type="primary"
+              class="btnValider"
+              @click="dialogVisible = false"
+              >Valider</el-button
+            >
+          </span>
+        </div>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+
+<script lang="ts" setup>
+import { ref } from "vue";
+import { ElMessageBox } from "element-plus";
+const dialogVisible = ref(false);
+const inputMail = ref("");
+const inputMdp = ref("");
+</script>
+
+
+<style lang="scss">
+@import "../assets/constant.scss";
+
+
+.dialog {
+  background-color: $gray !important;
+  border-radius: 30px;
+}
+
+.el-dialog__header {
+  display: flex;
+  font-weight: bold;
+  margin-right: 0px !important;
+}
+
+.el-dialog__body {
+  display: grid;
+}
+
+.el-dialog__title {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
+
+.btnValider {
+  background-color: $yellow;
+  margin-right: 0px !important;
+  border: none;
+  border-radius: 20px;
+  font-family: "Raleway", sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.el-dialog__close {
+  color: white !important;
+}
+
+.imgForm {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -60px;
+}
+
+.title {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: white;
+  margin-top: -10px;
+}
+
+.formulaire {
+  margin-top: 30px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.el-form-item__label {
+  font-weight: 1000;
+  font-size: 18px;
+}
+
+.el-form-item {
+      margin-bottom: 40px!important
+}
+
+.el-form-item__error{
+  color : red
+}
+
+@media screen and (max-width: 715px) and (min-width: 600px) {
+  .el-form-item__label {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 599px) {
+  .el-form-item__label {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 1000px) and (min-width: 601px){
+  .dialog {
+    min-width: 50%!important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .dialog {
+    min-width: 70%!important;
+  }
+}
+</style>
+
+<style scoped lang="scss">
+.el-dialog__footer {
+  display: flex !important;
+}
+
+.dialog-footer {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+</style>
+
