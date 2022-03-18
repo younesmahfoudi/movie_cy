@@ -13,7 +13,6 @@ group_collection = database.get_collection("Group")
 
 def group_helper(group) -> dict:
     return {
-        "id": str(group["_id"]),
         "nom": group["nom"],
         "membres": group["membres"],
         "admin": group["admin"],
@@ -65,20 +64,27 @@ async def delete_group(id: str):
         return True 
 
 
-
-database = client.users
-
-user_collection = database.get_collection("user_collection")
+user_collection = database.get_collection("User")
 
 def user_helper(user) -> dict:
     return {
         "prenom": user["prenom"],
         "nom": user["nom"],
+        "prenom": user["prenom"],
         "email": user["email"],
         "mdp": user["mdp"],
+        "films": user["films"],
+        "groupes": user["groupes"],
+        "mood": user["mood"],
+        "acteur": user["acteur"],
+        "realisateur": user["realisateur"],
+        "genre": user["genre"],
+        "genreFlex": user["genreFlex"],
+        "ddn": user["ddn"],
+        "age": user["age"],
     }
 
-# Add a new student into to the database
+# Add a new user into to the database
 async def add_user(user_data: dict) -> dict:
     user = await user_collection.insert_one(user_data)
     new_user = await user_collection.find_one({"_id": user.inserted_id})
