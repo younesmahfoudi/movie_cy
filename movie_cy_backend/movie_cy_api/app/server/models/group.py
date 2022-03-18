@@ -5,10 +5,9 @@ from pydantic import BaseModel, Field
 
 
 class GroupSchema(BaseModel):
-    ##id: str = Field(...)
     nom: str = Field(...)
     membres: List[str]=  Field(...) 
-    admin: str = Field(...) ##User = Field(...)
+    admin: str = Field(...) 
     photo: str = Field(...)
 
     class Config:
@@ -23,7 +22,6 @@ class GroupSchema(BaseModel):
 
 
 class UpdateGroupModel(BaseModel):
-    ##id: Optional[str]
     nom: Optional[str]
     membres: Optional[str]
     admin: Optional[int]
@@ -32,7 +30,6 @@ class UpdateGroupModel(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "id": "1",
                 "nom": "La coloc",
                 "membres": ["iduser1","iduser2"],
                 "admin": "idAdmin",

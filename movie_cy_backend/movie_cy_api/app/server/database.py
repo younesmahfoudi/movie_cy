@@ -1,6 +1,10 @@
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 
+from app.server.models.group import (
+    ErrorResponseModel
+)
+
 
 ##MONGO_DETAILS = "mongodb://localhost:27017"
 MONGO_DETAILS = "mongodb://root:pass12345@localhost:27017"
@@ -13,6 +17,7 @@ group_collection = database.get_collection("Group")
 
 def group_helper(group) -> dict:
     return {
+        "id": str(group["_id"]),
         "nom": group["nom"],
         "membres": group["membres"],
         "admin": group["admin"],
@@ -35,6 +40,12 @@ async def retrieve_groups():
 
 # Add a new group into to the database
 async def add_group(group_data: dict) -> dict:
+    for idUser in group_data['membres']:
+        if ObjectId.is_valid(idUser) :
+            user = await user_collection.find_one({"_id": ObjectId(idUser)})
+            if user : bool = True 
+            else : return ErrorResponseModel("An error occurred", 404, "User with id {0} doesn't exist".format(idUser))   
+        else : return ErrorResponseModel("An error occurred", 404, "User with id {0} doesn't exist and doesn't has a good format".format(idUser))   
     group = await group_collection.insert_one(group_data)
     new_group = await group_collection.find_one({"_id": group.inserted_id})
     return group_helper(new_group)

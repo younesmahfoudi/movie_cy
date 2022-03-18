@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from app.server.database import (
@@ -22,7 +22,11 @@ router = APIRouter()
 async def add_group_data(group: GroupSchema = Body(...)):
     group = jsonable_encoder(group)
     new_group = await add_group(group)
-    return ResponseModel(new_group, "group added successfully.")     
+    print(new_group)
+    if 'nom' in new_group.keys():
+        return ResponseModel(new_group, "group added successfully.")     
+    else :
+        raise HTTPException(status_code=404, detail=new_group["message"])
 
 @router.get("/", response_description="Groups retrieved")
 async def get_groups():
