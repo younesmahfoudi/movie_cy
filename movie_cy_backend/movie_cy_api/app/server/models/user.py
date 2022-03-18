@@ -1,6 +1,6 @@
 from typing import Optional, List
-import datetime
-from xmlrpc.client import DateTime
+from datetime import date
+
 from bson.objectid import ObjectId
 
 from pydantic import BaseModel, EmailStr, Field
@@ -18,7 +18,7 @@ class UserSchema(BaseModel):
     realisateur: str = Field(...)
     genre: str = Field(...)
     genreFlex: str = Field(...)
-    ddn: str = Field(...)
+    ddn: date = Field(...)
     age: int = Field(...)
 
     class Config:
@@ -35,7 +35,7 @@ class UserSchema(BaseModel):
                 "realisateur": "exampleIDRealisateur",
                 "genre": "comedie",
                 "genreFlex": "comedie",
-                "ddn": "1998-08-28",
+                "ddn": date.today(),
                 "age": 20,
             }
         }
@@ -54,7 +54,7 @@ class UpdateUserModel(BaseModel):
     realisateur: Optional[str] 
     genre: Optional[str] 
     genreFlex: Optional[str] 
-    ddn: Optional[str] 
+    ddn: Optional[date] 
     age: Optional[int] 
 
     class Config:
@@ -71,7 +71,7 @@ class UpdateUserModel(BaseModel):
                 "realisateur": "exampleIDRealisateur",
                 "genre": "comedie",
                 "genreFlex": "comedie",
-                "ddn": "1998-08-28",
+                "ddn": date.today(),
                 "age": 20,
             }
         }
