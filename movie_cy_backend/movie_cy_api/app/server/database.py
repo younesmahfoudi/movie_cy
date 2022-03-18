@@ -11,7 +11,6 @@ user_collection = database.get_collection("user_collection")
 
 def user_helper(user) -> dict:
     return {
-        "id": str(user["_id"]),
         "prenom": user["prenom"],
         "nom": user["nom"],
         "email": user["email"],
@@ -22,4 +21,4 @@ def user_helper(user) -> dict:
 async def add_user(user_data: dict) -> dict:
     user = await user_collection.insert_one(user_data)
     new_user = await user_collection.find_one({"_id": user.inserted_id})
-    return user_collection(new_user)
+    return user_helper(new_user)
