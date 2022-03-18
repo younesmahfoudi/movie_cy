@@ -23,3 +23,46 @@ async def add_group_data(group: GroupSchema = Body(...)):
     group = jsonable_encoder(group)
     new_group = await add_group(group)
     return ResponseModel(new_group, "group added successfully.")     
+
+@router.get("/", response_description="Groups retrieved")
+async def get_groups():
+    groups = await retrieve_groups()
+    if groups:
+        return ResponseModel(groups, "Groups data retrieved successfully")
+    return ResponseModel(groups, "Empty list returned")
+
+
+@router.get("/{id}", response_description="Group data retrieved")
+async def get_group_data(id):
+    group = await retrieve_group(id)
+    if group:
+        return ResponseModel(group, "Group data retrieved successfully")
+    return ErrorResponseModel("An error occurred.", 404, "Group doesn't exist.")
+
+@router.put("/{id}")
+async def update_group_data(id: str, req: UpdateGroupModel = Body(...)):
+    req = {k: v for k, v in req.dict().items() if v is not None}
+    updated_group = await update_group(id, req)
+    if updated_group:
+        return ResponseModel(
+            "Group with ID: {} name update is successful".format(id),
+            "Group name updated successfully",
+        )
+    return ErrorResponseModel(
+        "An error occurred",
+        404,
+        "There was an error updating the group data.",
+    )
+
+
+
+@router.delete("/{id}", response_description="Group data deleted from the database")
+async def delete_group_data(id: str):
+    deleted_group = await delete_group(id)
+    if deleted_group:
+        return ResponseModel(
+            "Group with ID: {} removed".format(id), "Group deleted successfully"
+        )
+    return ErrorResponseModel(
+        "An error occurred", 404, "Group with id {0} doesn't exist".format(id)
+    )   
