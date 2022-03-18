@@ -1,6 +1,7 @@
 from typing import Optional, List
 import datetime
 from xmlrpc.client import DateTime
+from bson.objectid import ObjectId
 
 from pydantic import BaseModel, EmailStr, Field
 

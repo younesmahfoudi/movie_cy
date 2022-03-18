@@ -19,6 +19,12 @@ def group_helper(group) -> dict:
         "photo": group["photo"],
     }
 
+# Retrieve a group with a matching ID
+async def retrieve_group(id: str) -> dict:
+    group = await group_collection.find_one({"_id": ObjectId(id)})
+    if group:
+        return group_helper(group)
+
 # Retrieve all groups present in the database
 async def retrieve_groups():
     groups = []
@@ -32,13 +38,6 @@ async def add_group(group_data: dict) -> dict:
     group = await group_collection.insert_one(group_data)
     new_group = await group_collection.find_one({"_id": group.inserted_id})
     return group_helper(new_group)
-
-
-# Retrieve a group with a matching ID
-async def retrieve_group(id: str) -> dict:
-    group = await group_collection.find_one({"_id": ObjectId(id)})
-    if group:
-        return group_helper(group)
 
 
 # Update a group with a matching ID
@@ -68,7 +67,7 @@ user_collection = database.get_collection("User")
 
 def user_helper(user) -> dict:
     return {
-        "prenom": user["prenom"],
+        "id": str(user["_id"]),
         "nom": user["nom"],
         "prenom": user["prenom"],
         "email": user["email"],
@@ -89,3 +88,22 @@ async def add_user(user_data: dict) -> dict:
     user = await user_collection.insert_one(user_data)
     new_user = await user_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
+
+
+# Retrieve a user with a matching ID
+async def retrieve_user(id: str) -> dict:
+    user = await user_collection.find_one({"_id": ObjectId(id)})
+    if user:
+        return user_helper(user)
+
+
+# Retrieve all users present in the database
+async def retrieve_users():
+    users = []
+    print("Get Users")
+    print(user_collection.find())
+    async for user in user_collection.find():
+        print(users)
+        users.append(user_helper(user))
+    return users
+
