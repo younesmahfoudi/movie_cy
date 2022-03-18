@@ -37,14 +37,16 @@
         </router-link>
       </div>
       <div class="logo">
-        <el-menu-item index="15" class="plus">
-          <el-avatar
-            id="photoGroup"
-            :style="{ backgroundColor: '#faa427' }"
-            :size="25"
-            src="./src/components/icon/utilIcon/plus.png"
-          />
-        </el-menu-item>
+        <router-link to="/groupCreation">
+          <el-menu-item index="15" class="plus">
+            <el-avatar
+              id="photoGroup"
+              :style="{ backgroundColor: '#faa427' }"
+              :size="25"
+              src="./src/components/icon/utilIcon/plus.png"
+            />
+          </el-menu-item>
+        </router-link>
       </div>
     </el-menu>
   </div>
@@ -100,6 +102,10 @@ export default {
   display: flex;
 }
 
+.sidenav .el-menu {
+  display: block;
+}
+
 #photoGroup {
   filter: contrast(200%);
 }
@@ -116,5 +122,14 @@ export default {
 .logoImg {
   padding-top: 10%;
   padding-bottom: 10%;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav .el-menu {
+    font-size: 18px;
+  }
 }
 </style>
