@@ -1,15 +1,29 @@
+from enum import Enum
 from multiprocessing.dummy import Array
 from typing import Optional,List
 
 from pydantic import BaseModel, Field
 
+class GenreList(BaseModel):
+    key: str
+    value: str
 
-class GroupSchema(BaseModel):
-    ##id: str = Field(...)
-    nom: str = Field(...)
-    membres: List[str]=  Field(...) 
-    admin: str = Field(...) ##User = Field(...)
-    photo: str = Field(...)
+
+class MovieSchema(BaseModel):
+    id: str
+    image: str
+    title: str
+    description: str
+    runtime_str: Optional[str]
+    genres: str
+    genre_list: List[str]
+    content_rating: Optional[str]
+    im_db_rating: Optional[str]
+    im_db_rating_votes: Optional[int]
+    metacritic_rating: Optional[int]
+    plot: Optional[str]
+    stars: Optional[str]
+    star_list: Optional[List[str]]
 
     class Config:
         schema_extra = {
