@@ -107,3 +107,24 @@ async def retrieve_users():
         users.append(user_helper(user))
     return users
 
+
+# Update a user with a matching ID
+async def update_user(id: str, data: dict):
+    # Return false if an empty request body is sent.
+    if len(data) < 1:
+        return False
+    user = await user_collection.find_one({"_id": ObjectId(id)})
+    if user:
+        updated_user = await user_collection.update_one(
+            {"_id": ObjectId(id)}, {"$set": data}
+        )
+        if updated_user:
+            return True
+        return False
+
+# Delete a user from the database
+async def delete_user(id: str):
+    user = await user_collection.find_one({"_id": ObjectId(id)})
+    if user:
+        await user_collection.delete_one({"_id": ObjectId(id)})
+        return True 
