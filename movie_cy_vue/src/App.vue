@@ -12,5 +12,4 @@ import CreationGroupForm from "./components/CreationGroupForm.vue";
 </div>
 </template>
 
-<style>
-</style>
+<style></style>

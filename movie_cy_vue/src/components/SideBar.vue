@@ -1,15 +1,15 @@
 <template>
-  <el-row class="tac">
-    <el-col :span="2.5" class="menu">
-      <el-menu
-        active-text-color="#faa427"
-        background-color="#5a6075"
-        class="el-menu-vertical-demo"
-        default-active="2"
-        text-color="#ffffff"
-        :collapse="isCollapse"
-        :style="{ height: '100%' }"
-      >
+  <div class="sidenav">
+    <el-menu
+      active-text-color="#faa427"
+      background-color="#5a6075"
+      class="el-menu-vertical-demo"
+      default-active="2"
+      text-color="#ffffff"
+      :collapse="isCollapse"
+      :style="{ height: '100%' }"
+    >
+      <router-link to="/">
         <div class="logo">
           <el-menu-item class="logoImg" index="0">
             <el-avatar
@@ -21,7 +21,9 @@
             />
           </el-menu-item>
         </div>
-        <div class="logo">
+      </router-link>
+      <div class="logo">
+        <router-link to="/movieGroupList">
           <el-menu-item v-for="group in groups" :key="group" index="1">
             <el-avatar
               :key="group"
@@ -32,8 +34,10 @@
               :src="group.photo"
             />
           </el-menu-item>
-        </div>
-        <div class="logo">
+        </router-link>
+      </div>
+      <div class="logo">
+        <router-link to="/groupCreation">
           <el-menu-item index="15" class="plus">
             <el-avatar
               id="photoGroup"
@@ -42,10 +46,11 @@
               src="./src/components/icon/utilIcon/plus.png"
             />
           </el-menu-item>
-        </div>
-      </el-menu>
-    </el-col>
-  </el-row>
+        </router-link>
+      </div>
+    </el-menu>
+  </div>
+  <router-view />
 </template>
 
 <script>
@@ -86,9 +91,19 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.tac {
-  min-height: 939px;
-  max-height: 100%;
+.sidenav {
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 7%; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  display: flex;
+}
+
+.sidenav .el-menu {
+  display: block;
 }
 
 #photoGroup {
@@ -107,5 +122,14 @@ export default {
 .logoImg {
   padding-top: 10%;
   padding-bottom: 10%;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav .el-menu {
+    font-size: 18px;
+  }
 }
 </style>
