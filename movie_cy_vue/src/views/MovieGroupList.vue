@@ -14,9 +14,8 @@ import MovieList from "../components/MovieList.vue";
   </div>
 </template>
 
-<style>
+<style scoped>
 .toolbar {
-  margin-left: 10%;
   margin-right: 3%;
   height: 50px;
 }

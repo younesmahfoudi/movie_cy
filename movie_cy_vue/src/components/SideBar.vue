@@ -6,11 +6,10 @@
       class="el-menu-vertical-demo"
       default-active="2"
       text-color="#ffffff"
-      :collapse="isCollapse"
       :style="{ height: '100%' }"
     >
-      <router-link to="/">
-        <div class="logo">
+      <div class="logo">
+        <router-link to="/">
           <el-menu-item class="logoImg" index="0">
             <el-avatar
               id="photoGroup"
@@ -20,8 +19,8 @@
               src="./src/components/icon/utilIcon/logo.png"
             />
           </el-menu-item>
-        </div>
-      </router-link>
+        </router-link>
+      </div>
       <div class="logo">
         <router-link to="/movieGroupList">
           <el-menu-item v-for="group in groups" :key="group" index="1">
@@ -54,11 +53,6 @@
 </template>
 
 <script>
-import { ref } from "vue";
-
-const isCollapse = ref(true);
-
-export { isCollapse };
 export default {
   data() {
     return {
@@ -92,18 +86,15 @@ export default {
 
 <style lang="css" scoped>
 .sidenav {
-  height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 7%; /* Set the width of the sidebar */
-  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1; /* Stay on top */
-  top: 0; /* Stay at the top */
+  height: 100%;
+  width: 7%;
+  min-width: 40px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
   left: 0;
-  overflow-x: hidden; /* Disable horizontal scroll */
+  overflow-x: hidden;
   display: flex;
-}
-
-.sidenav .el-menu {
-  display: block;
 }
 
 #photoGroup {
@@ -130,6 +121,12 @@ export default {
   }
   .sidenav .el-menu {
     font-size: 18px;
+  }
+}
+
+@media screen and (height: 320px) {
+  .logo {
+    size: 10;
   }
 }
 </style>
