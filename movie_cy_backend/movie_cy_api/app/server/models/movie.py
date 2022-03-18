@@ -4,9 +4,13 @@ from typing import Optional,List
 
 from pydantic import BaseModel, Field
 
-class GenreList(BaseModel):
+class Genre(BaseModel):
     key: str
     value: str
+
+class StarList(BaseModel):
+    id: str
+    name: str
 
 
 class MovieSchema(BaseModel):
@@ -14,43 +18,137 @@ class MovieSchema(BaseModel):
     image: str
     title: str
     description: str
-    runtime_str: Optional[str]
+    runtimeStr: Optional[str]
     genres: str
-    genre_list: List[str]
-    content_rating: Optional[str]
-    im_db_rating: Optional[str]
-    im_db_rating_votes: Optional[int]
-    metacritic_rating: Optional[int]
+    genreList: List[Genre]
+    contentRating: Optional[str]
+    imDbRating: Optional[str]
+    imDbRatingVotes: Optional[int]
+    metacriticRating: Optional[int]
     plot: Optional[str]
     stars: Optional[str]
-    star_list: Optional[List[str]]
+    starList: Optional[List[StarList]]
 
     class Config:
         schema_extra = {
             "example": {
-                "nom": "La coloc",
-                "membres": ["iduser1","iduser2"],
-                "admin": "idAdmin",
-                "photo": "/path/example/",
+                "id": "tt2463208",
+                "image": "https://imdb-api.com/images/original/MV5BOWM0YWMwMDQtMjE5NS00ZTIwLWE1NWEtODViMWZjMWI2OTU3XkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_Ratio0.6837_AL_.jpg",
+                "title": "The Adam Project",
+                "description": "(2022)",
+                "runtimeStr": "106 min",
+                "genres": "Action, Adventure, Comedy",
+                "genreList": [
+                    {
+                        "key": "Action",
+                        "value": "Action"
+                    },
+                    {
+                        "key": "Adventure",
+                        "value": "Adventure"
+                    },
+                    {
+                        "key": "Comedy",
+                        "value": "Comedy"
+                    }
+                ],
+                "contentRating": "PG-13",
+                "imDbRating": "6.9",
+                "imDbRatingVotes": "49883",
+                "metacriticRating": "55",
+                "plot": "A time-traveling pilot teams up with his younger self and his late father to come to terms with his past while saving the future.",
+                "stars": "Shawn Levy, Ryan Reynolds, Walker Scobell, Mark Ruffalo, Jennifer Garner",
+                "starList": [
+                    {
+                        "id": "tt2463208",
+                        "name": "Shawn Levy"
+                    },
+                    {
+                        "id": "tt2463208",
+                        "name": "Ryan Reynolds"
+                    },
+                    {
+                        "id": "tt2463208",
+                        "name": "Walker Scobell"
+                    },
+                    {
+                        "id": "tt2463208",
+                        "name": "Mark Ruffalo"
+                    },
+                    {
+                        "id": "tt2463208",
+                        "name": "Jennifer Garner"
+                    }
+                ]
             }
         }
 
 
-class UpdateGroupModel(BaseModel):
-    ##id: Optional[str]
-    nom: Optional[str]
-    membres: Optional[str]
-    admin: Optional[int]
-    photo: Optional[str]
+class UpdateMovieModel(BaseModel):
+    image: Optional[str]
+    title: Optional[str]
+    description: Optional[str]
+    runtimeStr: Optional[str]
+    genres: Optional[str]
+    genreList: Optional[List[Genre]]
+    contentRating: Optional[str]
+    imDbRating: Optional[str]
+    imDbRatingVotes: Optional[int]
+    metacriticRating: Optional[int]
+    plot: Optional[str]
+    stars: Optional[str]
+    starList: Optional[List[StarList]]
 
     class Config:
         schema_extra = {
             "example": {
-                "id": "1",
-                "nom": "La coloc",
-                "membres": ["iduser1","iduser2"],
-                "admin": "idAdmin",
-                "photo": "/path/example/",
+                "image": "https://imdb-api.com/images/original/MV5BOWM0YWMwMDQtMjE5NS00ZTIwLWE1NWEtODViMWZjMWI2OTU3XkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_Ratio0.6837_AL_.jpg",
+                "title": "The Adam Project",
+                "description": "(2022)",
+                "runtimeStr": "106 min",
+                "genres": "Action, Adventure, Comedy",
+                "genreList": [
+                    {
+                        "key": "Action",
+                        "value": "Action"
+                    },
+                    {
+                        "key": "Adventure",
+                        "value": "Adventure"
+                    },
+                    {
+                        "key": "Comedy",
+                        "value": "Comedy"
+                    }
+                ],
+                "contentRating": "PG-13",
+                "imDbRating": "6.9",
+                "imDbRatingVotes": "49883",
+                "metacriticRating": "55",
+                "plot": "A time-traveling pilot teams up with his younger self and his late father to come to terms with his past while saving the future.",
+                "stars": "Shawn Levy, Ryan Reynolds, Walker Scobell, Mark Ruffalo, Jennifer Garner",
+                "starList": [
+                    {
+                        "id": "tt2463208",
+                        "name": "Shawn Levy"
+                    },
+                    {
+                        "id": "tt2463208",
+                        "name": "Ryan Reynolds"
+                    },
+                    {
+                        "id": "tt2463208",
+                        "name": "Walker Scobell"
+                    },
+                    {
+                        "id": "tt2463208",
+                        "name": "Mark Ruffalo"
+                    },
+                    {
+                        "id": "tt2463208",
+                        "name": "Jennifer Garner"
+                    }
+                ]
             }
         }
 
