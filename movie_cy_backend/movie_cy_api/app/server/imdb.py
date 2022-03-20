@@ -1,37 +1,16 @@
 from datetime import date
+import json
 import os
-import string
 from typing import List
-from urllib import response
-import requests
-
 import aiohttp
 import asyncio
-
-    
-
+from models.imdbResponse import ImdbResponse
+from types import SimpleNamespace
 
 IMDBPATH =  'https://imdb-api.com/API'
 IMDBTOKEN = 'k_ompp9716'
 
-"""
-advanced search 
-string title
-string type
-date releaseDate
-
-"""
 def advancedSearch(
-        title: string = None, 
-        type: string = None, 
-        realeaseDate: date = None, 
-        userRating: List[float] = None 
-    ):
-    print(title)
-    request = requests.get('https://imdb-api.com/API/AdvancedSearch/k_ompp9716?title_type=feature&count=250')
-    return request
-
-def runAdvancedSearch(
         title: str = None, 
         types: List[str] = None, 
         releaseDate: date = None, 
@@ -67,19 +46,21 @@ def runAdvancedSearch(
         if filmingLocation is not None : url = url + f'locations={filmingLocation}&'
         if popularity is not None : url = url + f'moviemeter={popularity},&'
         if sort is not None : url = url + f'sort={sort}&'
-        return asyncio.run(advancedSearchSync(url))
+        return asyncio.run(getRequest(url))
 
 
-async def advancedSearchSync(
+async def getRequest(
         url : str
     ):
         print(url)
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
-                response = await resp.json()
-                return response
-    
+                responseJsn = await resp.json(content_type=None)
+                # Parse JSON into an object with attributes corresponding to dict keys.
+                responseStr = json.dumps(responseJsn)
+                responseObj : ImdbResponse = json.loads(responseStr, object_hook=lambda d: SimpleNamespace(**d))
+                return responseObj
 
 
 if __name__ == "__main__":
-    print(runAdvancedSearch(genres=['action']))
+    print(advancedSearch(genres=['action']).results)
