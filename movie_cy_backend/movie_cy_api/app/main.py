@@ -1,7 +1,6 @@
+###     uniquement en dev       ###
+import uvicorn
 
-# ###     uniquement en dev       ###
-# import uvicorn
-
-# ###     uniquement en dev       ###
-# if __name__ == "__main__":
-#     uvicorn.run("server.app:app", host="0.0.0.0", port=8000, reload=True)
+###     uniquement en dev       ###
+if __name__ == "__main__":
+    uvicorn.run("server.app:app", host="0.0.0.0", port=8000, reload=True)

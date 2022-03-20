@@ -1,3 +1,5 @@
+from ast import List
+from enum import unique
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 
@@ -131,6 +133,8 @@ async def delete_user(id: str):
 
 movie_collection = database.get_collection("MOVIES")
 
+database.get_collection("MOVIES").create_index("id", unique= True)
+
 def movie_helper(movie) -> dict:
     return {
         "id": movie["id"],
@@ -162,9 +166,19 @@ async def retrieve_movies():
         movies.append(group_helper(movie))
     return movies
 
-
-# Add a new group into to the database
+# Add a new movie into to the database
 async def add_movie(movie_data: dict) -> dict:
     movie = await movie_collection.insert_one(movie_data)
     new_movie = await movie_collection.find_one({"_id": movie.inserted_id})
     return movie_helper(new_movie)
+
+
+# Add a new movies into to the database
+async def add_movies(movies_data):
+    movies = await movie_collection.update_many(
+            {
+                movies_data
+            }
+    )
+    return movies
+    
