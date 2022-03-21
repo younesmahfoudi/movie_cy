@@ -25,7 +25,7 @@ class UpdateGroupModel(BaseModel):
     nom: Optional[str]
     membres: Optional[str]
     admin: Optional[int]
-    photo: Optional[float]
+    photo: Optional[str]
 
     class Config:
         schema_extra = {

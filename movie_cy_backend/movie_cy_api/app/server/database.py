@@ -12,9 +12,9 @@ MONGO_DETAILS = "mongodb://root:pass12345@localhost:27017"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
-database = client.movies
+database = client.MOVIECYDB
 
-group_collection = database.get_collection("Group")
+group_collection = database.get_collection("GROUPS")
 
 def group_helper(group) -> dict:
     return {
@@ -86,7 +86,7 @@ async def delete_group(id: str):
         return True 
 
 
-user_collection = database.get_collection("User")
+user_collection = database.get_collection("USERS")
 
 def user_helper(user) -> dict:
     return {
@@ -152,3 +152,56 @@ async def delete_user(id: str):
     if user:
         await user_collection.delete_one({"_id": ObjectId(id)})
         return True 
+
+movie_collection = database.get_collection("MOVIES")
+
+# database.get_collection("MOVIES").create_index("id", unique= True)
+
+def movie_helper(movie) -> dict:
+    return {
+        "id": movie["id"],
+        "image": movie["image"],
+        "title": movie["title"],
+        "description": movie["description"],
+        "runtimeStr": movie["runtimeStr"],
+        "genres": movie["genres"],
+        "genreList": movie["genreList"],
+        "contentRating": "PG-13",
+        "imDbRating": movie["imDbRating"],
+        "imDbRatingVotes": movie["imDbRatingVotes"],
+        "metacriticRating": movie["metacriticRating"],
+        "plot": movie["plot"],
+        "stars": movie["stars"],
+        "starList": movie["starList"],
+    }
+
+
+# Retrieve a group with a matching ID
+async def retrieve_movie(id: str) -> dict:
+    movie = await movie_collection.find_one({"_id": ObjectId(id)})
+    if movie:
+        return movie_helper(movie)
+
+# Retrieve all groups present in the database
+async def retrieve_movies():
+    movies = []
+    async for movie in movie_collection.find():
+        movies.append(group_helper(movie))
+    return movies
+
+
+# Add a new movie into to the database
+async def add_movie(movie_data: dict) -> dict:
+    print(movie_data)
+    movie = await movie_collection.update_one(
+            {
+                'id' : movie_data['id']
+            }, 
+            { 
+                '$setOnInsert': movie_data 
+            },
+            upsert = True
+        )
+    new_movie = await movie_collection.find_one({"id": movie_data['id']})
+    return movie_helper(new_movie)
+    
