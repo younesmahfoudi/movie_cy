@@ -1,3 +1,4 @@
+from turtle import up
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 
@@ -65,6 +66,17 @@ async def update_group(id: str, data: dict):
             return True
         return False
 
+# Update a group member with matchings IDs
+async def add_user_to_a_group(idGroup: str,idUser: str):
+    # Return false if an empty request body is sent.
+    group = await group_collection.find_one({"_id": ObjectId(idGroup)})
+    if group:
+        updated_group = await group_collection.update_one(
+            {"_id": ObjectId(idGroup)}, {"$addToSet": { "membres" : idUser } }
+        )
+        if updated_group:
+            return True
+        return False
 
 # Delete a group from the database
 async def delete_group(id: str):
@@ -92,6 +104,7 @@ def user_helper(user) -> dict:
         "genreFlex": user["genreFlex"],
         "ddn": user["ddn"],
         "age": user["age"],
+        "avatar": user["avatar"]
     }
 
 # Add a new user into to the database

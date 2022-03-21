@@ -7,6 +7,7 @@ from app.server.database import (
     retrieve_group,
     retrieve_groups,
     update_group,
+    add_user_to_a_group
 )
 from app.server.models.group import (
     ErrorResponseModel,
@@ -47,6 +48,21 @@ async def get_group_data(id):
 async def update_group_data(id: str, req: UpdateGroupModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_group = await update_group(id, req)
+    if updated_group:
+        return ResponseModel(
+            "Group with ID: {} name update is successful".format(id),
+            "Group name updated successfully",
+        )
+    return ErrorResponseModel(
+        "An error occurred",
+        404,
+        "There was an error updating the group data.",
+    )
+
+
+@router.put("/{id}/users/{idUser}")
+async def update_group_members_data(id: str, idUser:str):
+    updated_group = await add_user_to_a_group(id,idUser)
     if updated_group:
         return ResponseModel(
             "Group with ID: {} name update is successful".format(id),

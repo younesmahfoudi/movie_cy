@@ -20,6 +20,7 @@ class UserSchema(BaseModel):
     genreFlex: str = Field(...)
     ddn: date = Field(...)
     age: int = Field(...)
+    avatar: str =  Field(...)
 
     class Config:
         schema_extra = {
@@ -37,6 +38,7 @@ class UserSchema(BaseModel):
                 "genreFlex": "comedie",
                 "ddn": date.today(),
                 "age": 20,
+                "avatar" : "avatar"
             }
         }
         arbitrary_types_allowed = True
@@ -56,6 +58,7 @@ class UpdateUserModel(BaseModel):
     genreFlex: Optional[str] 
     ddn: Optional[date] 
     age: Optional[int] 
+    avatar: Optional[str]
 
     class Config:
         schema_extra = {
@@ -73,6 +76,7 @@ class UpdateUserModel(BaseModel):
                 "genreFlex": "comedie",
                 "ddn": date.today(),
                 "age": 20,
+                "avatar" : "avatar",
             }
         }
         arbitrary_types_allowed = True
