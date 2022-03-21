@@ -1,25 +1,20 @@
-<script setup>
-import CreationGroupForm from "./components/CreationGroupForm.vue";
-import Connect from "./components/Connect.vue";
-import RegisterForm from "./components/RegisterForm.vue";
-
-
-
-
-</script>
-
 <template>
-<div>
-  <CreationGroupForm />
-  <Connect/>
-  <RegisterForm/>
-</div>
+  <router-view></router-view>
 </template>
-
 
 <style lang="scss">
 @import "src/assets/constant.scss";
-body{
+body {
   font-family: $font;
+  margin: 0%;
+  height: 100%;
+}
+
+html {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
 }
 </style>
