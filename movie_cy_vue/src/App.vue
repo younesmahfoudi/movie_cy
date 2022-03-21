@@ -6,5 +6,4 @@ import SideBar from "./components/SideBar.vue";
   <SideBar />
 </template>
 
-<style>
-</style>
+<style></style>
