@@ -14,6 +14,44 @@
           :model="ruleForm"
           :rules="rules"
         >
+          <div class="names">
+            <el-form-item
+              label="Prénom"
+              prop="prenom"
+              style="width: 47%; margin-right: 6%"
+              :rules="[
+                {
+                  required: true,
+                  message: 'Entrer un prénom',
+                },
+              ]"
+            >
+              <el-input
+                input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
+                v-model.number="ruleForm.age"
+                placeholder="Prénom"
+              />
+            </el-form-item>
+
+            <el-form-item
+              label="Nom"
+              prop="nom"
+              style="width: 47%"
+              :rules="[
+                {
+                  required: true,
+                  message: 'Entrer un nom',
+                },
+              ]"
+            >
+              <el-input
+                input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
+                v-model.number="ruleForm.age"
+                placeholder="Nom"
+              />
+            </el-form-item>
+          </div>
+
           <el-form-item
             label="Age"
             prop="age"
@@ -25,8 +63,9 @@
           >
             <el-input
               type="number"
-              input-style="border-radius:20px ; font-family:'Raleway', sans-serif; font-weight: bold;"
+              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               v-model.number="ruleForm.age"
+              placeholder="Age"
             />
           </el-form-item>
           <el-form-item
@@ -46,7 +85,7 @@
             ]"
           >
             <el-input
-              input-style="border-radius:20px; font-family:'Raleway', sans-serif; font-weight: bold;"
+              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="email"
               v-model="inputMail"
               placeholder="Adresse email"
@@ -64,7 +103,7 @@
           >
             <el-input
               v-model="ruleForm.pass"
-              input-style="border-radius:20px ; font-family:'Raleway', sans-serif; font-weight: bold;"
+              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password"
               type="password"
               placeholder="Mot de passe"
@@ -75,7 +114,7 @@
 
           <el-form-item
             prop="checkPass"
-            label="Confirmation du mot de passe"
+            label="Confirmation mot de passe"
             :rules="[
               {
                 required: true,
@@ -84,7 +123,7 @@
           >
             <el-input
               v-model="ruleForm.checkPass"
-              input-style="border-radius:20px ; font-family:'Raleway', sans-serif; font-weight: bold;"
+              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password"
               type="password"
               placeholder="Mot de passe"
@@ -98,10 +137,7 @@
       <template #footer>
         <div style="display: flex">
           <span class="dialog-footer">
-            <el-button
-              type="primary"
-              class="btnValider"
-              @click="dialogVisible = false"
+            <el-button class="btnValidate" @click="dialogVisible = false"
               >Valider</el-button
             >
           </span>
@@ -179,7 +215,7 @@ const rules = reactive({
 
 .dialog {
   background-color: $gray !important;
-  border-radius: 30px;
+  border-radius: 5px;
 }
 
 .el-dialog__header {
@@ -199,16 +235,6 @@ const rules = reactive({
 
 .dialog-footer button:first-child {
   margin-right: 10px;
-}
-
-.btnValider {
-  background-color: $yellow;
-  margin-right: 0px !important;
-  border: none;
-  border-radius: 20px;
-  font-family: "Raleway", sans-serif;
-  font-weight: bold;
-  font-size: 20px;
 }
 
 .el-dialog__close {
@@ -245,8 +271,25 @@ const rules = reactive({
   font-size: 18px;
 }
 
+@media screen and (max-width: 800px) {
+  .el-form-item {
+    width: 100%!important;
+  }
+}
 .el-form-item {
   margin-bottom: 20px !important;
+}
+
+.names {
+  display: flex;
+}
+
+.btnValidate {
+  background-color: $yellow;
+  margin-right: 0px !important;
+  font-family: "Raleway", sans-serif;
+  font-size: 20px;
+  border: none;
 }
 
 .el-form-item__error {
@@ -275,6 +318,16 @@ const rules = reactive({
   .dialog {
     min-width: 70% !important;
   }
+}
+
+@media screen and (max-width: 800px) {
+  .names {
+    display: block;
+  }
+}
+
+.el-button--default {
+  --el-button-hover-text-color: $grey !important;
 }
 </style>
 

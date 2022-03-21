@@ -2,6 +2,8 @@
 import CreationGroupForm from "./components/CreationGroupForm.vue";
 import Connect from "./components/Connect.vue";
 import RegisterForm from "./components/RegisterForm.vue";
+import ProfilManager from "./components/ProfilManager.vue";
+
 
 
 
@@ -10,9 +12,7 @@ import RegisterForm from "./components/RegisterForm.vue";
 
 <template>
 <div>
-  <CreationGroupForm />
-  <Connect/>
-  <RegisterForm/>
+  <ProfilManager />
 </div>
 </template>
 
