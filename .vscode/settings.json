@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./movie_cy_backend/movie_cy_api"
+    ]
+}

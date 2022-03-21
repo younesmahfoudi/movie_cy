@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 <script setup></script>
+=======
+<script setup>
+import SideBar from "../components/SideBar.vue";
+console.log();
+</script>
+>>>>>>> 98e46802f40d8b715fe5f2732389d4ea0083d86c
 
 <template>
   <div class="centerItems">
@@ -16,6 +23,7 @@
   </div>
 </template>
 
+<<<<<<< HEAD
 <style lang="scss" scoped>
 @import "../assets/constant.scss";
 
@@ -67,3 +75,6 @@ img {
   }
 }
 </style>
+=======
+<style></style>
+>>>>>>> 98e46802f40d8b715fe5f2732389d4ea0083d86c
