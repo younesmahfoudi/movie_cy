@@ -133,7 +133,7 @@ async def delete_user(id: str):
 
 movie_collection = database.get_collection("MOVIES")
 
-database.get_collection("MOVIES").create_index("id", unique= True)
+# database.get_collection("MOVIES").create_index("id", unique= True)
 
 def movie_helper(movie) -> dict:
     return {
@@ -153,6 +153,7 @@ def movie_helper(movie) -> dict:
         "starList": movie["starList"],
     }
 
+
 # Retrieve a group with a matching ID
 async def retrieve_movie(id: str) -> dict:
     movie = await movie_collection.find_one({"_id": ObjectId(id)})
@@ -166,19 +167,19 @@ async def retrieve_movies():
         movies.append(group_helper(movie))
     return movies
 
+
 # Add a new movie into to the database
 async def add_movie(movie_data: dict) -> dict:
-    movie = await movie_collection.insert_one(movie_data)
-    new_movie = await movie_collection.find_one({"_id": movie.inserted_id})
-    return movie_helper(new_movie)
-
-
-# Add a new movies into to the database
-async def add_movies(movies_data):
-    movies = await movie_collection.update_many(
+    print(movie_data)
+    movie = await movie_collection.update_one(
             {
-                movies_data
-            }
-    )
-    return movies
+                'id' : movie_data['id']
+            }, 
+            { 
+                '$setOnInsert': movie_data 
+            },
+            upsert = True
+        )
+    new_movie = await movie_collection.find_one({"id": movie_data['id']})
+    return movie_helper(new_movie)
     
