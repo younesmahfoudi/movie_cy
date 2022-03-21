@@ -72,19 +72,15 @@
   </div>
 </template>
 
-
 <script lang="ts" setup>
 import { ref } from "vue";
-import { ElMessageBox } from "element-plus";
 const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");
 </script>
 
-
 <style lang="scss">
 @import "../assets/constant.scss";
-
 
 .dialog {
   background-color: $gray !important;
@@ -155,11 +151,11 @@ const inputMdp = ref("");
 }
 
 .el-form-item {
-      margin-bottom: 40px!important
+  margin-bottom: 40px !important;
 }
 
-.el-form-item__error{
-  color : red
+.el-form-item__error {
+  color: red;
 }
 
 @media screen and (max-width: 715px) and (min-width: 600px) {
@@ -174,15 +170,15 @@ const inputMdp = ref("");
   }
 }
 
-@media screen and (max-width: 1000px) and (min-width: 601px){
+@media screen and (max-width: 1000px) and (min-width: 601px) {
   .dialog {
-    min-width: 50%!important;
+    min-width: 50% !important;
   }
 }
 
 @media screen and (max-width: 600px) {
   .dialog {
-    min-width: 70%!important;
+    min-width: 70% !important;
   }
 }
 </style>
@@ -197,4 +193,3 @@ const inputMdp = ref("");
   margin-right: auto !important;
 }
 </style>
-
