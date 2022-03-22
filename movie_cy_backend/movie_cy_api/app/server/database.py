@@ -166,15 +166,11 @@ async def retrieve_movie(id: str) -> dict:
 async def retrieve_movies(
         id: str | None,
         title: str | None,
-        description: str | None,
         runtimeStr: str | None,
         genreList: List[str] | None,
         contentRating: str | None,
         imDbRating: str | None,
         imDbRatingVotes: int | None,
-        metacriticRating: int | None,
-        plot: str | None,
-        stars: str | None,
         starList: List[StarList] | None,
     ):
     movies = await movie_collection.find(
@@ -182,8 +178,11 @@ async def retrieve_movies(
                 "$or":[ 
                     {"id": id}, 
                     {"title": title},
-                    {"genres": genres}
-
+                    {"genres": genreList},
+                    {"contentRating": contentRating},
+                    {"imDbRating": imDbRating},
+                    {"imDbRatingVotes": imDbRatingVotes},
+                    {"starList": starList},
                 ]
             }
         )

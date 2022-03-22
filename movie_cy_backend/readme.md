@@ -5,7 +5,7 @@ Run Mongodb
 ```bash
   cd movie_cy_bdd
 
-  docker-compose build -d
+  docker-compose up -d
 ```
 
 Install fastapi with lite server in a docker (Python 3.10 requiered!!) 
