@@ -1,5 +1,7 @@
-from ast import List
+import datetime
 from enum import unique
+from typing import List, Optional
+from app.server.models.movie import Genre, StarList
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 
@@ -161,10 +163,30 @@ async def retrieve_movie(id: str) -> dict:
         return movie_helper(movie)
 
 # Retrieve all groups present in the database
-async def retrieve_movies():
-    movies = []
-    async for movie in movie_collection.find():
-        movies.append(group_helper(movie))
+async def retrieve_movies(
+        id: str | None,
+        title: str | None,
+        description: str | None,
+        runtimeStr: str | None,
+        genreList: List[str] | None,
+        contentRating: str | None,
+        imDbRating: str | None,
+        imDbRatingVotes: int | None,
+        metacriticRating: int | None,
+        plot: str | None,
+        stars: str | None,
+        starList: List[StarList] | None,
+    ):
+    movies = await movie_collection.find(
+            {
+                "$or":[ 
+                    {"id": id}, 
+                    {"title": title},
+                    {"genres": genres}
+
+                ]
+            }
+        )
     return movies
 
 
