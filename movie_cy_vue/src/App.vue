@@ -12,7 +12,7 @@ import ProfilManager from "./components/ProfilManager.vue";
 
 <template>
 <div>
-  <ProfilManager />
+  <RegisterForm />
 </div>
 </template>
 
