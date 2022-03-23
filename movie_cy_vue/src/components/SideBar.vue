@@ -1,58 +1,60 @@
 <template>
-  <div class="sidenav">
+  <div class="sidebar-container">
     <el-menu
-      active-text-color="#faa427"
-      background-color="#5a6075"
-      class="el-menu-vertical-demo"
       default-active="2"
-      text-color="#ffffff"
-      :style="{ height: '100%' }"
+      class="el-menu-vertical-demo"
+      :collapse="isCollapse"
+      background-color="#5a6075"
+      text-color="#faa427"
     >
-      <div class="logo">
-        <router-link to="/">
-          <el-menu-item class="logoImg" index="0">
-            <el-avatar
-              id="photoGroup"
-              :style="{ backgroundColor: '#faa427' }"
-              shape="square"
-              :size="50"
-              src="./src/components/icon/utilIcon/logo.png"
-            />
-          </el-menu-item>
-        </router-link>
+      <div v-for="(group, index) in groups" :key="group">
+        <el-sub-menu :index="index.toString()">
+          <template #title>
+            <el-icon v-on:click="isCollapse = !isCollapse">
+              <el-avatar
+                id="photoGroup"
+                :style="{ backgroundColor: '#faa427' }"
+                :size="25"
+                :src="group.photo"
+              />
+            </el-icon>
+          </template>
+          <el-menu-item-group>
+            <template #title><span>Membre du groupe</span></template>
+            <el-menu-item
+              v-for="(membre, membreIndex) in groups[index].membres"
+              :key="membre"
+              :index="membreIndex.toString()"
+            >
+              {{ membre }}
+            </el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
       </div>
-      <div class="logo">
-        <router-link to="/movieGroupList">
-          <el-menu-item v-for="group in groups" :key="group" index="1">
-            <el-avatar
-              :key="group"
-              id="photoGroup"
-              :alt="group.nom"
-              :style="{ backgroundColor: '#faa427' }"
-              :size="50"
-              :src="group.photo"
-            />
-          </el-menu-item>
-        </router-link>
-      </div>
-      <div class="logo">
-        <router-link to="/groupCreation">
-          <el-menu-item index="15" class="plus">
+      <el-sub-menu index="120">
+        <template #title>
+          <el-icon>
             <el-avatar
               id="photoGroup"
               :style="{ backgroundColor: '#faa427' }"
               :size="25"
               src="./src/components/icon/utilIcon/plus.png"
             />
-          </el-menu-item>
-        </router-link>
-      </div>
+          </el-icon>
+        </template>
+      </el-sub-menu>
     </el-menu>
+    <router-view />
   </div>
-  <router-view />
 </template>
 
-<script>
+<script lang="ts" setup>
+import { ref } from "vue";
+
+const isCollapse = ref(true);
+</script>
+
+<script lang="ts">
 export default {
   data() {
     return {
@@ -84,49 +86,21 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
-.sidenav {
+<style lang="scss" scoped>
+@import "../assets/constant.scss";
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
+
+.el-icon {
+  width: 30% !important;
+}
+
+.sidebar-container {
   height: 100%;
-  width: 7%;
-  min-width: 40px;
   position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  overflow-x: hidden;
-  display: flex;
-}
-
-#photoGroup {
-  filter: contrast(200%);
-}
-
-.plus {
-  display: flex;
-  justify-content: center;
-}
-
-.logo {
-  padding-top: 10%;
-}
-
-.logoImg {
-  padding-top: 10%;
-  padding-bottom: 10%;
-}
-
-@media screen and (max-height: 450px) {
-  .sidenav {
-    padding-top: 15px;
-  }
-  .sidenav .el-menu {
-    font-size: 18px;
-  }
-}
-
-@media screen and (height: 320px) {
-  .logo {
-    size: 10;
-  }
+  background-color: $darkGray;
 }
 </style>

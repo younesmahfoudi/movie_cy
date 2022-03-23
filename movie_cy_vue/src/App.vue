@@ -4,17 +4,16 @@
 
 <style lang="scss">
 @import "src/assets/constant.scss";
-body {
-  font-family: $font;
-  margin: 0%;
-  height: 100%;
-}
 
-html {
-  height: 100%;
+html, body {
+  font-family: $font;
+  margin: 0px !important;
+  padding: 0px !important;
+  height: 100% !important;
 }
 
 #app {
   height: 100%;
+  padding: 0%;
 }
 </style>

@@ -1,10 +1,11 @@
 <script setup>
 import ProfilManager from "../components/ProfilManager.vue";
+import SideBar from "../components/SideBar.vue";
 </script>
 
 <template>
+  <SideBar />
   <ProfilManager />
-  <router-view></router-view>
 </template>
 
 <style></style>

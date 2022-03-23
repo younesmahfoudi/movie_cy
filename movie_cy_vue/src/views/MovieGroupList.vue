@@ -1,9 +1,11 @@
 <script setup>
 import ToolBar from "../components/ToolBar.vue";
 import MovieList from "../components/MovieList.vue";
+import SideBar from "../components/SideBar.vue";
 </script>
 
 <template>
+  <SideBar />
   <div class="content">
     <div class="toolbar">
       <ToolBar />
