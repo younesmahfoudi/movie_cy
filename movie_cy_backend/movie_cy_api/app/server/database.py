@@ -157,35 +157,67 @@ def movie_helper(movie) -> dict:
 
 
 # Retrieve a group with a matching ID
-async def retrieve_movie(id: str) -> dict:
-    movie = await movie_collection.find_one({"_id": ObjectId(id)})
+async def retrieve_movie_by_id(id: str) -> dict:
+    movie = await movie_collection.find_one({"id": id})
     if movie:
         return movie_helper(movie)
 
+# Retrieve a group with a matching ID
+async def retrieve_movies_by_title(title: str) -> dict:
+    movies = []
+    async for movie in movie_collection.find({"title": title}):
+        print(movie)
+        movies.append(movie_helper(movie))
+    return movies
+
+# Retrieve a group with a matching ID
+async def retrieve_movies_by_genre(genre: str) -> dict:
+    movies = []
+    async for movie in movie_collection.find({"genreList": {"$elemMatch": { "value": genre }}}):
+        print(movie)
+        movies.append(movie_helper(movie))
+    return movies
+
+# Retrieve a group with a matching ID
+async def retrieve_movies_by_star(starId: str) -> dict:
+    movies = []
+    async for movie in movie_collection.find(
+        { "starList": { "$elemMatch": { "id": starId } } }):
+        print(movie)
+        movies.append(movie_helper(movie))
+    return movies
+
+# Retrieve a group with a matching ID
+async def retrieve_movies_by_stars(starList: List[str]) -> dict:
+    movies = []
+    for star in starList:
+        async for movie in movie_collection.find(
+            { "starList": { "$elemMatch": { "id": star["id"] } } }):
+            print(movie)
+            movies.append(movie_helper(movie))
+    return movies
+
+# Retrieve a group with a matching ID
+async def retrieve_movies_by_genres(genreList: List[str]) -> dict:
+    movies = []
+    for genre in genreList:
+        async for movie in movie_collection.find({"genreList": {"$elemMatch": { "value": genre }}}):
+            movies.append(movie_helper(movie))
+    return movies
+
+# Retrieve a group with a matching ID
+async def retrieve_movies_by_imdbRating(imdbRating: str) -> dict:
+    movies = []
+    movies = await movie_collection.find({"imdbRating": { "$gt": imdbRating }})
+    if movies:
+        return movies
+
 # Retrieve all groups present in the database
-async def retrieve_movies(
-        id: str | None,
-        title: str | None,
-        runtimeStr: str | None,
-        genreList: List[str] | None,
-        contentRating: str | None,
-        imDbRating: str | None,
-        imDbRatingVotes: int | None,
-        starList: List[StarList] | None,
-    ):
-    movies = await movie_collection.find(
-            {
-                "$or":[ 
-                    {"id": id}, 
-                    {"title": title},
-                    {"genres": genreList},
-                    {"contentRating": contentRating},
-                    {"imDbRating": imDbRating},
-                    {"imDbRatingVotes": imDbRatingVotes},
-                    {"starList": starList},
-                ]
-            }
-        )
+async def retrieve_movies() -> dict:
+    movies = []
+    async for movie in movie_collection.find():
+        print(movie)
+        movies.append(movie_helper(movie))
     return movies
 
 
