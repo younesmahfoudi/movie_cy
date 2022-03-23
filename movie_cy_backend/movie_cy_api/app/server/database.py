@@ -1,4 +1,5 @@
-from turtle import up
+from typing import List
+from app.server.models.movie import StarList
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 
@@ -183,12 +184,156 @@ async def retrieve_movie(id: str) -> dict:
         return movie_helper(movie)
 
 # Retrieve all groups present in the database
+async def retrieve_movies_2(
+        id: str | None,
+        title: str | None,
+        description: str | None,
+        runtimeStr: str | None,
+        genreList: List[str] | None,
+        contentRating: str | None,
+        imDbRating: str | None,
+        imDbRatingVotes: int | None,
+        metacriticRating: int | None,
+        plot: str | None,
+        stars: str | None,
+        starList: List[StarList] | None,
+    ):
+    movies = await movie_collection.find(
+            {
+                '$elemMatch': [
+                    { 'value': genreList }
+                ]
+            }
+        )
+    return movies
+
+# Retrieve all movies present in the database
 async def retrieve_movies():
     movies = []
     async for movie in movie_collection.find():
-        movies.append(group_helper(movie))
+        movies.append(movie_helper(movie))
     return movies
 
+# Retrieve movies depending parameters
+async def retrieve_movies_with_parameters(genreList: str | None, starList: str | None) -> dict:
+    movies = []
+    parameters = []
+    request_genres_value : List[dict] = []
+    request_stars_value : List[dict] = []
+    request_parameters_mdb : List[dict] = []
+
+
+    if genreList is not None:
+    # Construction de la requête mongodb en fonction du nombre de genre en parametres
+        for genre in genreList:
+            parameters.append(genre)
+            request: dict = { "value" : genre } 
+            request_genres_value.append(request)
+
+        #Structure requête mongodb pour filtrer selon les genres en paramètres        
+        request_genre_mdb: dict = { "genreList": { "$elemMatch": 
+                    {
+                        "$or" : 
+                            request_genres_value
+                    }
+                }}
+        request_parameters_mdb.append(request_genre_mdb)  
+
+    if starList is not None :
+    # Construction de la requête mongodb en fonction du nombre d'acteurs en parametres
+        for star in starList:
+            parameters.append(star)
+            request_stars_value.append(star)   
+    #Structure requête mongodb pour filtrer selon les acteurs en paramètres        
+        request_star_mdb: dict = { "starList": { "$elemMatch": 
+                    {
+                        "$or" : 
+                            request_stars_value
+                    }
+                }}
+
+        request_parameters_mdb.append(request_star_mdb)  
+
+    
+    if len(request_parameters_mdb) > 1:
+        final_request_mdb: dict = { "$or" : request_parameters_mdb}
+    else :
+        if request_parameters_mdb != [{}] :
+            final_request_mdb: dict = { request_parameters_mdb }
+        else :
+            final_request_mdb: dict =  {}
+
+        
+    print(final_request_mdb)
+
+    if(parametersAreNull(parameters)) :
+        collection = movie_collection.find({})
+    else :
+        collection = movie_collection.find(final_request_mdb)
+
+    async for movie in movie_collection.find():
+        movies.append(movie_helper(movie))
+    return movies
+
+
+
+
+# Retrieve all movies by title present in the database
+async def retrieve_movie_by_title(title: str | None ) -> dict:
+    movies = []
+    print(title)
+    parameters = [title]
+   
+    if(parametersAreNull(parameters)) :
+        print("cette requete")
+        collection = movie_collection.find({})
+    else :
+        collection = movie_collection.find({'title': title})
+
+    async for movie in collection:
+        movies.append(movie_helper(movie))
+    return movies
+
+# Retrieve all movies by genre present in the database
+async def retrieve_movie_by_genres(genreListe: str | None ) -> dict:
+    
+    movies = []
+    parameters = []
+    parameters_request : List[dict] = []
+
+    # Construction de la requête mongodb en fonction du nombre de genre
+    for genre in genreListe:
+        parameters.append(genre)
+        request: dict = { "value" : genre } 
+        parameters_request.append(request)
+
+    #Structure requête mongodb pour filtrer selon les genres en paramètres    
+    request_genre_mdb: dict = { "genreList": { "$elemMatch": 
+                    {
+                        "$or" : 
+                            parameters_request
+                    }
+                }}
+
+    if(parametersAreNull(parameters)) :
+        collection = movie_collection.find({})
+    else :
+        collection = movie_collection.find(request_genre_mdb)
+
+    async for movie in collection:
+        movies.append(movie_helper(movie))
+    return movies
+
+
+def parametersAreNull(parameters: List[str]):
+    bool = True
+    for p in parameters:
+        if(p != None):
+            bool = False
+        else: 
+            p = " "
+
+    return bool
 
 # Add a new movie into to the database
 async def add_movie(movie_data: dict) -> dict:

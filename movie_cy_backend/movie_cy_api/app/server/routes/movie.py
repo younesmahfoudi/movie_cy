@@ -1,10 +1,13 @@
 from datetime import date
-from typing import List
+from typing import List, Optional
+
+from click import Option
 from fastapi import APIRouter, Body, Query
 from fastapi.encoders import jsonable_encoder
 
 from app.server.database import (
-    add_movie
+    add_movie,
+    retrieve_movies_with_parameters
 )
 
 from app.server.models.movie import (
@@ -21,6 +24,7 @@ from app.server.imdb import (
 router = APIRouter()
 
 def movie_helper(movie) -> dict:
+    print("test")
     return {
         "id": str(movie["id"]),
         "image": movie["image"],
@@ -92,6 +96,17 @@ def ResponseModel(data, message):
 
 def ErrorResponseModel(error, code, message):
     return {"error": error, "code": code, "message": message} 
-
-
-    
+""" 
+@router.get("/", response_description="Get movies")
+async def get_movies():
+    movies = await retrieve_movies()
+    if movies:
+        return ResponseModel(movies, "Groups data retrieved successfully")
+    return ResponseModel(movies, "Empty list returned")
+ """
+@router.get("/", response_description="Get movies depends parameters")
+async def get_movies_with_option(genreList: List[str] = Query(None), starList: List[str] = Query(None)):
+    movies = await retrieve_movies_with_parameters(genreList,starList)
+    if movies:
+        return ResponseModel(movies, "Groups data retrieved successfully")
+    return ResponseModel(movies, "Empty list returned")
