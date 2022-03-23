@@ -14,6 +14,7 @@ import CreationGroupForm from "../components/CreationGroupForm.vue";
       <AddGroupMembers />
     </div>
   </div>
+  <router-view></router-view>
 </template>
 
 <style>

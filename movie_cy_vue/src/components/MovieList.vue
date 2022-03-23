@@ -5,6 +5,11 @@
       <div class="movie" v-for="movie in movies" :key="movie">
         <img src="/src/components/icon/exempleAffiche.jpg" />
         <div class="icon">
+          <el-button
+            type="warning"
+            icon="./src/components/icon/utilIcon/coeur.png"
+            circle
+          />
           <el-avatar
             :key="movie"
             id="photoMovie"

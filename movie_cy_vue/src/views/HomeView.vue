@@ -17,6 +17,7 @@ import Connect from "../components/Connect.vue";
       </div>
     </div>
   </div>
+  <router-view></router-view>
 </template>
 
 <style lang="scss" scoped>

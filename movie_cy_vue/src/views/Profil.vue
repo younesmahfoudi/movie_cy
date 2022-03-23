@@ -4,6 +4,7 @@ import ProfilManager from "../components/ProfilManager.vue";
 
 <template>
   <ProfilManager />
+  <router-view></router-view>
 </template>
 
 <style></style>
