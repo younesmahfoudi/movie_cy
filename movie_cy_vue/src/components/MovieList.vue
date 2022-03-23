@@ -1,46 +1,24 @@
+<script lang="ts" setup>
+import { Check, Star, Delete } from "@element-plus/icons-vue";
+</script>
+
 <template>
   <div class="movieContent">
-    <h1>Mes films à voir</h1>
+    <h1>TIER LIST</h1>
     <div class="movieList">
       <div class="movie" v-for="movie in movies" :key="movie">
         <img src="/src/components/icon/exempleAffiche.jpg" />
         <div class="icon">
-          <el-button
-            type="warning"
-            icon="./src/components/icon/utilIcon/coeur.png"
-            circle
-          />
-          <el-avatar
-            :key="movie"
-            id="photoMovie"
-            :alt="movie.nom"
-            :size="40"
-            src="./src/components/icon/utilIcon/coeur.png"
-            @click="clickOnHeart()"
-          />
-          <el-avatar
-            :key="movie"
-            id="photoMovie"
-            :alt="movie.nom"
-            :size="40"
-            src="./src/components/icon/utilIcon/oeil.png"
-            @click="clickOnSeen()"
-          />
-          <el-avatar
-            :key="movie"
-            id="photoMovie"
-            :alt="movie.nom"
-            :size="40"
-            src="./src/components/icon/utilIcon/croix.png"
-            @click="clickOnCross()"
-          />
+          <el-button type="warning" size="large" :icon="Star" circle />
+          <el-button type="success" size="large" :icon="Check" circle />
+          <el-button type="danger" size="large" :icon="Delete" circle />
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   data() {
     return {
@@ -89,17 +67,6 @@ export default {
         },
       ],
     };
-  },
-  methods: {
-    clickOnHeart() {
-      console.log("click heart");
-    },
-    clickOnSeen() {
-      console.log("click on eyes");
-    },
-    clickOnCross() {
-      console.log("click on cross");
-    },
   },
 };
 </script>
