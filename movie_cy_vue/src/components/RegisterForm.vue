@@ -1,11 +1,15 @@
 <template>
   <div>
-    <el-button type="warning" @click="dialogVisible = true" round>
+    <el-button class='btn-register-login' type="warning" size="large" @click="dialogVisible = true" round>
       Inscription
     </el-button>
 
-    <el-dialog custom-class="dialog" v-model="dialogVisible" width="30%">
-      <img class="imgForm" :style="{ maxWidth: '30%' }" src="/src/components/icon/utilIcon/logo.svg" />
+    <el-dialog custom-class="dialog" v-model="dialogVisible" width="35%">
+      <img
+        class="imgForm"
+        :style="{ maxWidth: '30%' }"
+        src="/src/components/icon/utilIcon/logo.svg"
+      />
 
       <span class="title"> Inscription</span>
 
@@ -82,7 +86,7 @@
             <el-select
               v-model="photo"
               class="m-2"
-              placeholder="Choisir un avatar"
+              :placeholder="defaultLabel"
               size="large"
             >
               <div class="iconGrid">
@@ -120,7 +124,7 @@
       <template #footer>
         <div style="display: flex">
           <span class="dialog-footer">
-            <el-button type="warning" @click="submitForm(ruleFormRef)" round>
+            <el-button class="validate" type="warning" @click="submitForm(ruleFormRef)" round>
               Valider
             </el-button>
           </span>
@@ -135,7 +139,8 @@
 export default {
   data() {
     return {
-      imageSrc: "",
+      imageSrc: "./src/components/icon/CharacterIcon/alien.png",
+      defaultLabel: "Alien",
       listImages: [],
     };
   },
@@ -285,6 +290,9 @@ const rules = reactive({
 
 .el-dialog__body {
   display: grid;
+  padding-bottom: 0px !important;  
+  padding-bottom: 200px !important;
+
 }
 
 .el-dialog__title {
@@ -363,9 +371,9 @@ const rules = reactive({
   }
 }
 
-@media screen and (max-width: 1000px) and (min-width: 601px) {
+@media screen and (max-width: 1200px) and (min-width: 601px) {
   .dialog {
-    min-width: 50% !important;
+    min-width: 90% !important;
   }
 }
 
@@ -404,19 +412,10 @@ input {
 }
 </style>
 
-<style scoped lang="scss">
-.el-dialog__footer {
-  display: flex !important;
-}
-
-.dialog-footer {
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-.el-input__inner {
-  font-family: Raleway, sans-serif !important;
-  font-weight: bold !important;
+<style>
+.btn-register-login{
+  font-size: 20px;
+  font-weight: bold;
 }
 </style>
 
