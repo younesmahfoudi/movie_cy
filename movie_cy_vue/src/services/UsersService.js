@@ -1,19 +1,19 @@
+import axios from 'axios';
+
 export default {
     createUser(user) {
-        debugger
-        console.log(user)
         axios.post("http://localhost:8000/users/", {
             "nom": "John Doe",
             "prenom": "John Doe",
             "email": "jdoe@x.edu.ng",
             "mdp": "exampleMDP",
             "films": [
-              "film",
-              "film2"
+                "film",
+                "film2"
             ],
             "groupes": [
-              "groupe",
-              "groupe1"
+                "groupe",
+                "groupe1"
             ],
             "mood": "fun",
             "acteur": "exampleIDAuteur",
@@ -22,9 +22,10 @@ export default {
             "genreFlex": "comedie",
             "ddn": "2022-03-23",
             "age": 20,
-            "avatar": "avatar"
-          }).then(
-              user => console.log(user)
-          )
+            "avatar": "avatar",
+
+        }).then(
+            user => console.log(user)
+        )
     }
 }
