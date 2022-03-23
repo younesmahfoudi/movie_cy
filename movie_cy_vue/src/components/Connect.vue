@@ -1,6 +1,12 @@
 <template>
   <div>
-    <el-button type="warning" @click="dialogVisible = true" round>
+    <el-button
+      class="btn-register-login"
+      type="warning"
+      size="large"
+      @click="dialogVisible = true"
+      round
+    >
       Connexion
     </el-button>
 
@@ -67,7 +73,7 @@
           <span class="dialog-footer">
             <el-button
               type="warning"
-              class="btnValider"
+              class="btnValider validate"
               @click="dialogVisible = false"
               round
               >Valider</el-button
@@ -89,6 +95,12 @@ const inputMdp = ref("");
 <style lang="scss">
 @import "../assets/constant.scss";
 
+.validate {
+  font-size: 20px !important;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 .dialog {
   background-color: $gray !important;
   border-radius: 10px;
@@ -102,6 +114,8 @@ const inputMdp = ref("");
 
 .el-dialog__body {
   display: grid;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
 }
 
 .el-dialog__title {
@@ -121,7 +135,7 @@ const inputMdp = ref("");
   display: flex;
   margin-left: auto;
   margin-right: auto;
-  margin-top: -60px;
+  margin-bottom: 50px;
 }
 
 .title {
@@ -167,7 +181,7 @@ const inputMdp = ref("");
   }
 }
 
-@media screen and (max-width: 1000px) and (min-width: 601px) {
+@media screen and (max-width: 1400px) and (min-width: 601px) {
   .dialog {
     min-width: 50% !important;
   }
@@ -178,15 +192,17 @@ const inputMdp = ref("");
     min-width: 70% !important;
   }
 }
-</style>
-
-<style scoped lang="scss">
-.el-dialog__footer {
-  display: flex !important;
-}
 
 .dialog-footer {
   margin-left: auto !important;
   margin-right: auto !important;
+}
+</style>
+
+<style scoped>
+@media screen and (max-width: 1000px) and (min-width: 601px) {
+  .dialog {
+    min-width: 50% !important;
+  }
 }
 </style>
