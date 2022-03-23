@@ -6,12 +6,24 @@ import { Check, Star, Delete } from "@element-plus/icons-vue";
   <div class="movieContent">
     <h1>TIER LIST</h1>
     <div class="movieList">
-      <div class="movie" v-for="movie in movies" :key="movie">
-        <img src="/src/components/icon/exempleAffiche.jpg" />
-        <div class="icon">
-          <el-button type="warning" size="large" :icon="Star" circle />
-          <el-button type="success" size="large" :icon="Check" circle />
-          <el-button type="danger" size="large" :icon="Delete" circle />
+      <div class="row">
+        <div class="movie" v-for="movie in movies.slice(0, 3)" :key="movie">
+          <img src="/src/components/icon/exempleAffiche.jpg" />
+          <div class="icon">
+            <el-button type="primary" size="large" :icon="Star" circle />
+            <el-button type="success" size="large" :icon="Check" circle />
+            <el-button type="danger" size="large" :icon="Delete" circle />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="movie" v-for="movie in movies.slice(3, 6)" :key="movie">
+          <img src="/src/components/icon/exempleAffiche.jpg" />
+          <div class="icon">
+            <el-button type="primary" size="large" :icon="Star" circle />
+            <el-button type="success" size="large" :icon="Check" circle />
+            <el-button type="danger" size="large" :icon="Delete" circle />
+          </div>
         </div>
       </div>
     </div>
@@ -86,12 +98,20 @@ img {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
+  flex-direction: column;
   width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 
 .movie {
   margin-bottom: 20px;
-  max-width: 15em;
+  max-width: 19em;
 }
 
 .icon {
@@ -101,5 +121,17 @@ img {
 
 #photoMovie {
   background-color: $yellow;
+}
+
+@media screen and (max-width: 1050px) and (min-width: 800px) {
+  .movie {
+    max-width: 14em !important;
+  }
+}
+
+@media screen and (max-width: 800px) and (min-width: 600px) {
+  .movie {
+    max-width: 25em !important;
+  }
 }
 </style>
