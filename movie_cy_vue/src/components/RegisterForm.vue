@@ -1,6 +1,12 @@
 <template>
   <div>
-    <el-button class='btn-register-login' type="warning" size="large" @click="dialogVisible = true" round>
+    <el-button
+      class="btn-register-login"
+      type="warning"
+      size="large"
+      @click="dialogVisible = true"
+      round
+    >
       Inscription
     </el-button>
 
@@ -28,15 +34,16 @@
             >
               <el-input
                 input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
-                v-model.number="ruleForm.prenom"
+                v-model="ruleForm.prenom"
                 placeholder="Prénom"
+                name="prenom"
               />
             </el-form-item>
 
             <el-form-item label="Nom" prop="nom" style="width: 47%">
               <el-input
                 input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
-                v-model.number="ruleForm.nom"
+                v-model="ruleForm.nom"
                 placeholder="Nom"
               />
             </el-form-item>
@@ -124,7 +131,12 @@
       <template #footer>
         <div style="display: flex">
           <span class="dialog-footer">
-            <el-button class="validate" type="warning" @click="submitForm(ruleFormRef)" round>
+            <el-button
+              class="validate"
+              type="warning"
+              @click="createUser()"
+              round
+            >
               Valider
             </el-button>
           </span>
@@ -136,6 +148,8 @@
 
 
 <script lang="ts">
+import UsersService from "../services/UsersService.js";
+
 export default {
   data() {
     return {
@@ -148,6 +162,10 @@ export default {
     changeImg(e) {
       this.imageSrc = e;
     },
+    createUser() {
+      console.log(this.ruleForm);
+      UsersService.createUser(this.ruleForm);
+    },
   },
 };
 </script>
@@ -158,7 +176,6 @@ import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 import { FormInstance } from "element-plus";
 import { avatarForUser } from "./data/avatarForUser";
-
 const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");
@@ -168,7 +185,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      console.log("submit!");
+      //createUser(formEl);
     } else {
       console.log("error submit!");
       return false;
@@ -290,9 +307,8 @@ const rules = reactive({
 
 .el-dialog__body {
   display: grid;
-  padding-bottom: 0px !important;  
+  padding-bottom: 0px !important;
   padding-bottom: 200px !important;
-
 }
 
 .el-dialog__title {
@@ -312,7 +328,7 @@ const rules = reactive({
   display: flex;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom : 25px;
+  margin-bottom: 25px;
 }
 
 .title {
@@ -413,7 +429,7 @@ input {
 </style>
 
 <style>
-.btn-register-login{
+.btn-register-login {
   font-size: 20px;
   font-weight: bold;
 }

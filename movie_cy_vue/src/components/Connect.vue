@@ -98,6 +98,7 @@ const inputMdp = ref("");
 .validate {
   font-size: 20px !important;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .dialog {
