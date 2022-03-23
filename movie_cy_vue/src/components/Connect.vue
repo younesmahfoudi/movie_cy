@@ -1,9 +1,15 @@
 <template>
   <div>
-    <el-button type="text" @click="dialogVisible = true">Connexion</el-button>
+    <el-button type="warning" @click="dialogVisible = true" round>
+      Connexion
+    </el-button>
 
     <el-dialog custom-class="dialog" v-model="dialogVisible" width="30%">
-      <img class="imgForm" src="./icon/utilIcon/logo.png" />
+      <img
+        class="imgForm"
+        :style="{ maxWidth: '30%' }"
+        src="/src/components/icon/utilIcon/logo.svg"
+      />
 
       <span class="title"> Connexion</span>
 
@@ -60,9 +66,10 @@
         <div style="display: flex">
           <span class="dialog-footer">
             <el-button
-              type="primary"
+              type="warning"
               class="btnValider"
               @click="dialogVisible = false"
+              round
               >Valider</el-button
             >
           </span>
@@ -104,16 +111,6 @@ const inputMdp = ref("");
 
 .dialog-footer button:first-child {
   margin-right: 10px;
-}
-
-.btnValider {
-  background-color: $yellow;
-  margin-right: 0px !important;
-  border: none;
-  border-radius: 20px;
-  font-family: "Raleway", sans-serif;
-  font-weight: bold;
-  font-size: 20px;
 }
 
 .el-dialog__close {

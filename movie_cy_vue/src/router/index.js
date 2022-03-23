@@ -10,12 +10,6 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: "/connexion",
-      name: "connexion",
-      component: () =>
-        import(/* webpackChunkName : "connexion" */ "../views/Connexion.vue"),
-    },
-    {
       path: "/groupCreation",
       name: "création de groupe",
       component: () =>
@@ -36,12 +30,6 @@ const router = createRouter({
       name: "profil",
       component: () =>
         import(/* webpackChunkName : "profil" */ "../views/Profil.vue"),
-    },
-    {
-      path: "/register",
-      name: "register",
-      component: () =>
-        import(/* webpackChunkName : "register" */ "../views/Register.vue"),
     },
   ],
 });

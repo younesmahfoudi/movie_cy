@@ -1,9 +1,11 @@
 <template>
   <div>
-    <el-button type="text" @click="dialogVisible = true">Inscription</el-button>
+    <el-button type="warning" @click="dialogVisible = true" round>
+      Inscription
+    </el-button>
 
     <el-dialog custom-class="dialog" v-model="dialogVisible" width="30%">
-      <img class="imgForm" src="./icon/utilIcon/logo.png" />
+      <img class="imgForm" :style="{ maxWidth: '30%' }" src="/src/components/icon/utilIcon/logo.svg" />
 
       <span class="title"> Inscription</span>
 
@@ -118,9 +120,9 @@
       <template #footer>
         <div style="display: flex">
           <span class="dialog-footer">
-            <el-button class="btnValidate" @click="submitForm(ruleFormRef)"
-              >Valider</el-button
-            >
+            <el-button type="warning" @click="submitForm(ruleFormRef)" round>
+              Valider
+            </el-button>
           </span>
         </div>
       </template>
@@ -149,7 +151,7 @@ export default {
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
-import type { FormInstance } from "element-plus";
+import { FormInstance } from "element-plus";
 import { avatarForUser } from "./data/avatarForUser";
 
 const dialogVisible = ref(false);
@@ -341,14 +343,6 @@ const rules = reactive({
   display: flex;
 }
 
-.btnValidate {
-  background-color: $yellow;
-  margin-right: 0px !important;
-  font-family: "Raleway", sans-serif;
-  font-size: 20px;
-  border: none;
-}
-
 .el-form-item__error {
   color: red;
 }
@@ -397,9 +391,6 @@ const rules = reactive({
   .el-select {
     width: 100%;
   }
-}
-.el-button--default {
-  --el-button-hover-text-color: $grey !important;
 }
 
 .el-input__inner {

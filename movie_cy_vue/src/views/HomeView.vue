@@ -1,29 +1,24 @@
-<<<<<<< HEAD
-<script setup></script>
-=======
 <script setup>
-import SideBar from "../components/SideBar.vue";
-console.log();
+import RegisterForm from "../components/RegisterForm.vue";
+import Connect from "../components/Connect.vue";
 </script>
->>>>>>> 98e46802f40d8b715fe5f2732389d4ea0083d86c
 
 <template>
   <div class="centerItems">
     <div class="accueil">
       <img src="../components/icon/utilIcon/logoYellow.svg" />
       <div class="buttonGroup">
-        <router-link to="register" id="buttonHome">
-          <el-button type="warning" round> inscription </el-button>
-        </router-link>
-        <router-link to="connexion" id="buttonHome">
-          <el-button type="warning" round> Connexion </el-button>
-        </router-link>
+        <div :style="{ padding: '10px' }">
+          <RegisterForm />
+        </div>
+        <div :style="{ padding: '10px' }">
+          <Connect />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<<<<<<< HEAD
 <style lang="scss" scoped>
 @import "../assets/constant.scss";
 
@@ -75,6 +70,3 @@ img {
   }
 }
 </style>
-=======
-<style></style>
->>>>>>> 98e46802f40d8b715fe5f2732389d4ea0083d86c
