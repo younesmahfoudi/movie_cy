@@ -84,7 +84,7 @@ const inputMdp = ref("");
 
 .dialog {
   background-color: $gray !important;
-  border-radius: 30px;
+  border-radius: 10px;
 }
 
 .el-dialog__header {

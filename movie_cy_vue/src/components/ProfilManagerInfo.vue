@@ -18,21 +18,18 @@
       <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
         <div class="username">
           <el-descriptions title="Vos informations">
-            <el-descriptions-item label="Type de film favori n°1"
-              >Horreur</el-descriptions-item
+            <el-descriptions-item label="Prénom :"
+              >Maxime</el-descriptions-item
             >
-            <el-descriptions-item label="Type de film favori n°2"
-              >Drame</el-descriptions-item
+            <el-descriptions-item label="Nom :"
+              >Adda</el-descriptions-item
             >
-            <el-descriptions-item label="Acteur favori"
-              >Will smith</el-descriptions-item
+            <el-descriptions-item label="Âge"
+              >23</el-descriptions-item
             >
-            <el-descriptions-item label="Réalisateur favori">
-              Clint Eastwood
+            <el-descriptions-item label="Adresse email">
+              maxime.adda@hotmail.fr
             </el-descriptions-item>
-            <el-descriptions-item label="Address"
-              >5 Place de la Monnaie, 64000 PAU</el-descriptions-item
-            >
           </el-descriptions>
         </div>
       </el-col>

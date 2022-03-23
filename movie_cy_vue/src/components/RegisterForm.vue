@@ -14,57 +14,49 @@
           :model="ruleForm"
           :rules="rules"
         >
-          <el-form-item
-            label="Age"
-            prop="age"
-            :rules="[
-              {
-                required: true,
-              },
-            ]"
-          >
+          <div class="names">
+            <el-form-item
+              label="Prénom"
+              prop="prenom"
+              style="width: 47%; margin-right: 6%"
+            >
+              <el-input
+                input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
+                v-model.number="ruleForm.prenom"
+                placeholder="Prénom"
+              />
+            </el-form-item>
+
+            <el-form-item label="Nom" prop="nom" style="width: 47%">
+              <el-input
+                input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
+                v-model.number="ruleForm.nom"
+                placeholder="Nom"
+              />
+            </el-form-item>
+          </div>
+
+          <el-form-item label="Age" prop="age">
             <el-input
               type="number"
-              input-style="border-radius:20px ; font-family:'Raleway', sans-serif; font-weight: bold;"
+              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               v-model.number="ruleForm.age"
+              placeholder="Age"
             />
           </el-form-item>
-          <el-form-item
-            prop="email"
-            label="Adresse email"
-            :rules="[
-              {
-                required: true,
-                message: 'Entrer une adresse email.',
-                trigger: 'blur',
-              },
-              {
-                type: 'email',
-                message: 'Entrer une adresse email correcte.',
-                trigger: ['blur', 'change'],
-              },
-            ]"
-          >
+          <el-form-item prop="email" label="Adresse email">
             <el-input
-              input-style="border-radius:20px; font-family:'Raleway', sans-serif; font-weight: bold;"
+              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="email"
-              v-model="inputMail"
+              v-model="ruleForm.email"
               placeholder="Adresse email"
             />
           </el-form-item>
 
-          <el-form-item
-            prop="pass"
-            label="Mot de passe"
-            :rules="[
-              {
-                required: true,
-              },
-            ]"
-          >
+          <el-form-item prop="pass" label="Mot de passe">
             <el-input
               v-model="ruleForm.pass"
-              input-style="border-radius:20px ; font-family:'Raleway', sans-serif; font-weight: bold;"
+              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password"
               type="password"
               placeholder="Mot de passe"
@@ -73,24 +65,52 @@
             />
           </el-form-item>
 
-          <el-form-item
-            prop="checkPass"
-            label="Confirmation du mot de passe"
-            :rules="[
-              {
-                required: true,
-              },
-            ]"
-          >
+          <el-form-item prop="checkPass" label="Confirmation mot de passe">
             <el-input
+              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               v-model="ruleForm.checkPass"
-              input-style="border-radius:20px ; font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password"
               type="password"
               placeholder="Mot de passe"
               show-password
               autocomplete="off"
             />
+          </el-form-item>
+          <el-form-item prop="avatar" label="Avatar">
+            <el-select
+              v-model="photo"
+              class="m-2"
+              placeholder="Choisir un avatar"
+              size="large"
+            >
+              <div class="iconGrid">
+                <el-option
+                  v-for="item in avatarForUser"
+                  :key="item.value"
+                  :value="item.photo"
+                  :label="item.label"
+                  @click="changeImg(item.photo)"
+                >
+                  <div class="oneGroup">
+                    <el-avatar
+                      class="iconGroup"
+                      :style="{ backgroundColor: '#faa427' }"
+                      :size="48"
+                      :src="item.photo"
+                    />
+                  </div>
+                </el-option>
+              </div>
+            </el-select>
+            <el-avatar
+              v-if="imageSrc !== ''"
+              class="iconGroup"
+              id="iconChoosenForChange"
+              :style="{ backgroundColor: '#faa427' }"
+              :size="60"
+            >
+              <img :src="imageSrc" />
+            </el-avatar>
           </el-form-item>
         </el-form>
       </div>
@@ -98,10 +118,7 @@
       <template #footer>
         <div style="display: flex">
           <span class="dialog-footer">
-            <el-button
-              type="primary"
-              class="btnValider"
-              @click="dialogVisible = false"
+            <el-button class="btnValidate" @click="submitForm(ruleFormRef)"
               >Valider</el-button
             >
           </span>
@@ -112,31 +129,80 @@
 </template>
 
 
+<script lang="ts">
+export default {
+  data() {
+    return {
+      imageSrc: "",
+      listImages: [],
+    };
+  },
+  methods: {
+    changeImg(e) {
+      this.imageSrc = e;
+    },
+  },
+};
+</script>
+
+
 <script lang="ts" setup>
 import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 import type { FormInstance } from "element-plus";
+import { avatarForUser } from "./data/avatarForUser";
 
 const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");
 const ruleFormRef = ref<FormInstance>();
 
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  formEl.validate((valid) => {
+    if (valid) {
+      console.log("submit!");
+    } else {
+      console.log("error submit!");
+      return false;
+    }
+  });
+};
+
 const checkAge = (rule: any, value: any, callback: any) => {
-  if (!value) {
-    return callback(new Error("Please input the age"));
-  }
   setTimeout(() => {
+    if (!value) {
+      callback(new Error("Veuillez saisir un âge."));
+    }
     if (!Number.isInteger(value)) {
-      callback(new Error("Please input digits"));
+      callback(new Error("Veuillez saisir un nombre correct."));
     } else {
       if (value < 18) {
-        callback(new Error("Age must be greater than 18"));
+        callback(new Error("Vous devez avoir plus de 18 ans."));
       } else {
         callback();
       }
     }
   }, 1000);
+};
+
+const checkPrenom = (rule: any, value: any, callback: any) => {
+  if (!value || value === "") {
+    callback(new Error("Veuillez saisir un prénom."));
+  }
+};
+
+const checkNom = (rule: any, value: any, callback: any) => {
+  if (!value || value === "") {
+    callback(new Error("Veuillez saisir un nom."));
+  }
+};
+
+const checkAvatar = (rule: any, value: any, callback: any) => {
+  debugger;
+  if (!value || value === "") {
+    callback(new Error("Veuillez choisir un avatar."));
+  }
 };
 
 const validatePass = (rule: any, value: any, callback: any) => {
@@ -161,25 +227,52 @@ const validatePass2 = (rule: any, value: any, callback: any) => {
 };
 
 const ruleForm = reactive({
+  prenom: "",
+  nom: "",
+  email: "",
+  age: "",
   pass: "",
   checkPass: "",
-  age: "",
 });
 
 const rules = reactive({
-  pass: [{ validator: validatePass, trigger: "blur" }],
-  checkPass: [{ validator: validatePass2, trigger: "blur" }],
-  age: [{ validator: checkAge, trigger: "blur" }],
+  prenom: [{ validator: checkPrenom, trigger: "blur", required: true }],
+  nom: [{ validator: checkNom, trigger: "blur", required: true }],
+  email: [
+    {
+      required: true,
+      message: "Veuillez saisir une adresse email.",
+      trigger: "blur",
+    },
+    {
+      type: "email",
+      message: "Veuillez saisir une adresse email correcte.",
+      trigger: ["blur", "change"],
+    },
+  ],
+  age: [{ validator: checkAge, trigger: "blur", required: true }],
+  pass: [{ validator: validatePass, trigger: "blur", required: true }],
+  checkPass: [{ validator: validatePass2, trigger: "blur", required: true }],
+  avatar: [{ validator: checkAvatar, trigger: "blur", required: true }],
 });
 </script>
 
 
-<style lang="scss">
+<style scoped lang="scss">
 @import "../assets/constant.scss";
+
+.iconGrid {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.el-select-dropdown__item {
+  height: 55px !important;
+}
 
 .dialog {
   background-color: $gray !important;
-  border-radius: 30px;
+  border-radius: 5px;
 }
 
 .el-dialog__header {
@@ -199,16 +292,6 @@ const rules = reactive({
 
 .dialog-footer button:first-child {
   margin-right: 10px;
-}
-
-.btnValider {
-  background-color: $yellow;
-  margin-right: 0px !important;
-  border: none;
-  border-radius: 20px;
-  font-family: "Raleway", sans-serif;
-  font-weight: bold;
-  font-size: 20px;
 }
 
 .el-dialog__close {
@@ -245,12 +328,33 @@ const rules = reactive({
   font-size: 18px;
 }
 
+@media screen and (max-width: 800px) {
+  .el-form-item {
+    width: 100% !important;
+  }
+}
 .el-form-item {
   margin-bottom: 20px !important;
 }
 
+.names {
+  display: flex;
+}
+
+.btnValidate {
+  background-color: $yellow;
+  margin-right: 0px !important;
+  font-family: "Raleway", sans-serif;
+  font-size: 20px;
+  border: none;
+}
+
 .el-form-item__error {
   color: red;
+}
+
+.el-avatar {
+  margin-left: 5%;
 }
 
 @media screen and (max-width: 715px) and (min-width: 600px) {
@@ -276,6 +380,37 @@ const rules = reactive({
     min-width: 70% !important;
   }
 }
+
+@media screen and (max-width: 800px) {
+  .names {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 1313px) {
+  .el-avatar {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 10px;
+  }
+
+  .el-select {
+    width: 100%;
+  }
+}
+.el-button--default {
+  --el-button-hover-text-color: $grey !important;
+}
+
+.el-input__inner {
+  font-family: Raleway, sans-serif !important;
+  font-weight: bold !important;
+}
+
+input {
+  font-family: "Raleway", sans-serif !important;
+  font-weight: bold !important;
+}
 </style>
 
 <style scoped lang="scss">
@@ -286,6 +421,11 @@ const rules = reactive({
 .dialog-footer {
   margin-left: auto !important;
   margin-right: auto !important;
+}
+
+.el-input__inner {
+  font-family: Raleway, sans-serif !important;
+  font-weight: bold !important;
 }
 </style>
 
