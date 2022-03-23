@@ -1,6 +1,12 @@
 <template>
   <div>
-    <el-button class='btn-register-login' type="warning" size="large" @click="dialogVisible = true" round>
+    <el-button
+      class="btn-register-login"
+      type="warning"
+      size="large"
+      @click="dialogVisible = true"
+      round
+    >
       Connexion
     </el-button>
 
@@ -89,8 +95,8 @@ const inputMdp = ref("");
 <style lang="scss">
 @import "../assets/constant.scss";
 
-.validate{
-  font-size : 20px!important;
+.validate {
+  font-size: 20px !important;
   font-weight: bold;
 }
 
@@ -107,8 +113,8 @@ const inputMdp = ref("");
 
 .el-dialog__body {
   display: grid;
-  padding-bottom: 0px!important;
-  padding-top: 0px!important;
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
 }
 
 .el-dialog__title {
@@ -128,7 +134,7 @@ const inputMdp = ref("");
   display: flex;
   margin-left: auto;
   margin-right: auto;
-  margin-top: -60px;
+  margin-bottom: 50px;
 }
 
 .title {

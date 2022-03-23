@@ -312,7 +312,7 @@ const rules = reactive({
   display: flex;
   margin-left: auto;
   margin-right: auto;
-  margin-top: -60px;
+  margin-bottom : 25px;
 }
 
 .title {
