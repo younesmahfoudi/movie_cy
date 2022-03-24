@@ -49,12 +49,12 @@
             </el-form-item>
           </div>
 
-          <el-form-item label="Age" prop="age">
-            <el-input
-              type="number"
-              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
-              v-model.number="ruleForm.age"
-              placeholder="Age"
+          <el-form-item label="Date de naissance" prop="age">
+            <el-date-picker
+              v-model="ruleForm.age"
+              type="date"
+              placeholder="Date de naissance"
+              style="width: 100%"
             />
           </el-form-item>
           <el-form-item prop="email" label="Adresse email">
@@ -120,7 +120,7 @@
               class="iconGroup"
               id="iconChoosenForChange"
               :style="{ backgroundColor: '#faa427' }"
-              :size="60"
+              :size="50"
             >
               <img :src="imageSrc" />
             </el-avatar>
@@ -193,15 +193,26 @@ const submitForm = (formEl: FormInstance | undefined) => {
   });
 };
 
+const calculateAgeFromDate = (birthday: any) => {
+  // birthday is a date
+  var ageDifMs = Date.now() - birthday.getTime();
+  var ageDate = new Date(ageDifMs); // miliseconds from epoch
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+};
+
+const isDateBeforeToday = (date) => {
+  return new Date(date.toDateString()) < new Date(new Date().toDateString());
+};
+
 const checkAge = (rule: any, value: any, callback: any) => {
   setTimeout(() => {
     if (!value) {
-      callback(new Error("Veuillez saisir un âge."));
+      callback(new Error("Veuillez choisir une date."));
     }
-    if (!Number.isInteger(value)) {
-      callback(new Error("Veuillez saisir un nombre correct."));
+    if (!isDateBeforeToday(value)) {
+      callback(new Error("Veuillez choisir une date de naissance correcte."));
     } else {
-      if (value < 18) {
+      if (calculateAgeFromDate(value) < 18) {
         callback(new Error("Vous devez avoir plus de 18 ans."));
       } else {
         callback();
@@ -432,6 +443,10 @@ input {
 .btn-register-login {
   font-size: 20px;
   font-weight: bold;
+}
+
+.el-form-item__label{
+  margin-bottom: 5px!important;
 }
 </style>
 
