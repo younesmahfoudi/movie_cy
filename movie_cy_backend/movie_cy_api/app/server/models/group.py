@@ -8,7 +8,7 @@ class GroupSchema(BaseModel):
     nom: str = Field(...)
     membres: List[str]=  Field(...) 
     admin: str = Field(...) 
-    photo: str = Field(...)
+    avatar: str = Field(...)
 
     class Config:
         schema_extra = {
@@ -16,7 +16,7 @@ class GroupSchema(BaseModel):
                 "nom": "La coloc",
                 "membres": ["iduser1","iduser2"],
                 "admin": "idAdmin",
-                "photo": "/path/example/",
+                "avatar": "/path/example/",
             }
         }
 
@@ -25,7 +25,7 @@ class UpdateGroupModel(BaseModel):
     nom: Optional[str]
     membres: Optional[str]
     admin: Optional[int]
-    photo: Optional[str]
+    avatar: Optional[str]
 
     class Config:
         schema_extra = {
@@ -33,7 +33,7 @@ class UpdateGroupModel(BaseModel):
                 "nom": "La coloc",
                 "membres": ["iduser1","iduser2"],
                 "admin": "idAdmin",
-                "photo": "/path/example/",
+                "avatar": "/path/example/",
             }
         }
 
