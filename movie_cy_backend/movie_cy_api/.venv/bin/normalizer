@@ -1,4 +1,4 @@
-#!/home/eisti/movie_cy/movie_cy/movie_cy_backend/movie_cy_api/.venv/bin/python3
+#!/home/eisti/movie_cy/movie_cy_backend/movie_cy_api/.venv/bin/python3.10
 # -*- coding: utf-8 -*-
 import re
 import sys
