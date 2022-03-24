@@ -11,16 +11,17 @@ from app.server.routes.movie import router as MovieRouteur
 app = FastAPI()
 
 
-origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
+origins = [  
+    "http://localhost:8000",
+    "http://localhost:8000/users/",
+    "http://localhost:3000"
+    "http://localhost:8081"
+    "http://localhost:27017"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,7 +36,11 @@ app.include_router(MovieRouteur, tags=["movies"], prefix="/movies")
 
 
 
-@app.get("/", tags=["Root"])
-async def read_root():
-    return {"message": "Welcome to this fantastic app!"}
+# @app.get("/", tags=["Root"])
+# async def read_root():
+#     return {"message": "Welcome to this fantastic app!"}
+
+@app.get("/")
+async def main():
+    return {"message": "Hello World"}
 
