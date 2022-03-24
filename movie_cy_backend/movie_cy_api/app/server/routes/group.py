@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from app.server.database import (
@@ -7,6 +7,7 @@ from app.server.database import (
     retrieve_group,
     retrieve_groups,
     update_group,
+    add_user_to_a_group
 )
 from app.server.models.group import (
     ErrorResponseModel,
@@ -22,7 +23,11 @@ router = APIRouter()
 async def add_group_data(group: GroupSchema = Body(...)):
     group = jsonable_encoder(group)
     new_group = await add_group(group)
-    return ResponseModel(new_group, "group added successfully.")     
+    print(new_group)
+    if 'nom' in new_group.keys():
+        return ResponseModel(new_group, "group added successfully.")     
+    else :
+        raise HTTPException(status_code=404, detail=new_group["message"])
 
 @router.get("/", response_description="Groups retrieved")
 async def get_groups():
@@ -43,6 +48,21 @@ async def get_group_data(id):
 async def update_group_data(id: str, req: UpdateGroupModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_group = await update_group(id, req)
+    if updated_group:
+        return ResponseModel(
+            "Group with ID: {} name update is successful".format(id),
+            "Group name updated successfully",
+        )
+    return ErrorResponseModel(
+        "An error occurred",
+        404,
+        "There was an error updating the group data.",
+    )
+
+
+@router.put("/{id}/users/{idUser}")
+async def update_group_members_data(id: str, idUser:str):
+    updated_group = await add_user_to_a_group(id,idUser)
     if updated_group:
         return ResponseModel(
             "Group with ID: {} name update is successful".format(id),

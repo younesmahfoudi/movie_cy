@@ -1,9 +1,14 @@
 import datetime
+from distutils.command.build import build
 from enum import unique
 from typing import List, Optional
 from app.server.models.movie import Genre, StarList
 import motor.motor_asyncio
 from bson.objectid import ObjectId
+
+from app.server.models.group import (
+    ErrorResponseModel
+)
 
 
 ##MONGO_DETAILS = "mongodb://localhost:27017"
@@ -17,6 +22,7 @@ group_collection = database.get_collection("GROUPS")
 
 def group_helper(group) -> dict:
     return {
+        "id": str(group["_id"]),
         "nom": group["nom"],
         "membres": group["membres"],
         "admin": group["admin"],
@@ -39,6 +45,12 @@ async def retrieve_groups():
 
 # Add a new group into to the database
 async def add_group(group_data: dict) -> dict:
+    for idUser in group_data['membres']:
+        if ObjectId.is_valid(idUser) :
+            user = await user_collection.find_one({"_id": ObjectId(idUser)})
+            if user : bool = True 
+            else : return ErrorResponseModel("An error occurred", 404, "User with id {0} doesn't exist".format(idUser))   
+        else : return ErrorResponseModel("An error occurred", 404, "User with id {0} doesn't exist and doesn't has a good format".format(idUser))   
     group = await group_collection.insert_one(group_data)
     new_group = await group_collection.find_one({"_id": group.inserted_id})
     return group_helper(new_group)
@@ -58,6 +70,17 @@ async def update_group(id: str, data: dict):
             return True
         return False
 
+# Update a group member with matchings IDs
+async def add_user_to_a_group(idGroup: str,idUser: str):
+    # Return false if an empty request body is sent.
+    group = await group_collection.find_one({"_id": ObjectId(idGroup)})
+    if group:
+        updated_group = await group_collection.update_one(
+            {"_id": ObjectId(idGroup)}, {"$addToSet": { "membres" : idUser } }
+        )
+        if updated_group:
+            return True
+        return False
 
 # Delete a group from the database
 async def delete_group(id: str):
@@ -217,9 +240,87 @@ async def retrieve_movies() -> dict:
     movies = []
     async for movie in movie_collection.find():
         print(movie)
+
+
+
+
+
+
+
+
+
+
+# Retrieve all movies present in the database
+async def retrieve_movies():
+    movies = []
+    async for movie in movie_collection.find():
         movies.append(movie_helper(movie))
     return movies
 
+def build_title_request(title: str) -> dict:
+    request: dict = { "title": {"$regex":title}}
+    return request
+
+def build_imdbRating_request(imdbRating: float) -> dict:
+    request: dict = { "imdbRating": {"$gt":imdbRating}}
+    return request
+
+def build_genres_request(genreList: List[str]) -> dict:
+    requestParameters : List[dict] = []
+    for genre in genreList:
+        requestParameters.append({ "value" : genre })
+    request: dict = { 
+        "genreList": 
+            { 
+                "$elemMatch": 
+                    {
+                        "$or" : requestParameters
+                    }
+            }
+        }
+    return request
+
+def build_stars_request(starIDList: List[str]) -> dict:
+    requestParameters : List[dict] = []
+    for starID in starIDList:
+        requestParameters.append({ "id" : starID })
+    request: dict = { 
+        "starList": 
+            { 
+                "$elemMatch": 
+                    {
+                        "$or" : requestParameters
+                    }
+            }
+        }
+    return request
+
+def build_movies_request_filtered(
+        title: str,
+        genreList: List[str], 
+        starList: List[str],
+        imdbRating: float
+    ) -> dict:
+    requestParameters: List[dict] = []
+    request: dict = {}
+    if title is not None: requestParameters.append(build_title_request(title))
+    if genreList is not None: requestParameters.append(build_genres_request(genreList))
+    if starList is not None: requestParameters.append(build_stars_request(starList))
+    if imdbRating is not None: requestParameters.append(build_imdbRating_request(imdbRating))
+    if requestParameters: request: dict = {"$or" : requestParameters}
+    return request
+
+async def retrieve_movies_filtered(
+        title: str | None,
+        genreList: str | None, 
+        starList: str | None,
+        imdbRating: float | None
+    ) -> dict:
+    request: dict = build_movies_request_filtered(title,genreList,starList,imdbRating)
+    movies = []
+    async for movie in movie_collection.find(request):
+        movies.append(movie_helper(movie))
+    return movies
 
 # Add a new movie into to the database
 async def add_movie(movie_data: dict) -> dict:

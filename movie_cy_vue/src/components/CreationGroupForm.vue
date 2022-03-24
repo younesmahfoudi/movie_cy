@@ -168,7 +168,6 @@ const options = [
 ];
 
 const onSubmit = () => {
-  console.log("submit!");
 };
 </script>
 

@@ -1,14 +1,17 @@
 from datetime import date
-from typing import List
+from typing import List, Optional
+
+from click import Option
 from fastapi import APIRouter, Body, Query
 from fastapi.encoders import jsonable_encoder
 
 from app.server.database import (
     add_movie,
     retrieve_movies_by_genres,
-    #retrieve_movies_by_imdbRating,
+    retrieve_movies_by_imdbRating,
     retrieve_movies_by_stars,
-    retrieve_movies_by_title
+    retrieve_movies_by_title,
+    retrieve_movies_filtered
 )
 
 from app.server.models.movie import (
@@ -25,6 +28,7 @@ from app.server.imdb import (
 router = APIRouter()
 
 def movie_helper(movie) -> dict:
+    print("test")
     return {
         "id": str(movie["id"]),
         "image": movie["image"],
@@ -47,14 +51,10 @@ def movie_helper(movie) -> dict:
 async def get_movies_data_filtered(
         title: str = None,
         genreList: List[str] = Query(None),
-        imDbRating: str = None,
+        imDbRating: float = None,
         starList: List[str] = Query(None),
     ): 
-    movies = []
-    if title is not None: movies.append(await retrieve_movies_by_title(title))
-    if genreList is not None: movies.append(await retrieve_movies_by_genres(genreList))
-    #if imDbRating is not None: movies.append(retrieve_movies_by_imdbRating(imDbRating))
-    if starList is not None: movies.append(await retrieve_movies_by_stars(starList))
+    movies = await retrieve_movies_filtered(title,genreList,starList,imDbRating)
     return ResponseModel(movies, "movies get successfully.")  
 
 @router.post("/", response_description="Movies data added into the database")
@@ -109,6 +109,3 @@ def ResponseModel(data, message):
 
 def ErrorResponseModel(error, code, message):
     return {"error": error, "code": code, "message": message} 
-
-
-    

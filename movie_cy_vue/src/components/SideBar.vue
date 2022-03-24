@@ -1,61 +1,132 @@
 <template>
-  <el-row class="tac">
-    <el-col :span="12">
-      <h5 class="mb-2">Custom colors</h5>
-      <el-menu
-        active-text-color="#ffd04b"
-        background-color="#545c64"
-        class="el-menu-vertical-demo"
-        default-active="2"
-        text-color="#fff"
-        @open="handleOpen"
-        @close="handleClose"
-      >
-        <el-sub-menu index="1">
-          <template #title>
-            <el-icon><location /></el-icon>
-            <span>Navigator One</span>
-          </template>
-          <el-menu-item-group title="Group One">
-            <el-menu-item index="1-1">item one</el-menu-item>
-            <el-menu-item index="1-2">item one</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="Group Two">
-            <el-menu-item index="1-3">item three</el-menu-item>
-          </el-menu-item-group>
-          <el-sub-menu index="1-4">
-            <template #title>item four</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-          </el-sub-menu>
-        </el-sub-menu>
-        <el-menu-item index="2">
-          <el-icon><icon-menu /></el-icon>
-          <span>Navigator Two</span>
-        </el-menu-item>
-        <el-menu-item index="3" disabled>
-          <el-icon><document /></el-icon>
-          <span>Navigator Three</span>
-        </el-menu-item>
-        <el-menu-item index="4">
-          <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
-        </el-menu-item>
-      </el-menu>
-    </el-col>
-  </el-row>
+  <div class="sidenav">
+    <el-menu
+      active-text-color="#faa427"
+      background-color="#5a6075"
+      class="el-menu-vertical-demo"
+      default-active="2"
+      text-color="#ffffff"
+      :style="{ height: '100%' }"
+    >
+      <div class="logo">
+        <router-link to="/">
+          <el-menu-item class="logoImg" index="0">
+            <el-avatar
+              id="photoGroup"
+              :style="{ backgroundColor: '#faa427' }"
+              shape="square"
+              :size="50"
+              src="./src/components/icon/utilIcon/logo.png"
+            />
+          </el-menu-item>
+        </router-link>
+      </div>
+      <div class="logo">
+        <router-link to="/movieGroupList">
+          <el-menu-item v-for="group in groups" :key="group" index="1">
+            <el-avatar
+              :key="group"
+              id="photoGroup"
+              :alt="group.nom"
+              :style="{ backgroundColor: '#faa427' }"
+              :size="50"
+              :src="group.photo"
+            />
+          </el-menu-item>
+        </router-link>
+      </div>
+      <div class="logo">
+        <router-link to="/groupCreation">
+          <el-menu-item index="15" class="plus">
+            <el-avatar
+              id="photoGroup"
+              :style="{ backgroundColor: '#faa427' }"
+              :size="25"
+              src="./src/components/icon/utilIcon/plus.png"
+            />
+          </el-menu-item>
+        </router-link>
+      </div>
+    </el-menu>
+  </div>
+  <router-view />
 </template>
 
-<script lang="ts" setup>
-import {
-  Location,
-  Document,
-  Menu as IconMenu,
-  Setting,
-} from '@element-plus/icons-vue'
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
+<script>
+export default {
+  data() {
+    return {
+      groups: [
+        {
+          id: 1,
+          nom: "groupe 1",
+          membres: ["Jean", "Bernard", "Louis"],
+          admin: "Bernard",
+          photo: "./src/components/icon/ThemeIcon/animation.png",
+        },
+        {
+          id: 2,
+          nom: "Groupe 2",
+          membres: ["Jean", "Bernard", "Louis"],
+          admin: "Bernard",
+          photo: "./src/components/icon/ThemeIcon/horreur.png",
+        },
+        {
+          id: 3,
+          nom: "Groupe 3",
+          membres: ["Jean", "Bernard", "Louis"],
+          admin: "Louis",
+          photo: "./src/components/icon/ThemeIcon/drame.png",
+        },
+      ],
+    };
+  },
+};
 </script>
+
+<style lang="css" scoped>
+.sidenav {
+  height: 100%;
+  width: 7%;
+  min-width: 40px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  display: flex;
+}
+
+#photoGroup {
+  filter: contrast(200%);
+}
+
+.plus {
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  padding-top: 10%;
+}
+
+.logoImg {
+  padding-top: 10%;
+  padding-bottom: 10%;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav .el-menu {
+    font-size: 18px;
+  }
+}
+
+@media screen and (height: 320px) {
+  .logo {
+    size: 10;
+  }
+}
+</style>

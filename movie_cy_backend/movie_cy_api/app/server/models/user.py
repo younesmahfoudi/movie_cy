@@ -73,6 +73,7 @@ class UpdateUserModel(BaseModel):
                 "genreFlex": "comedie",
                 "ddn": date.today(),
                 "avatar": "image"
+
             }
         }
         arbitrary_types_allowed = True
