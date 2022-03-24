@@ -1,75 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<template>
+  <router-view></router-view>
+</template>
 
-    <title>My first BootstrapVue app</title>
+<style lang="scss">
+@import "src/assets/constant.scss";
+body {
+  font-family: $font;
+  margin: 0%;
+  height: 100%;
+}
 
-    <!-- Required Stylesheets -->
-    <link
-      type="text/css"
-      rel="stylesheet"
-      href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"
-    />
-    <link
-      type="text/css"
-      rel="stylesheet"
-      href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"
-    />
+html {
+  height: 100%;
+}
 
-    <!-- Load polyfills to support older browsers -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"></script>
-
-    <!-- Required scripts -->
-    <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
-    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
-  </head>
-  <body>
-    <!-- Our application root element -->
-    <div id="app">
-      <b-container>
-        <b-jumbotron
-          header="BootstrapVue"
-          lead="Bootstrap v4 Components for Vue.js 2"
-        >
-          <p>For more information visit our website</p>
-          <b-btn variant="primary" href="https://bootstrap-vue.org/"
-            >More Info</b-btn
-          >
-        </b-jumbotron>
-
-        <b-form-group
-          horizontal
-          :label-cols="4"
-          description="Let us know your name."
-          label="Enter your name"
-        >
-          <b-form-input v-model.trim="name"></b-form-input>
-        </b-form-group>
-
-        <b-alert variant="success" :show="showAlert">Hello {{ name }}</b-alert>
-      </b-container>
-    </div>
-
-    <!-- Start running your app -->
-    <script>
-      window.app = new Vue({
-        el: "#app",
-        data: {
-          name: "",
-        },
-        computed: {
-          showAlert() {
-            return this.name.length > 4 ? true : false;
-          },
-        },
-      });
-    </script>
-  </body>
-</html>
+#app {
+  height: 100%;
+}
+</style>
