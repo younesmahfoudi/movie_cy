@@ -49,9 +49,9 @@
             </el-form-item>
           </div>
 
-          <el-form-item label="Date de naissance" prop="age">
+          <el-form-item label="Date de naissance" prop="ddn">
             <el-date-picker
-              v-model="ruleForm.age"
+              v-model="ruleForm.ddn"
               type="date"
               placeholder="Date de naissance"
               style="width: 100%"
@@ -68,7 +68,7 @@
 
           <el-form-item prop="pass" label="Mot de passe">
             <el-input
-              v-model="ruleForm.pass"
+              v-model="ruleForm.mdp"
               input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password"
               type="password"
@@ -91,7 +91,7 @@
           </el-form-item>
           <el-form-item prop="avatar" label="Avatar">
             <el-select
-              v-model="photo"
+              v-model="ruleForm.avatar"
               class="m-2"
               :placeholder="defaultLabel"
               size="large"
@@ -163,7 +163,7 @@ export default {
       this.imageSrc = e;
     },
     createUser() {
-      console.log(this.ruleForm);
+      delete this.ruleForm["checkPass"];
       UsersService.createUser(this.ruleForm);
     },
   },
@@ -201,7 +201,9 @@ const calculateAgeFromDate = (birthday: any) => {
 };
 
 const isDateBeforeToday = (date) => {
-  return new Date(date.toDateString()) < new Date(new Date().toDateString());
+  if (date) {
+    return new Date(date.toDateString()) < new Date(new Date().toDateString());
+  }
 };
 
 const checkAge = (rule: any, value: any, callback: any) => {
@@ -244,7 +246,7 @@ const validatePass = (rule: any, value: any, callback: any) => {
   if (value === "") {
     callback(new Error("Saisissez votre mot de passe"));
   } else {
-    if (ruleForm.checkPass !== "") {
+    if (ruleForm.mdp !== "") {
       if (!ruleFormRef.value) return;
       ruleFormRef.value.validateField("checkPass", () => null);
     }
@@ -254,7 +256,7 @@ const validatePass = (rule: any, value: any, callback: any) => {
 const validatePass2 = (rule: any, value: any, callback: any) => {
   if (value === "") {
     callback(new Error("Réessayez"));
-  } else if (value !== ruleForm.pass) {
+  } else if (value !== ruleForm.mdp) {
     callback(new Error("Les mots de passe sont différents"));
   } else {
     callback();
@@ -265,9 +267,9 @@ const ruleForm = reactive({
   prenom: "",
   nom: "",
   email: "",
-  age: "",
-  pass: "",
-  checkPass: "",
+  ddn: "",
+  mdp: "",
+  avatar: "",
 });
 
 const rules = reactive({
@@ -285,7 +287,7 @@ const rules = reactive({
       trigger: ["blur", "change"],
     },
   ],
-  age: [{ validator: checkAge, trigger: "blur", required: true }],
+  ddn: [{ validator: checkAge, trigger: "blur", required: true }],
   pass: [{ validator: validatePass, trigger: "blur", required: true }],
   checkPass: [{ validator: validatePass2, trigger: "blur", required: true }],
   avatar: [{ validator: checkAvatar, trigger: "blur", required: true }],
@@ -445,8 +447,8 @@ input {
   font-weight: bold;
 }
 
-.el-form-item__label{
-  margin-bottom: 5px!important;
+.el-form-item__label {
+  margin-bottom: 5px !important;
 }
 </style>
 

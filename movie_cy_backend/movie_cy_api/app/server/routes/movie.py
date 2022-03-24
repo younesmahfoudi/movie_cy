@@ -7,7 +7,11 @@ from fastapi.encoders import jsonable_encoder
 
 from app.server.database import (
     add_movie,
-    retrieve_movies_with_parameters
+    retrieve_movies_by_genres,
+    retrieve_movies_by_imdbRating,
+    retrieve_movies_by_stars,
+    retrieve_movies_by_title,
+    retrieve_movies_filtered
 )
 
 from app.server.models.movie import (
@@ -43,8 +47,17 @@ def movie_helper(movie) -> dict:
         "starList": movie["starList"]
     }
 
+@router.get("/", response_description="Movies data retrieved")
+async def get_movies_data_filtered(
+        title: str = None,
+        genreList: List[str] = Query(None),
+        imDbRating: float = None,
+        starList: List[str] = Query(None),
+    ): 
+    movies = await retrieve_movies_filtered(title,genreList,starList,imDbRating)
+    return ResponseModel(movies, "movies get successfully.")  
 
-@router.post("/", response_description="movies data added into the database")
+@router.post("/", response_description="Movies data added into the database")
 async def add_movie_data(
         title: str = None, 
         types: List[str] = Query(None), 
@@ -96,17 +109,3 @@ def ResponseModel(data, message):
 
 def ErrorResponseModel(error, code, message):
     return {"error": error, "code": code, "message": message} 
-""" 
-@router.get("/", response_description="Get movies")
-async def get_movies():
-    movies = await retrieve_movies()
-    if movies:
-        return ResponseModel(movies, "Groups data retrieved successfully")
-    return ResponseModel(movies, "Empty list returned")
- """
-@router.get("/", response_description="Get movies depends parameters")
-async def get_movies_with_option(genreList: List[str] = Query(None), starList: List[str] = Query(None)):
-    movies = await retrieve_movies_with_parameters(genreList,starList)
-    if movies:
-        return ResponseModel(movies, "Groups data retrieved successfully")
-    return ResponseModel(movies, "Empty list returned")

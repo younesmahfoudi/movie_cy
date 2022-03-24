@@ -3,6 +3,27 @@
         "./movie_cy_backend/movie_cy_api"
     ],
     "workbench.colorCustomizations": {
+<<<<<<< HEAD
+        "activityBar.activeBackground": "#635147",
+        "activityBar.activeBorder": "#1b251e",
+        "activityBar.background": "#635147",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#1b251e",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "sash.hoverBorder": "#635147",
+        "statusBar.background": "#453932",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#635147",
+        "statusBarItem.remoteBackground": "#453932",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#453932",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#45393299",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#453932"
+=======
         "activityBar.activeBackground": "#65c89b",
         "activityBar.activeBorder": "#945bc4",
         "activityBar.background": "#65c89b",
@@ -22,4 +43,5 @@
         "titleBar.inactiveForeground": "#15202b99"
     },
     "peacock.color": "#42b883"
+>>>>>>> 48f7089b452fb4837045e1e0bc8605decc761db8
 }
