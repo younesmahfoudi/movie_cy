@@ -84,7 +84,7 @@ def user_helper(user) -> dict:
         "genre": user["genre"],
         "genreFlex": user["genreFlex"],
         "ddn": user["ddn"],
-        "age": user["age"],
+        "avatar": user["avatar"]
     }
 
 # Add a new user into to the database
