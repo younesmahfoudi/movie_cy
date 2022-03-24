@@ -131,7 +131,13 @@ img {
 
 @media screen and (max-width: 800px) and (min-width: 600px) {
   .movie {
-    max-width: 25em !important;
+    max-width: 20em !important;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .movie {
+    max-width: 12em !important;
   }
 }
 </style>

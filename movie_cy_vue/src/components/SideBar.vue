@@ -1,7 +1,12 @@
 <template>
   <div class="sidebar-container">
+    <el-avatar
+      id="photoGroup"
+      :style="{ backgroundColor: '#faa427' }"
+      :size="150"
+      src="./src/components/icon/utilIcon/logo.svg"
+    />
     <el-menu
-      default-active="2"
       class="el-menu-vertical-demo"
       :collapse="isCollapse"
       background-color="#5a6075"
@@ -10,17 +15,21 @@
       <div v-for="(group, index) in groups" :key="group">
         <el-sub-menu :index="index.toString()">
           <template #title>
-            <el-icon v-on:click="isCollapse = !isCollapse">
-              <el-avatar
-                id="photoGroup"
-                :style="{ backgroundColor: '#faa427' }"
-                :size="25"
-                :src="group.photo"
-              />
-            </el-icon>
+            <router-link to="groupCreation">
+              <el-icon v-on:click="isCollapse = !isCollapse">
+                <el-avatar
+                  id="photoGroup"
+                  :style="{ backgroundColor: '#faa427' }"
+                  :size="25"
+                  :src="group.photo"
+                />
+              </el-icon>
+            </router-link>
           </template>
           <el-menu-item-group>
-            <template #title><span>Membre du groupe</span></template>
+            <template #title>
+              <span>Membres du groupe</span>
+            </template>
             <el-menu-item
               v-for="(membre, membreIndex) in groups[index].membres"
               :key="membre"
@@ -33,14 +42,16 @@
       </div>
       <el-sub-menu index="120">
         <template #title>
-          <el-icon>
-            <el-avatar
-              id="photoGroup"
-              :style="{ backgroundColor: '#faa427' }"
-              :size="25"
-              src="./src/components/icon/utilIcon/plus.png"
-            />
-          </el-icon>
+          <router-link to="groupCreation">
+            <el-icon>
+              <el-avatar
+                id="photoPlus"
+                :style="{ backgroundColor: '#faa427' }"
+                :size="25"
+                src="./src/components/icon/utilIcon/plus.png"
+              />
+            </el-icon>
+          </router-link>
         </template>
       </el-sub-menu>
     </el-menu>
@@ -94,13 +105,31 @@ export default {
   min-height: 400px;
 }
 
+.el-menu {
+  width: 101%;
+}
+
 .el-icon {
-  width: 30% !important;
+  width: 100%;
+}
+
+.el-avatar {
+  --el-avatar-size: 50px !important;
 }
 
 .sidebar-container {
   height: 100%;
   position: fixed;
   background-color: $darkGray;
+}
+
+.name-groupe {
+  visibility: hidden;
+}
+
+#photoPlus {
+  height: 130%;
+  width: 100%;
+  max-width: 30px;
 }
 </style>
