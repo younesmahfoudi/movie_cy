@@ -258,8 +258,10 @@ async def retrieve_movies_with_parameters(genreList: str | None, starList: str |
     if len(request_parameters_mdb) > 1:
         final_request_mdb: dict = { "$or" : request_parameters_mdb}
     else :
-        if request_parameters_mdb != [{}] :
-            final_request_mdb: dict = { request_parameters_mdb }
+        if request_parameters_mdb != [] :
+            print(request_parameters_mdb[0])
+            final_request_mdb = request_parameters_mdb[0]
+            
         else :
             final_request_mdb: dict =  {}
 
