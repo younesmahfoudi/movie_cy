@@ -149,6 +149,7 @@
 
 <script lang="ts">
 import UsersService from "../services/UsersService.js";
+import axios from 'axios'
 
 export default {
   data() {
@@ -166,7 +167,7 @@ export default {
       console.log(this.ruleForm);
       UsersService.createUser(this.ruleForm);
     },
-  },
+  }
 };
 </script>
 
