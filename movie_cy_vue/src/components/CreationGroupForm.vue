@@ -200,8 +200,9 @@ const onSubmit = () => {
 }
 .formulaire{
   max-width: 50%;
+  margin-left: 10% !important;
 }
 #iconChoosenForChange{
-  margin: 0!important;
+  margin: 0 !important;
 }
 </style>

@@ -1,10 +1,12 @@
 <script setup>
+import SideBar from "../components/SideBar.vue";
 import ToolBar from "../components/ToolBar.vue";
 import AddGroupMembers from "../components/AddGroupMembers.vue";
 import CreationGroupForm from "../components/CreationGroupForm.vue";
 </script>
 
 <template>
+  <SideBar />
   <div class="content">
     <div class="toolbar">
       <ToolBar />
@@ -16,7 +18,7 @@ import CreationGroupForm from "../components/CreationGroupForm.vue";
   </div>
 </template>
 
-<style>
+<style scoped>
 .toolbar {
   margin-left: 10%;
   margin-right: 3%;
@@ -24,9 +26,6 @@ import CreationGroupForm from "../components/CreationGroupForm.vue";
 }
 
 .content {
-  margin-left: 10%;
-  margin-top: 3%;
-  margin-bottom: 3%;
   margin-right: 3%;
 }
 </style>
