@@ -7,10 +7,6 @@ from fastapi.encoders import jsonable_encoder
 
 from app.server.database import (
     add_movie,
-    retrieve_movies_by_genres,
-    retrieve_movies_by_imdbRating,
-    retrieve_movies_by_stars,
-    retrieve_movies_by_title,
     retrieve_movies_filtered
 )
 
@@ -50,11 +46,11 @@ def movie_helper(movie) -> dict:
 @router.get("/", response_description="Movies data retrieved")
 async def get_movies_data_filtered(
         title: str = None,
-        genreList: List[str] = Query(None),
-        imDbRating: float = None,
-        starList: List[str] = Query(None),
+        genrelist: List[str] = Query(None),
+        imdbrating: str = None,
+        starlist: List[str] = Query(None),
     ): 
-    movies = await retrieve_movies_filtered(title,genreList,starList,imDbRating)
+    movies = await retrieve_movies_filtered(title,genrelist,starlist,imdbrating)
     return ResponseModel(movies, "movies get successfully.")  
 
 @router.post("/", response_description="Movies data added into the database")
