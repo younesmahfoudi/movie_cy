@@ -137,7 +137,6 @@
               @click="createUser()"
               round
               :disabled="!isComplete"
-              
             >
               Valider
             </el-button>
@@ -170,10 +169,16 @@ export default {
     },
   },
   computed: {
-  isComplete () {
-    return this.ruleForm.prenom && this.ruleForm.nom && this.ruleForm.ddn && this.ruleForm.mdp && this.ruleForm.checkPass
-  }
-}
+    isComplete() {
+      return (
+        this.ruleForm.prenom &&
+        this.ruleForm.nom &&
+        this.ruleForm.ddn &&
+        this.ruleForm.mdp &&
+        this.ruleForm.checkPass
+      );
+    },
+  },
 };
 </script>
 
@@ -242,8 +247,12 @@ const validatePass = (rule: any, value: any, callback: any) => {
     callback(new Error("Veuillez saisir un mot de passe"));
   } else {
     if (ruleForm.mdp !== "") {
-      if (value.length < 6 || !/\d/.test(value)){
-        callback(new Error("Votre mot de passe doit être composé d'au moins 6 caractères et d'au moins un chiffre"));
+      if (value.length < 6 || !/\d/.test(value)) {
+        callback(
+          new Error(
+            "Votre mot de passe doit être composé d'au moins 6 caractères et d'au moins un chiffre"
+          )
+        );
       }
       if (!ruleFormRef.value) return;
       ruleFormRef.value.validateField("checkPass", () => null);
@@ -267,7 +276,7 @@ const ruleForm = reactive({
   email: "",
   ddn: "",
   mdp: "",
-  checkPass:"",
+  checkPass: "",
   avatar: "",
 });
 
