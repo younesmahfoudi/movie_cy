@@ -74,19 +74,4 @@ export const iconForGroup = [
         label: "Coeur",
         photo: "./src/components/icon/ThemeIcon/romance.png",
     },
-    {
-        value: "Option16",
-        label: "Socoupe",
-        photo: "./src/components/icon/ThemeIcon/scifi.png",
-    },
-    {
-        value: "Option17",
-        label: "Rugby",
-        photo: "./src/components/icon/ThemeIcon/sport.png",
-    },
-    {
-        value: "Option18",
-        label: "Crâne",
-        photo: "./src/components/icon/ThemeIcon/thriller.png",
-    },
 ]

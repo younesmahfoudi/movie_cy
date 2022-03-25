@@ -10,47 +10,72 @@
         <el-input v-model="ruleForm.nom" />
       </el-form-item>
 
-      <el-form-item prop="avatar" label="Image du groupe">
+      <el-form-item prop="photo" label="Image du groupe">
+        <el-col :span="22">
+          <el-select
+            @change="(e) => changeImg(e)"
+            v-model="ruleForm.photo"
+            class="m-2"
+            placeholder="Choisir une image de groupe"
+            size="large"
+          >
+            <div class="iconGrid">
+              <el-option
+                v-for="item in iconForGroup"
+                :key="item.value"
+                :value="item.photo"
+                :label="item.label"
+              >
+                <div class="oneGroup">
+                  <el-avatar
+                    class="iconGroup"
+                    :style="{ backgroundColor: '#faa427' }"
+                    :size="48"
+                    :src="item.photo"
+                  />
+                </div>
+              </el-option>
+            </div>
+          </el-select>
+        </el-col>
+        <el-col :span="2">
+          <el-avatar
+            v-if="imageSrc !== ''"
+            class="iconGroup"
+            id="iconChoosenForChange"
+            :style="{ backgroundColor: '#faa427' }"
+            :size="70"
+          >
+            <img :src="imageSrc" />
+          </el-avatar>
+        </el-col>
+      </el-form-item>
+
+      <el-form-item prop="membres" label="Membres du groupe">
         <el-select
-          @change="(e) => changeImg(e)"
-          v-model="ruleForm.avatar"
-          class="m-2"
-          placeholder="Choisir une image de groupe"
-          size="large"
+          v-model="value"
+          multiple
+          filterable
+          remote
+          reserve-keyword
+          placeholder="Choisir des utilisateurs"
+          :remote-method="remoteMethod"
+          :loading="loading"
         >
-          <div class="iconGrid">
-            <el-option
-              v-for="item in iconForGroup"
-              :key="item.value"
-              :value="item.photo"
-              :label="item.label"
-            >
-              <div class="oneGroup">
-                <el-avatar
-                  class="iconGroup"
-                  :style="{ backgroundColor: '#faa427' }"
-                  :size="48"
-                  :src="item.photo"
-                />
-              </div>
-            </el-option>
-          </div>
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
         </el-select>
-        <el-avatar
-          v-if="imageSrc !== ''"
-          class="iconGroup"
-          id="iconChoosenForChange"
-          :style="{ backgroundColor: '#faa427' }"
-          :size="60"
-        >
-          <img :src="imageSrc" />
-        </el-avatar>
       </el-form-item>
     </el-form>
+
     <el-button
       class="validate"
       type="warning"
-      @click="createUser()"
+      @click="createGroup()"
       round
       :disabled="!isComplete"
     >
@@ -61,6 +86,8 @@
 
 
 <script lang="ts">
+import GroupsService from "../services/GroupsService.js";
+
 export default {
   data() {
     return {
@@ -74,12 +101,12 @@ export default {
       this.imageSrc = e;
     },
     createGroup() {
-      //UsersService.createUser(this.ruleForm);
+      GroupsService.createGroup(this.ruleForm);
     },
   },
   computed: {
     isComplete() {
-      return this.ruleForm.nom && this.ruleForm.avatar;
+      return this.ruleForm.nom;
     },
   },
 };
@@ -92,7 +119,9 @@ import { iconForGroup } from "./data/iconForGroup";
 
 const ruleForm = reactive({
   nom: "",
-  avatar: "",
+  photo: "",
+  membres: ["623db4a15a5a69cbe3666ea1"], // A CHANGER AVEC ID DU MEC CONNECTE + LES AUTRES USERS
+  admin: "623db4a15a5a69cbe3666ea1", // A CHANGER AVEC ID DU MEC CONNECTE
 });
 
 const checkNom = (rule: any, value: any, callback: any) => {
@@ -101,22 +130,25 @@ const checkNom = (rule: any, value: any, callback: any) => {
   }
 };
 
-const checkAvatar = (rule: any, value: any, callback: any) => {
+const checkPhoto = (rule: any, value: any, callback: any) => {
   debugger;
   if (!value || value === "") {
-    callback(new Error("Veuillez choisir un avatar."));
+    callback(new Error("Veuillez choisir une photo."));
   }
 };
 
 const rules = reactive({
   nom: [{ validator: checkNom, trigger: "blur", required: true }],
-  avatar: [{ validator: checkAvatar, trigger: "blur", required: true }],
+  photo: [{ validator: checkPhoto, trigger: "blur", required: true }],
 });
 
 const value = ref("");
 </script>
 
 <style lang="css" scoped>
+.el-select {
+  width: 100% !important;
+}
 .iconGroup {
   margin-left: auto;
   margin-right: auto;
@@ -131,7 +163,7 @@ const value = ref("");
 
 .iconGrid {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto auto auto auto;
 }
 
 .oneGroup {
@@ -149,10 +181,4 @@ const value = ref("");
   max-width: 50%;
   margin-left: 10% !important;
 }
-<<<<<<< HEAD
-=======
-#iconChoosenForChange{
-  margin: 0 !important;
-}
->>>>>>> 4512b44e45c94279b591cf07f30bdc6e2d3f53bd
 </style>
