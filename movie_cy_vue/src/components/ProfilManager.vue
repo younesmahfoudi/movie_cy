@@ -62,7 +62,7 @@ export default {
         genre: "Comédie",
         genreFlex: "Horreur",
         ddn: "19/08/98",
-        icon: "/src/components/icon/CharacterIcon/captain-america.svg",
+        icon: "/src/components/icon/CharacterIcon/kakashi.svg",
       },
     };
   },

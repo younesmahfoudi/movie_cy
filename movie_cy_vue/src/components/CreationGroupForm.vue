@@ -1,190 +1,169 @@
 <template>
   <div class="formulaire">
-    <el-form :model="form" label-position="top" label-width="120px">
-      <el-form-item label="Nom du groupe">
-        <el-input v-model="form.name" />
+    <el-form
+      :model="ruleForm"
+      label-position="top"
+      :rules="rules"
+      label-width="120px"
+    >
+      <el-form-item prop="nom" label="Nom du groupe">
+        <el-input v-model="ruleForm.nom" />
       </el-form-item>
 
-      <el-form-item label="Image du groupe">
+      <el-form-item prop="photo" label="Image du groupe">
+        <el-col :span="22">
+          <el-select
+            @change="(e) => changeImg(e)"
+            v-model="ruleForm.photo"
+            class="m-2"
+            placeholder="Choisir une image de groupe"
+            size="large"
+          >
+            <div class="iconGrid">
+              <el-option
+                v-for="item in iconForGroup"
+                :key="item.value"
+                :value="item.photo"
+                :label="item.label"
+              >
+                <div class="oneGroup">
+                  <el-avatar
+                    class="iconGroup"
+                    :style="{ backgroundColor: '#faa427' }"
+                    :size="48"
+                    :src="item.photo"
+                  />
+                </div>
+              </el-option>
+            </div>
+          </el-select>
+        </el-col>
+        <el-col :span="2">
+          <el-avatar
+            v-if="imageSrc !== ''"
+            class="iconGroup"
+            id="iconChoosenForChange"
+            :style="{ backgroundColor: '#faa427' }"
+            :size="70"
+          >
+            <img :src="imageSrc" />
+          </el-avatar>
+        </el-col>
+      </el-form-item>
+
+      <el-form-item prop="membres" label="Membres du groupe">
         <el-select
-          @change="(e) => changeImg(e)"
           v-model="value"
-          class="m-2"
-          placeholder="Choisir une image de groupe"
-          size="large"
+          multiple
+          filterable
+          remote
+          reserve-keyword
+          placeholder="Choisir des utilisateurs"
+          :remote-method="remoteMethod"
+          :loading="loading"
         >
-          <div class="iconGrid">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :value="item.photo"
-              :label="item.label"
-            >
-              <div class="oneGroup">
-                <el-avatar
-                  class="iconGroup"
-                  :style="{ backgroundColor: '#faa427' }"
-                  :size="48"
-                  :src="item.photo"
-                />
-              </div>
-            </el-option>
-          </div>
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
         </el-select>
-        <el-avatar
-          class="iconGroup avatarHidden"
-          id="iconChoosenForChange"
-          :style="{ backgroundColor: '#faa427' }"
-          :size="48"
-        >
-          <img id="img" />
-        </el-avatar>
       </el-form-item>
     </el-form>
+
+    <el-button
+      class="validate"
+      type="warning"
+      @click="createGroup()"
+      round
+      :disabled="!isComplete"
+    >
+      Valider
+    </el-button>
   </div>
 </template>
 
 
-<script>
+<script lang="ts">
+import GroupsService from "../services/GroupsService.js";
+
 export default {
+  data() {
+    return {
+      imageSrc: "./src/components/icon/ThemeIcon/action.png",
+      defaultLabel: "Pistolet",
+      listImages: [],
+    };
+  },
   methods: {
     changeImg(e) {
-      document.getElementById("img").src = e;
-      document.getElementById("iconChoosenForChange").className +=
-        " avatarVisible";
+      this.imageSrc = e;
+    },
+    createGroup() {
+      GroupsService.createGroup(this.ruleForm);
+    },
+  },
+  computed: {
+    isComplete() {
+      return this.ruleForm.nom;
     },
   },
 };
 </script>
 
-<script setup>
+<script lang="ts" setup>
 import { reactive } from "vue";
 import { ref } from "vue";
+import { iconForGroup } from "./data/iconForGroup";
 
-const form = reactive({
-  name: "",
-  region: "",
-  date1: "",
-  date2: "",
-  delivery: false,
-  type: [],
-  resource: "",
-  desc: "",
+const ruleForm = reactive({
+  nom: "",
+  photo: "",
+  membres: ["623db4a15a5a69cbe3666ea1"], // A CHANGER AVEC ID DU MEC CONNECTE + LES AUTRES USERS
+  admin: "623db4a15a5a69cbe3666ea1", // A CHANGER AVEC ID DU MEC CONNECTE
+});
+
+const checkNom = (rule: any, value: any, callback: any) => {
+  if (!value || value === "") {
+    callback(new Error("Veuillez saisir un nom de groupe"));
+  }
+};
+
+const checkPhoto = (rule: any, value: any, callback: any) => {
+  debugger;
+  if (!value || value === "") {
+    callback(new Error("Veuillez choisir une photo."));
+  }
+};
+
+const rules = reactive({
+  nom: [{ validator: checkNom, trigger: "blur", required: true }],
+  photo: [{ validator: checkPhoto, trigger: "blur", required: true }],
 });
 
 const value = ref("");
-
-const options = [
-  {
-    value: "Option1",
-    label: "Pistolet",
-    photo: "./src/components/icon/ThemeIcon/action.png",
-  },
-  {
-    value: "Option2",
-    label: "Mickey",
-    photo: "./src/components/icon/ThemeIcon/animation.png",
-  },
-  {
-    value: "Option3",
-    label: "Boussole",
-    photo: "./src/components/icon/ThemeIcon/aventures.png",
-  },
-  {
-    value: "Option4",
-    label: "Comédie",
-    photo: "./src/components/icon/ThemeIcon/comedie.png",
-  },
-  {
-    value: "Option5",
-    label: "Loupe",
-    photo: "./src/components/icon/ThemeIcon/detective.png",
-  },
-  {
-    value: "Option6",
-    label: "Caméra",
-    photo: "./src/components/icon/ThemeIcon/docu.png",
-  },
-  {
-    value: "Option7",
-    label: "Drame",
-    photo: "./src/components/icon/ThemeIcon/drame.png",
-  },
-  {
-    value: "Option8",
-    label: "Espion",
-    photo: "./src/components/icon/ThemeIcon/espion.png",
-  },
-  {
-    value: "Option9",
-    label: "Baguette magique",
-    photo: "./src/components/icon/ThemeIcon/fantaisie.png",
-  },
-  {
-    value: "Option10",
-    label: "Chapeau",
-    photo: "./src/components/icon/ThemeIcon/filmNoir.png",
-  },
-  {
-    value: "Option11",
-    label: "Sablier",
-    photo: "./src/components/icon/ThemeIcon/histoire.png",
-  },
-  {
-    value: "Option12",
-    label: "Couteau",
-    photo: "./src/components/icon/ThemeIcon/horreur.png",
-  },
-  {
-    value: "Option13",
-    label: "Musique",
-    photo: "./src/components/icon/ThemeIcon/musical.png",
-  },
-  {
-    value: "Option14",
-    label: "Cactus",
-    photo: "./src/components/icon/ThemeIcon/occidental.png",
-  },
-  {
-    value: "Option15",
-    label: "Coeur",
-    photo: "./src/components/icon/ThemeIcon/romance.png",
-  },
-  {
-    value: "Option16",
-    label: "Socoupe",
-    photo: "./src/components/icon/ThemeIcon/scifi.png",
-  },
-  {
-    value: "Option17",
-    label: "Rugby",
-    photo: "./src/components/icon/ThemeIcon/sport.png",
-  },
-  {
-    value: "Option18",
-    label: "Crâne",
-    photo: "./src/components/icon/ThemeIcon/thriller.png",
-  },
-];
-
-const onSubmit = () => {
-};
 </script>
 
 <style lang="css" scoped>
+.el-select {
+  width: 100% !important;
+}
 .iconGroup {
   margin-left: auto;
   margin-right: auto;
   display: block;
 }
-
+.el-avatar {
+  margin-left: 5%;
+}
 .el-select-dropdown__item {
   height: 55px !important;
 }
 
 .iconGrid {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto auto auto auto auto;
 }
 
 .oneGroup {
@@ -198,11 +177,8 @@ const onSubmit = () => {
 .avatarVisible {
   visibility: visible;
 }
-.formulaire{
+.formulaire {
   max-width: 50%;
   margin-left: 10% !important;
-}
-#iconChoosenForChange{
-  margin: 0 !important;
 }
 </style>
