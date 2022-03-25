@@ -20,6 +20,7 @@ from app.server.models.movie import (
 from app.server.imdb import (
     advancedSearch
 )
+from app.server.models.user import UserSchema
 
 router = APIRouter()
 
@@ -49,30 +50,35 @@ async def get_movies_data_filtered(
         genrelist: List[str] = Query(None),
         imdbrating: str = None,
         starlist: List[str] = Query(None),
+        movielist: List[str] = Query(None)
     ): 
     movies = await retrieve_movies_filtered(title,genrelist,starlist,imdbrating)
-    return ResponseModel(movies, "movies get successfully.")  
+    moviesFiltered = filter(lambda x: x["id"] not in movielist, movies)
+    res = list(moviesFiltered)
+    if res:
+        return ResponseModel(res, "movies get successfully.")  
+    return await add_movie_data(title=title, genres=genrelist, userRating=imdbrating)
 
-@router.post("/", response_description="Movies data added into the database")
 async def add_movie_data(
         title: str = None, 
-        types: List[str] = Query(None), 
+        types: List[str] = ["feature","tv_movie","tv_special","short"], 
         releaseDate: date = None, 
         userRating: float = None,
         votesNumber: int = None,
-        genres: List[str] =  Query(None),
-        groups: List[str] = Query(None),
-        companies: List[str] = Query(None),
-        colorInfos: List[str] = Query(None),
-        countries: List[str] = Query(None),
+        genres: List[str] =  None,
+        groups: List[str] = None,
+        companies: List[str] = None,
+        colorInfos: List[str] = None,
+        countries: List[str] = None,
         keyword: str = None,
-        languages: List[str] = Query(None),
+        languages: List[str] = None,
         filmingLocation: str = None,
         popularity: int = None,
-        count: int = None,
+        count: int = 250,
         sort: str = None
     ): 
-    movies : List[MovieSchema] = advancedSearch(
+    movies: List[MovieSchema] = []
+    movies = advancedSearch(
         title, 
         types, 
         releaseDate, 
@@ -94,7 +100,9 @@ async def add_movie_data(
     for movie in movies:
         movie = jsonable_encoder(movie)
         new_movies.append(await add_movie(movie))
-    return ResponseModel(new_movies, "movies added successfully.")  
+    if new_movies:
+        return ResponseModel(new_movies, "movies added successfully.")  
+    return ErrorResponseModel("An error occurred", 404, "check the parameters or the imdb token")
 
 def ResponseModel(data, message):
     return {

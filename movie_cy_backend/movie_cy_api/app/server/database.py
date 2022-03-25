@@ -224,7 +224,7 @@ def build_genres_request(genreList: List[str]) -> dict:
 def build_stars_request(starIDList: List[str]) -> dict:
     requestParameters : List[dict] = []
     for starID in starIDList:
-        requestParameters.append({ "id" : starID })
+        requestParameters.append({ "name" : {"$regex":starID} })
     request: dict = { 
         "starList": 
             { 
