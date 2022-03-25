@@ -1,5 +1,5 @@
 <template>
-  <div class="donnees">
+  <div class="content">
     <el-row :gutter="10">
       <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="24">
         <div class="username">
@@ -18,15 +18,9 @@
       <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
         <div class="username">
           <el-descriptions title="Vos informations">
-            <el-descriptions-item label="Prénom :"
-              >Maxime</el-descriptions-item
-            >
-            <el-descriptions-item label="Nom :"
-              >Adda</el-descriptions-item
-            >
-            <el-descriptions-item label="Âge"
-              >23</el-descriptions-item
-            >
+            <el-descriptions-item label="Prénom :">Maxime</el-descriptions-item>
+            <el-descriptions-item label="Nom :">Adda</el-descriptions-item>
+            <el-descriptions-item label="Âge">23</el-descriptions-item>
             <el-descriptions-item label="Adresse email">
               maxime.adda@hotmail.fr
             </el-descriptions-item>
@@ -42,12 +36,16 @@
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../assets/constant.scss";
 
+.content {
+  margin-left: 10%;
+}
 .el-descriptions__cell {
   width: 100%;
 }
+
 tr {
   display: flex;
   flex-wrap: wrap;
@@ -55,7 +53,7 @@ tr {
 
 .username {
   font-size: 60px;
-  display : flex
+  display: flex;
 }
 
 .btnValider {
@@ -68,21 +66,14 @@ tr {
   font-size: 20px;
 }
 
-
-
-.donnees {
-  margin: 5%;
+.el-avatar {
+  margin-left: 10%;
 }
 
-.el-avatar{
-    margin-left: 10%;
-}
 .el-descriptions__cell {
-    font-size: 20px!important;
+  font-size: 20px !important;
 }
-</style>
 
-<style scoped lang="scss">
 .el-descriptions__cell {
   width: 100%;
 }
@@ -90,6 +81,4 @@ tr {
 td {
   width: 100%;
 }
-
-
 </style>

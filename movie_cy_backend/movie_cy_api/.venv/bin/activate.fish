@@ -30,7 +30,11 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
+<<<<<<< HEAD
 set -gx VIRTUAL_ENV "/home/eisti/Projet/movie_cy/movie_cy_backend/movie_cy_api/.venv"
+=======
+set -gx VIRTUAL_ENV "/home/eisti/movie_cy/movie_cy_backend/movie_cy_api/.venv"
+>>>>>>> 35a86e68cfd5dad78432600bc64f5d1e1b6507d7
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
