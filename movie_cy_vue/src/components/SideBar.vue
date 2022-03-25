@@ -15,7 +15,7 @@
       <div v-for="(group, index) in groups" :key="group">
         <el-sub-menu :index="index.toString()">
           <template #title>
-            <router-link to="groupCreation">
+            <router-link to="movieGroupList">
               <el-icon v-on:click="isCollapse = !isCollapse">
                 <el-avatar
                   id="photoGroup"
@@ -40,20 +40,19 @@
           </el-menu-item-group>
         </el-sub-menu>
       </div>
-      <el-sub-menu index="120">
-        <template #title>
-          <router-link to="groupCreation">
-            <el-icon>
-              <el-avatar
-                id="photoPlus"
-                :style="{ backgroundColor: '#faa427' }"
-                :size="25"
-                src="./src/components/icon/utilIcon/plus.png"
-              />
-            </el-icon>
-          </router-link>
-        </template>
-      </el-sub-menu>
+      <el-menu-item index="1245">
+        <router-link to="groupCreation">
+          <el-icon>
+            <el-avatar
+              id="photoPlus"
+              :style="{ backgroundColor: '#faa427' }"
+              :size="25"
+              src="./src/components/icon/utilIcon/plus.png"
+            />
+          </el-icon>
+        </router-link>
+        <template #title>Créer un groupe</template>
+      </el-menu-item>
     </el-menu>
     <router-view />
   </div>

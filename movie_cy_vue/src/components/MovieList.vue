@@ -123,13 +123,13 @@ img {
   background-color: $yellow;
 }
 
-@media screen and (max-width: 1050px) and (min-width: 800px) {
+@media screen and (max-width: 1050px) and (min-width: 850px) {
   .movie {
     max-width: 14em !important;
   }
 }
 
-@media screen and (max-width: 800px) and (min-width: 600px) {
+@media screen and (max-width: 850px) and (min-width: 600px) {
   .movie {
     max-width: 20em !important;
   }

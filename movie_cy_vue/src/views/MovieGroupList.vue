@@ -6,7 +6,7 @@ import SideBar from "../components/SideBar.vue";
 
 <template>
   <SideBar />
-  <div class="content">
+  <div class="content-movieGroupList">
     <div class="toolbar">
       <ToolBar />
     </div>
@@ -22,18 +22,18 @@ import SideBar from "../components/SideBar.vue";
   height: 50px;
 }
 
-.content {
-  margin-left: 10%;
-}
-
-@media screen and (max-width: 1050px) and (min-width: 800px) {
-  .content {
-    margin-left: 15% !important;
-  }
+.content-movieGroupList {
+  margin-left: 5%;
 }
 
 @media screen and (max-width: 800px) and (min-width: 600px) {
-  .content {
+  .content-movieGroupList {
+    margin-left: 10% !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .content-movieGroupList {
     margin-left: 20% !important;
   }
 }
