@@ -11,16 +11,15 @@ class UserSchema(BaseModel):
     prenom: str = Field(...)
     email: EmailStr = Field(...)
     mdp: str = Field(...)
-    films: List[str] = Field(...)
-    groupes: List[str] = Field(...)
-    mood: str = Field(...)
-    acteur: str = Field(...)
-    realisateur: str = Field(...)
-    genre: str = Field(...)
-    genreFlex: str = Field(...)
-    ddn: date = Field(...)
-    age: int = Field(...)
-    avatar: str =  Field(...)
+    films: Optional[List[str]]
+    groupes: List[str] = []
+    mood: Optional[str]
+    acteur: Optional[str]
+    realisateur: Optional[str]
+    genre: Optional[str]
+    genreFlex: Optional[str]
+    ddn: str = Field()
+    avatar: str = Field()
 
     class Config:
         schema_extra = {
@@ -37,8 +36,7 @@ class UserSchema(BaseModel):
                 "genre": "comedie",
                 "genreFlex": "comedie",
                 "ddn": date.today(),
-                "age": 20,
-                "avatar" : "avatar"
+                "avatar": "img"
             }
         }
         arbitrary_types_allowed = True
@@ -57,7 +55,6 @@ class UpdateUserModel(BaseModel):
     genre: Optional[str] 
     genreFlex: Optional[str] 
     ddn: Optional[date] 
-    age: Optional[int] 
     avatar: Optional[str]
 
     class Config:
@@ -75,8 +72,8 @@ class UpdateUserModel(BaseModel):
                 "genre": "comedie",
                 "genreFlex": "comedie",
                 "ddn": date.today(),
-                "age": 20,
-                "avatar" : "avatar",
+                "avatar": "image"
+
             }
         }
         arbitrary_types_allowed = True
