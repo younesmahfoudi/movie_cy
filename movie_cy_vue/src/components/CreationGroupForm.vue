@@ -79,10 +79,7 @@ export default {
   },
   computed: {
     isComplete() {
-      return (
-        this.ruleForm.nom &&
-        this.ruleForm.avatar
-      );
+      return this.ruleForm.nom && this.ruleForm.avatar;
     },
   },
 };
@@ -150,5 +147,12 @@ const value = ref("");
 }
 .formulaire {
   max-width: 50%;
+  margin-left: 10% !important;
 }
+<<<<<<< HEAD
+=======
+#iconChoosenForChange{
+  margin: 0 !important;
+}
+>>>>>>> 4512b44e45c94279b591cf07f30bdc6e2d3f53bd
 </style>
