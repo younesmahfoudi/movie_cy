@@ -81,14 +81,14 @@ export default {
           nom: "Groupe 2",
           membres: ["Jean", "Bernard", "Louis"],
           admin: "Bernard",
-          photo: "./src/components/icon/ThemeIcon/horreur.png",
+          photo: "./src/components/icon/ThemeIcon/horror.png",
         },
         {
           id: 3,
           nom: "Groupe 3",
           membres: ["Jean", "Bernard", "Louis"],
           admin: "Louis",
-          photo: "./src/components/icon/ThemeIcon/drame.png",
+          photo: "./src/components/icon/ThemeIcon/drama.png",
         },
       ],
     };

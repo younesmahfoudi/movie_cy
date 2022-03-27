@@ -11,8 +11,25 @@ import axios from "axios";
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
-              <span>Yummy hamburger</span>
+              <span>{{ movie.title }}</span>
               <div class="bottom">
+                <div class="info">
+                  <div class="iconGenre">
+                    <div
+                      class="iconSpace"
+                      v-for="genre in movie.genreList"
+                      :key="genre"
+                    >
+                      <el-avatar
+                        id="photoGroup"
+                        :style="{ backgroundColor: '#faa427' }"
+                        :size="25"
+                        :src="genre.value"
+                      />
+                    </div>
+                  </div>
+                  {{ movie.imDbRating }}
+                </div>
                 <div class="icon">
                   <el-button type="primary" size="large" :icon="Star" circle />
                   <el-button type="success" size="large" :icon="Check" circle />
@@ -28,8 +45,25 @@ import axios from "axios";
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
-              <span>Yummy hamburger</span>
+              <span>{{ movie.title }}</span>
               <div class="bottom">
+                <div class="info">
+                  <div class="iconGenre">
+                    <div
+                      class="iconSpace"
+                      v-for="genre in movie.genreList"
+                      :key="genre"
+                    >
+                      <el-avatar
+                        id="photoGroup"
+                        :style="{ backgroundColor: '#faa427' }"
+                        :size="25"
+                        :src="genre.value"
+                      />
+                    </div>
+                  </div>
+                  {{ movie.imDbRating }}
+                </div>
                 <div class="icon">
                   <el-button type="primary" size="large" :icon="Star" circle />
                   <el-button type="success" size="large" :icon="Check" circle />
@@ -48,13 +82,19 @@ import axios from "axios";
 export default {
   data() {
     return {
-      movies: null,
+      movies: [],
     };
   },
   mounted() {
-    axios
-      .get("http://localhost:8000/movies/")
-      .then((response) => (this.movies = response.data.data[0]));
+    axios.get("http://localhost:8000/movies/").then((response) => {
+      response.data.data[0].forEach((e) => {
+        e.genreList.forEach((element) => {
+          element.value = `./src/components/icon/ThemeIcon/${element.value.toLowerCase()}.png`;
+        });
+      });
+      console.log(response.data.data[0]);
+      this.movies = response.data.data[0];
+    });
   },
 };
 </script>
@@ -70,8 +110,15 @@ img {
   width: 100%;
 }
 
+.row {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
 .movieList {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-evenly;
   width: 100%;
@@ -89,6 +136,21 @@ img {
 
 #photoMovie {
   background-color: $yellow;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.iconGenre {
+  display: flex;
+  flex-direction: row;
+}
+
+.iconSpace {
+  margin: 1px;
 }
 
 @media screen and (max-width: 1050px) and (min-width: 850px) {
