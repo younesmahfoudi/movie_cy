@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+from app.auth.auth_handler import signJWT
 
 from app.server.database import (
     add_user, retrieve_user, retrieve_users,update_user,delete_user
@@ -9,21 +10,38 @@ from app.server.models.user import (
     ResponseModel,
     UserSchema,
     UpdateUserModel,
+    UserLoginSchema
 )
 
 router = APIRouter()
 
-@router.post("/", response_description="User data added into the database")
+async def check_user(data: UserLoginSchema):
+    for user in await get_users():
+        if user["email"] == data.email and user["mdp"] == data.mdp:
+            return True
+    return False
+
+
+@router.post("/signup", response_description="User data added into the database")
 async def add_user_data(user: UserSchema = Body(...)):
     user = jsonable_encoder(user)
     new_user = await add_user(user)
-    return ResponseModel(new_user, "user added successfully.")
+    return signJWT(new_user["email"])
+
+
+@router.post("/login", tags=["user"])
+async def user_login(user: UserLoginSchema = Body(...)):
+    if await    check_user(user):
+        return signJWT(user.email)
+    return {
+        "error": "Wrong login details!"
+    }
 
 @router.get("/", response_description="Users retrieved")
 async def get_users():
     users = await retrieve_users()
     if users:
-        return ResponseModel(users, "Users data retrieved successfully")
+        return users
     return ResponseModel(users, "Empty list returned")
 
 
@@ -33,6 +51,7 @@ async def get_user_data(id):
     if user:
         return ResponseModel(user, "User data retrieved successfully")
     return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")
+
 
 @router.put("/{id}")
 async def update_user_data(id: str, req: UpdateUserModel = Body(...)):
@@ -48,6 +67,7 @@ async def update_user_data(id: str, req: UpdateUserModel = Body(...)):
         404,
         "There was an error updating the user data.",
     )
+
 
 @router.delete("/{id}", response_description="User data deleted from the database")
 async def delete_user_data(id: str):

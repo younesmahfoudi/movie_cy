@@ -5,3 +5,5 @@ python-decouple==3.6
 uvicorn==0.17.4
 requests
 fastapi-pagination
+python-decouple==3.3
+PyJWT==1.7.1
