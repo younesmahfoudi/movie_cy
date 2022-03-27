@@ -15,7 +15,7 @@ Install fastapi with lite server in a docker (Python 3.10 requiered!!)
 
   docker build -t moviecyapi .
 
-  docker run -d --name apicontainer -p 81:81 moviecyapi
+  docker run -d --name apicontainer -p 8000:8000 moviecyapi
 ```
 
 Install in dev
@@ -36,7 +36,7 @@ Install in dev
 
 BDD (admin:admin123) : http://localhost:8081/ 
 
-swagger Docker : http://127.0.0.1:81/docs
+swagger Docker : http://127.0.0.1:8000/docs
 
 swagger dev : http://localhost:8000/docs
 

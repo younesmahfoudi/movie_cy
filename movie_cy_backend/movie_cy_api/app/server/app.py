@@ -21,9 +21,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
-
 app.include_router(GroupRouter, tags=["groups"], prefix="/groups")
 app.include_router(UserRouter, tags=["users"], prefix="/users")
 app.include_router(MovieRouteur, tags=["movies"], prefix="/movies")

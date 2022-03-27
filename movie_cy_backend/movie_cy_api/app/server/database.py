@@ -12,7 +12,7 @@ from app.server.models.group import (
 
 
 ##MONGO_DETAILS = "mongodb://localhost:27017"
-MONGO_DETAILS = "mongodb://root:pass12345@localhost:27017"
+MONGO_DETAILS = "mongodb://root:pass12345@mongodb:27017"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
