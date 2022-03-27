@@ -66,7 +66,7 @@
             />
           </el-form-item>
 
-          <el-form-item prop="pass" label="Mot de passe">
+          <el-form-item prop="mdp" label="Mot de passe">
             <el-input
               v-model="ruleForm.mdp"
               input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
@@ -136,6 +136,7 @@
               type="warning"
               @click="createUser()"
               round
+              :disabled="!isComplete"
             >
               Valider
             </el-button>
@@ -167,6 +168,17 @@ export default {
       UsersService.createUser(this.ruleForm);
     },
   },
+  computed: {
+    isComplete() {
+      return (
+        this.ruleForm.prenom &&
+        this.ruleForm.nom &&
+        this.ruleForm.ddn &&
+        this.ruleForm.mdp &&
+        this.ruleForm.checkPass
+      );
+    },
+  },
 };
 </script>
 
@@ -180,18 +192,6 @@ const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");
 const ruleFormRef = ref<FormInstance>();
-
-const submitForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.validate((valid) => {
-    if (valid) {
-      //createUser(formEl);
-    } else {
-      console.log("error submit!");
-      return false;
-    }
-  });
-};
 
 const calculateAgeFromDate = (birthday: any) => {
   // birthday is a date
@@ -244,9 +244,16 @@ const checkAvatar = (rule: any, value: any, callback: any) => {
 
 const validatePass = (rule: any, value: any, callback: any) => {
   if (value === "") {
-    callback(new Error("Saisissez votre mot de passe"));
+    callback(new Error("Veuillez saisir un mot de passe"));
   } else {
     if (ruleForm.mdp !== "") {
+      if (value.length < 6 || !/\d/.test(value)) {
+        callback(
+          new Error(
+            "Votre mot de passe doit être composé d'au moins 6 caractères et d'au moins un chiffre"
+          )
+        );
+      }
       if (!ruleFormRef.value) return;
       ruleFormRef.value.validateField("checkPass", () => null);
     }
@@ -269,6 +276,7 @@ const ruleForm = reactive({
   email: "",
   ddn: "",
   mdp: "",
+  checkPass: "",
   avatar: "",
 });
 
@@ -288,7 +296,7 @@ const rules = reactive({
     },
   ],
   ddn: [{ validator: checkAge, trigger: "blur", required: true }],
-  pass: [{ validator: validatePass, trigger: "blur", required: true }],
+  mdp: [{ validator: validatePass, trigger: "blur", required: true }],
   checkPass: [{ validator: validatePass2, trigger: "blur", required: true }],
   avatar: [{ validator: checkAvatar, trigger: "blur", required: true }],
 });
