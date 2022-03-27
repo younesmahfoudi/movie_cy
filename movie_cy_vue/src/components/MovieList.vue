@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { Check, Star, Delete } from "@element-plus/icons-vue";
+import axios from "axios";
 </script>
 
 <template>
@@ -8,22 +9,36 @@ import { Check, Star, Delete } from "@element-plus/icons-vue";
     <div class="movieList">
       <div class="row">
         <div class="movie" v-for="movie in movies.slice(0, 3)" :key="movie">
-          <img src="/src/components/icon/exempleAffiche.jpg" />
-          <div class="icon">
-            <el-button type="primary" size="large" :icon="Star" circle />
-            <el-button type="success" size="large" :icon="Check" circle />
-            <el-button type="danger" size="large" :icon="Delete" circle />
-          </div>
+          <el-card :body-style="{ padding: '0px' }">
+            <img :src="movie.image" class="image" />
+            <div style="padding: 14px">
+              <span>Yummy hamburger</span>
+              <div class="bottom">
+                <div class="icon">
+                  <el-button type="primary" size="large" :icon="Star" circle />
+                  <el-button type="success" size="large" :icon="Check" circle />
+                  <el-button type="danger" size="large" :icon="Delete" circle />
+                </div>
+              </div>
+            </div>
+          </el-card>
         </div>
       </div>
       <div class="row">
         <div class="movie" v-for="movie in movies.slice(3, 6)" :key="movie">
-          <img src="/src/components/icon/exempleAffiche.jpg" />
-          <div class="icon">
-            <el-button type="primary" size="large" :icon="Star" circle />
-            <el-button type="success" size="large" :icon="Check" circle />
-            <el-button type="danger" size="large" :icon="Delete" circle />
-          </div>
+          <el-card :body-style="{ padding: '0px' }">
+            <img :src="movie.image" class="image" />
+            <div style="padding: 14px">
+              <span>Yummy hamburger</span>
+              <div class="bottom">
+                <div class="icon">
+                  <el-button type="primary" size="large" :icon="Star" circle />
+                  <el-button type="success" size="large" :icon="Check" circle />
+                  <el-button type="danger" size="large" :icon="Delete" circle />
+                </div>
+              </div>
+            </div>
+          </el-card>
         </div>
       </div>
     </div>
@@ -34,51 +49,13 @@ import { Check, Star, Delete } from "@element-plus/icons-vue";
 export default {
   data() {
     return {
-      movies: [
-        {
-          id: 1,
-          nom: "film 1",
-          genre: "horreur",
-          date: "10/12/21",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 2,
-          nom: "film 2",
-          genre: "fantaisie",
-          date: "10/08/21",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 3,
-          nom: "film 3",
-          genre: "policier",
-          date: "01/01/97",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 4,
-          nom: "film 4",
-          genre: "horreur",
-          date: "10/12/21",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 5,
-          nom: "film 5",
-          genre: "fantaisie",
-          date: "10/08/21",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 6,
-          nom: "film 6",
-          genre: "policier",
-          date: "01/01/97",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-      ],
+      movies: null,
     };
+  },
+  beforeMount() {
+    axios
+      .get("http://localhost:8000/movies/")
+      .then((response) => (this.movies = response.data.data[0]));
   },
 };
 </script>
