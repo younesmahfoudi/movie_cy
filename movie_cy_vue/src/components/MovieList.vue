@@ -5,7 +5,6 @@ import axios from "axios";
 
 <template>
   <div class="movieContent">
-    <h1>TIER LIST</h1>
     <div class="movieList">
       <div class="row">
         <div class="movie" v-for="movie in movies.slice(0, 3)" :key="movie">
@@ -52,7 +51,7 @@ export default {
       movies: null,
     };
   },
-  beforeMount() {
+  mounted() {
     axios
       .get("http://localhost:8000/movies/")
       .then((response) => (this.movies = response.data.data[0]));
@@ -75,20 +74,12 @@ img {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  flex-direction: column;
   width: 100%;
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
 }
 
 .movie {
   margin-bottom: 20px;
-  max-width: 19em;
+  max-width: 15em;
 }
 
 .icon {

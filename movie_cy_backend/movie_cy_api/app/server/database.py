@@ -26,7 +26,7 @@ def group_helper(group) -> dict:
         "nom": group["nom"],
         "membres": group["membres"],
         "admin": group["admin"],
-        "photo": group["photo"],
+        "avatar": group["avatar"],
     }
 
 # Retrieve a group with a matching ID
@@ -240,8 +240,6 @@ async def retrieve_movies() -> dict:
     movies = []
     async for movie in movie_collection.find():
         print(movie)
-
-
 
 
 

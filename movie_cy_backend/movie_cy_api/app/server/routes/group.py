@@ -23,7 +23,6 @@ router = APIRouter()
 async def add_group_data(group: GroupSchema = Body(...)):
     group = jsonable_encoder(group)
     new_group = await add_group(group)
-    print(new_group)
     if 'nom' in new_group.keys():
         return ResponseModel(new_group, "group added successfully.")     
     else :
