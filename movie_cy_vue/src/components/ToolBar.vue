@@ -19,7 +19,6 @@
 }
 
 .darkGray {
-  color: $darkGray;
   margin: 10px;
 }
 </style>

@@ -1,10 +1,32 @@
 <script setup>
 import ProfilManager from "../components/ProfilManager.vue";
+import SideBar from "../components/SideBar.vue";
+import ToolBar from "../components/ToolBar.vue";
 </script>
 
 <template>
-  <ProfilManager />
-  <router-view></router-view>
+  <SideBar />
+  <div class="content-profil">
+    <div class="toolbar-profil">
+      <ToolBar />
+    </div>
+    <div class="form-profil">
+      <ProfilManager />
+    </div>
+  </div>
 </template>
 
-<style></style>
+<style>
+.toolbar-profil {
+  margin-right: 3%;
+  height: 50px;
+}
+
+.content-profil {
+  margin-left: 56px;
+}
+
+.form-profil {
+  margin-top: 3%;
+}
+</style>

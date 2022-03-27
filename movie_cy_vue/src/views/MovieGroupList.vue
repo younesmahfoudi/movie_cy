@@ -1,10 +1,12 @@
 <script setup>
 import ToolBar from "../components/ToolBar.vue";
 import MovieList from "../components/MovieList.vue";
+import SideBar from "../components/SideBar.vue";
 </script>
 
 <template>
-  <div class="content">
+  <SideBar />
+  <div class="content-movieGroupList">
     <div class="toolbar">
       <ToolBar />
     </div>
@@ -20,10 +22,8 @@ import MovieList from "../components/MovieList.vue";
   height: 50px;
 }
 
-.content {
-  margin-left: 10%;
-  margin-top: 3%;
-  margin-bottom: 3%;
-  margin-right: 3%;
+.content-movieGroupList {
+  margin-left: 56px;
 }
+
 </style>

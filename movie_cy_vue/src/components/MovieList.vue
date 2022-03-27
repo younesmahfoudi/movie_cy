@@ -1,17 +1,77 @@
 <script lang="ts" setup>
 import { Check, Star, Delete } from "@element-plus/icons-vue";
+import axios from "axios";
 </script>
 
 <template>
   <div class="movieContent">
-    <h1>TIER LIST</h1>
     <div class="movieList">
-      <div class="movie" v-for="movie in movies" :key="movie">
-        <img src="/src/components/icon/exempleAffiche.jpg" />
-        <div class="icon">
-          <el-button type="warning" size="large" :icon="Star" circle />
-          <el-button type="success" size="large" :icon="Check" circle />
-          <el-button type="danger" size="large" :icon="Delete" circle />
+      <div class="row">
+        <div class="movie" v-for="movie in movies.slice(0, 3)" :key="movie">
+          <el-card :body-style="{ padding: '0px' }">
+            <img :src="movie.image" class="image" />
+            <div style="padding: 14px">
+              <span>{{ movie.title }}</span>
+              <div class="bottom">
+                <div class="info">
+                  <div class="iconGenre">
+                    <div
+                      class="iconSpace"
+                      v-for="genre in movie.genreList"
+                      :key="genre"
+                    >
+                      <el-avatar
+                        id="photoGroup"
+                        :style="{ backgroundColor: '#faa427' }"
+                        :size="25"
+                        :src="genre.value"
+                      />
+                    </div>
+                  </div>
+                  {{ movie.imDbRating }}
+                </div>
+                <div class="icon">
+                  <el-button type="primary" size="large" :icon="Star" circle />
+                  <el-button type="success" size="large" :icon="Check" circle />
+                  <el-button type="danger" size="large" :icon="Delete" circle />
+                </div>
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </div>
+      <div class="row">
+        <div class="movie" v-for="movie in movies.slice(3, 6)" :key="movie">
+          <el-card :body-style="{ padding: '0px' }">
+            <img :src="movie.image" class="image" />
+            <div style="padding: 14px">
+              <span>{{ movie.title }}</span>
+              <div class="bottom">
+                <div class="info">
+                  <div class="iconGenre">
+                    <div
+                      class="iconSpace"
+                      v-for="genre in movie.genreList"
+                      :key="genre"
+                    >
+                      <el-avatar
+                        id="photoGroup"
+                        :style="{ backgroundColor: '#faa427' }"
+                        :size="25"
+                        :src="genre.value"
+                      />
+                    </div>
+                  </div>
+                  {{ movie.imDbRating }}
+                </div>
+                <div class="icon">
+                  <el-button type="primary" size="large" :icon="Star" circle />
+                  <el-button type="success" size="large" :icon="Check" circle />
+                  <el-button type="danger" size="large" :icon="Delete" circle />
+                </div>
+              </div>
+            </div>
+          </el-card>
         </div>
       </div>
     </div>
@@ -22,51 +82,19 @@ import { Check, Star, Delete } from "@element-plus/icons-vue";
 export default {
   data() {
     return {
-      movies: [
-        {
-          id: 1,
-          nom: "film 1",
-          genre: "horreur",
-          date: "10/12/21",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 2,
-          nom: "film 2",
-          genre: "fantaisie",
-          date: "10/08/21",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 3,
-          nom: "film 3",
-          genre: "policier",
-          date: "01/01/97",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 4,
-          nom: "film 4",
-          genre: "horreur",
-          date: "10/12/21",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 5,
-          nom: "film 5",
-          genre: "fantaisie",
-          date: "10/08/21",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-        {
-          id: 6,
-          nom: "film 6",
-          genre: "policier",
-          date: "01/01/97",
-          affiche: "./src/assets/exempleAffiche.jpg",
-        },
-      ],
+      movies: [],
     };
+  },
+  mounted() {
+    axios.get("http://localhost:8000/movies/").then((response) => {
+      response.data.data[0].forEach((e) => {
+        e.genreList.forEach((element) => {
+          element.value = `./src/components/icon/ThemeIcon/${element.value.toLowerCase()}.png`;
+        });
+      });
+      console.log(response.data.data[0]);
+      this.movies = response.data.data[0];
+    });
   },
 };
 </script>
@@ -82,8 +110,15 @@ img {
   width: 100%;
 }
 
+.row {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
 .movieList {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-evenly;
   width: 100%;
@@ -101,5 +136,38 @@ img {
 
 #photoMovie {
   background-color: $yellow;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.iconGenre {
+  display: flex;
+  flex-direction: row;
+}
+
+.iconSpace {
+  margin: 1px;
+}
+
+@media screen and (max-width: 1050px) and (min-width: 850px) {
+  .movie {
+    max-width: 14em !important;
+  }
+}
+
+@media screen and (max-width: 850px) and (min-width: 600px) {
+  .movie {
+    max-width: 20em !important;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .movie {
+    max-width: 12em !important;
+  }
 }
 </style>
