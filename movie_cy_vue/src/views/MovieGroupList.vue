@@ -23,18 +23,7 @@ import SideBar from "../components/SideBar.vue";
 }
 
 .content-movieGroupList {
-  margin-left: 5%;
+  margin-left: 56px;
 }
 
-@media screen and (max-width: 800px) and (min-width: 600px) {
-  .content-movieGroupList {
-    margin-left: 10% !important;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .content-movieGroupList {
-    margin-left: 20% !important;
-  }
-}
 </style>

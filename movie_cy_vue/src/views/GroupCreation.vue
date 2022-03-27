@@ -7,7 +7,7 @@ import CreationGroupForm from "../components/CreationGroupForm.vue";
 
 <template>
   <SideBar />
-  <div class="content">
+  <div class="content-group">
     <div class="toolbar">
       <ToolBar />
     </div>
@@ -25,7 +25,7 @@ import CreationGroupForm from "../components/CreationGroupForm.vue";
   height: 50px;
 }
 
-.content {
-  margin-right: 3%;
+.content-group {
+  margin-right: 56px;
 }
 </style>
