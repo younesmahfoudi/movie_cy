@@ -57,7 +57,7 @@ async def get_movies_data_filtered(
     moviesFiltered = list(filter(lambda x: x["id"] not in movielist, movies))
     if moviesFiltered:
         return paginate(moviesFiltered, params)
-    return await add_movie_data(title=title, genres=genrelist, userRating=imdbrating)
+    return paginate(await add_movie_data(title=title, genres=genrelist, userRating=imdbrating), params)
 
 async def add_movie_data(
         title: str = None, 
@@ -100,9 +100,7 @@ async def add_movie_data(
     for movie in movies:
         movie = jsonable_encoder(movie)
         new_movies.append(await add_movie(movie))
-    if new_movies:
-        return ResponseModel(new_movies, "movies added successfully.")  
-    return ErrorResponseModel("An error occurred", 404, "check the parameters or the imdb token")
+    return new_movies
 
 def ResponseModel(data, message):
     return {
