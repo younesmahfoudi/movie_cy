@@ -1,61 +1,134 @@
 <template>
-  <el-row class="tac">
-    <el-col :span="12">
-      <h5 class="mb-2">Custom colors</h5>
-      <el-menu
-        active-text-color="#ffd04b"
-        background-color="#545c64"
-        class="el-menu-vertical-demo"
-        default-active="2"
-        text-color="#fff"
-        @open="handleOpen"
-        @close="handleClose"
-      >
-        <el-sub-menu index="1">
+  <div class="sidebar-container">
+    <el-avatar
+      id="photoGroup"
+      :style="{ backgroundColor: '#faa427' }"
+      :size="150"
+      src="./src/components/icon/utilIcon/logo.svg"
+    />
+    <el-menu
+      class="el-menu-vertical-demo"
+      :collapse="isCollapse"
+      background-color="#5a6075"
+      text-color="#faa427"
+    >
+      <div v-for="(group, index) in groups" :key="group">
+        <el-sub-menu :index="index.toString()">
           <template #title>
-            <el-icon><location /></el-icon>
-            <span>Navigator One</span>
+            <router-link to="movieGroupList">
+              <el-icon v-on:click="isCollapse = !isCollapse">
+                <el-avatar
+                  id="photoGroup"
+                  :style="{ backgroundColor: '#faa427' }"
+                  :size="25"
+                  :src="group.photo"
+                />
+              </el-icon>
+            </router-link>
           </template>
-          <el-menu-item-group title="Group One">
-            <el-menu-item index="1-1">item one</el-menu-item>
-            <el-menu-item index="1-2">item one</el-menu-item>
+          <el-menu-item-group>
+            <template #title>
+              <span>Membres du groupe</span>
+            </template>
+            <el-menu-item
+              v-for="(membre, membreIndex) in groups[index].membres"
+              :key="membre"
+              :index="membreIndex.toString()"
+            >
+              {{ membre }}
+            </el-menu-item>
           </el-menu-item-group>
-          <el-menu-item-group title="Group Two">
-            <el-menu-item index="1-3">item three</el-menu-item>
-          </el-menu-item-group>
-          <el-sub-menu index="1-4">
-            <template #title>item four</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-          </el-sub-menu>
         </el-sub-menu>
-        <el-menu-item index="2">
-          <el-icon><icon-menu /></el-icon>
-          <span>Navigator Two</span>
-        </el-menu-item>
-        <el-menu-item index="3" disabled>
-          <el-icon><document /></el-icon>
-          <span>Navigator Three</span>
-        </el-menu-item>
-        <el-menu-item index="4">
-          <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
-        </el-menu-item>
-      </el-menu>
-    </el-col>
-  </el-row>
+      </div>
+      <el-menu-item index="1245">
+        <router-link to="groupCreation">
+          <el-icon>
+            <el-avatar
+              id="photoPlus"
+              :style="{ backgroundColor: '#faa427' }"
+              :size="25"
+              src="./src/components/icon/utilIcon/plus.png"
+            />
+          </el-icon>
+        </router-link>
+        <template #title>Créer un groupe</template>
+      </el-menu-item>
+    </el-menu>
+    <router-view />
+  </div>
 </template>
 
 <script lang="ts" setup>
-import {
-  Location,
-  Document,
-  Menu as IconMenu,
-  Setting,
-} from '@element-plus/icons-vue'
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
+import { ref } from "vue";
+
+const isCollapse = ref(true);
 </script>
+
+<script lang="ts">
+export default {
+  data() {
+    return {
+      groups: [
+        {
+          id: 1,
+          nom: "groupe 1",
+          membres: ["Jean", "Bernard", "Louis"],
+          admin: "Bernard",
+          photo: "./src/components/icon/ThemeIcon/animation.png",
+        },
+        {
+          id: 2,
+          nom: "Groupe 2",
+          membres: ["Jean", "Bernard", "Louis"],
+          admin: "Bernard",
+          photo: "./src/components/icon/ThemeIcon/horreur.png",
+        },
+        {
+          id: 3,
+          nom: "Groupe 3",
+          membres: ["Jean", "Bernard", "Louis"],
+          admin: "Louis",
+          photo: "./src/components/icon/ThemeIcon/drame.png",
+        },
+      ],
+    };
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+@import "../assets/constant.scss";
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
+
+.el-menu {
+  width: 101%;
+}
+
+.el-icon {
+  width: 100%;
+}
+
+.el-avatar {
+  --el-avatar-size: 50px !important;
+}
+
+.sidebar-container {
+  height: 100%;
+  position: fixed;
+  background-color: $darkGray;
+}
+
+.name-groupe {
+  visibility: hidden;
+}
+
+#photoPlus {
+  height: 130%;
+  width: 100%;
+  max-width: 30px;
+}
+</style>

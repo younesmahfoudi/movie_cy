@@ -8,29 +8,30 @@ from collections import namedtuple
 from app.server.models.movie import MovieSchema
 
 IMDBPATH =  'https://imdb-api.com/API'
-# IMDBTOKEN = 'k_ompp9716'
-IMDBTOKEN = 'k_szftjjr3'
+IMDBTOKEN = 'k_ompp9716'
+# IMDBTOKEN = 'k_szftjjr3'
 
 def _json_object_hook(d): return namedtuple('X', d.keys())(*d.values())
 def json2obj(data): return json.loads(data, object_hook=_json_object_hook)
 
+#python 3.10
 def advancedSearch(
-        title: str = None, 
-        types: List[str] = None, 
-        releaseDate: date = None, 
-        userRating: float = None,
-        votesNumber: int = None,
-        genres: List[str] = None,
-        groups: List[str] = None,
-        companies: List[str] = None,
-        colorInfos: List[str] = None,
-        countries: List[str] = None,
-        keyword: str = None,
-        languages: List[str] = None,
-        filmingLocation: str = None,
-        popularity: int = None,
-        count: int = None,
-        sort: str = None
+        title: str | None, 
+        types: List[str] | None, 
+        releaseDate: date | None, 
+        userRating: float | None,
+        votesNumber: int | None,
+        genres: List[str] | None,
+        groups: List[str] | None,
+        companies: List[str] | None,
+        colorInfos: List[str] | None,
+        countries: List[str] | None,
+        keyword: str | None,
+        languages: List[str] | None,
+        filmingLocation: str | None,
+        popularity: int | None,
+        count: int | None,
+        sort: str | None
     ):
         url = os.path.join(IMDBPATH,'AdvancedSearch',IMDBTOKEN)+'?'
         if count is not None : url = url + f'count={count}&'
