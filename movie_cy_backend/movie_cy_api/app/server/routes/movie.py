@@ -2,7 +2,9 @@ from datetime import date
 from typing import List, Optional
 
 from click import Option
-from fastapi import APIRouter, Body, Query
+from fastapi import APIRouter, Body, Depends, Query
+from fastapi_pagination import Page, Params, add_pagination, paginate
+
 from fastapi.encoders import jsonable_encoder
 
 from app.server.database import (
@@ -20,12 +22,10 @@ from app.server.models.movie import (
 from app.server.imdb import (
     advancedSearch
 )
-from app.server.models.user import UserSchema
 
 router = APIRouter()
 
 def movie_helper(movie) -> dict:
-    print("test")
     return {
         "id": str(movie["id"]),
         "image": movie["image"],
@@ -44,19 +44,19 @@ def movie_helper(movie) -> dict:
         "starList": movie["starList"]
     }
 
-@router.get("/", response_description="Movies data retrieved")
+@router.get("/", response_description="Movies data retrieved", response_model=Page[dict])
 async def get_movies_data_filtered(
         title: str = None,
         genrelist: List[str] = Query(None),
         imdbrating: str = None,
         starlist: List[str] = Query(None),
-        movielist: List[str] = Query(None)
+        movielist: List[str] = Query([]),
+        params: Params = Depends()
     ): 
     movies = await retrieve_movies_filtered(title,genrelist,starlist,imdbrating)
-    moviesFiltered = filter(lambda x: x["id"] not in movielist, movies)
-    res = list(moviesFiltered)
-    if res:
-        return ResponseModel(res, "movies get successfully.")  
+    moviesFiltered = list(filter(lambda x: x["id"] not in movielist, movies))
+    if moviesFiltered:
+        return paginate(moviesFiltered, params)
     return await add_movie_data(title=title, genres=genrelist, userRating=imdbrating)
 
 async def add_movie_data(
