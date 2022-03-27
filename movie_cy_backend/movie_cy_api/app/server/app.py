@@ -11,24 +11,15 @@ from app.server.routes.movie import router as MovieRouteur
 app = FastAPI()
 
 
-origins = [  
-    "http://localhost:8000",
-    "http://localhost:8000/users/",
-    "http://localhost:3000"
-    "http://localhost:8081"
-    "http://localhost:27017"
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-
 
 app.include_router(GroupRouter, tags=["groups"], prefix="/groups")
 app.include_router(UserRouter, tags=["users"], prefix="/users")
