@@ -56,12 +56,12 @@ export const avatarForUser = [
   },
   {
     value: "Option12",
-    label: "joker",
+    label: "Joker",
     photo: "./src/components/icon/CharacterIcon/joker.svg",
   },
   {
     value: "Option13",
-    label: "kakashi",
+    label: "Kakashi",
     photo: "./src/components/icon/CharacterIcon/kakashi.svg",
   },
   {
