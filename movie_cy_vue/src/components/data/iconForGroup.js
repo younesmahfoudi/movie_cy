@@ -42,7 +42,7 @@ export const iconForGroup = [
   {
     value: "Option9",
     label: "Baguette magique",
-    photo: "./src/components/icon/ThemeIcon/fantaisy.png",
+    photo: "./src/components/icon/ThemeIcon/fantasy.png",
   },
   {
     value: "Option10",
