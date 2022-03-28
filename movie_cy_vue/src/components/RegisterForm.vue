@@ -156,7 +156,7 @@ export default {
   data() {
     return {
       imageSrc: "./src/components/icon/CharacterIcon/avatar.svg",
-      defaultLabel: "Alien",
+      defaultLabel: "Avatar",
       listImages: [],
     };
   },
@@ -186,6 +186,7 @@ export default {
     isComplete() {
       return (
         this.ruleForm.prenom &&
+        this.ruleForm.email &&
         this.ruleForm.nom &&
         this.ruleForm.ddn &&
         this.ruleForm.mdp &&
@@ -472,10 +473,6 @@ input {
 .el-form-item__label {
   margin-bottom: 5px !important;
 }
-
-.el-dialog{
-  height : 55%
-} 
 
 </style>
 
