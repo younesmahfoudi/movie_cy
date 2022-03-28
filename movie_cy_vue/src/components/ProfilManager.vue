@@ -71,7 +71,7 @@ export default {
         genre: "Comédie",
         genreFlex: "Horreur",
         ddn: "19/08/98",
-        icon: "/src/components/icon/CharacterIcon/avatar.svg",
+        icon: "/src/components/icon/CharacterIcon/avatar.svg"
       },
     };
   },
