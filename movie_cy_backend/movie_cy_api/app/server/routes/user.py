@@ -18,21 +18,21 @@ router = APIRouter()
 async def check_user(data: UserLoginSchema):
     for user in await get_users():
         if user["email"] == data.email and user["mdp"] == data.mdp:
-            return True
-    return False
+            return user
 
 
 @router.post("/signup", response_description="User data added into the database")
 async def add_user_data(user: UserSchema = Body(...)):
     user = jsonable_encoder(user)
-    new_user = await add_user(user)
-    return signJWT(new_user["email"])
+    new_user: dict = await add_user(user)
+    return [signJWT(new_user["email"]),new_user] 
 
 
 @router.post("/login", tags=["user"])
 async def user_login(user: UserLoginSchema = Body(...)):
-    if await    check_user(user):
-        return signJWT(user.email)
+    userlog = await check_user(user)
+    if userlog:
+        return [signJWT(user.email), await get_user_data(userlog["id"])]
     return {
         "error": "Wrong login details!"
     }
