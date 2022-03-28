@@ -155,7 +155,7 @@ import CryptoJS from "crypto-js";
 export default {
   data() {
     return {
-      imageSrc: "./src/components/icon/CharacterIcon/alien.png",
+      imageSrc: "./src/components/icon/CharacterIcon/avatar.svg",
       defaultLabel: "Alien",
       listImages: [],
     };
@@ -472,5 +472,10 @@ input {
 .el-form-item__label {
   margin-bottom: 5px !important;
 }
+
+.el-dialog{
+  height : 55%
+} 
+
 </style>
 

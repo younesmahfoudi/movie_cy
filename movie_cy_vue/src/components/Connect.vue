@@ -96,9 +96,10 @@ const inputMdp = ref("");
 @import "../assets/constant.scss";
 
 .validate {
-  font-size: 20px !important;
+  font-size: 22px !important;
   font-weight: bold;
-  margin-bottom: 10px;
+  height : 80%;
+  margin-top: 20px;
 }
 
 .dialog {
