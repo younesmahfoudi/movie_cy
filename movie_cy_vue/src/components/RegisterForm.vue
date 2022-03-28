@@ -150,12 +150,13 @@
 
 <script lang="ts">
 import UsersService from "../services/UsersService.js";
+import CryptoJS from "crypto-js";
 
 export default {
   data() {
     return {
-      imageSrc: "./src/components/icon/CharacterIcon/alien.png",
-      defaultLabel: "Alien",
+      imageSrc: "./src/components/icon/CharacterIcon/avatar.svg",
+      defaultLabel: "Avatar",
       listImages: [],
     };
   },
@@ -165,13 +166,27 @@ export default {
     },
     createUser() {
       delete this.ruleForm["checkPass"];
+      this.ruleForm["mdp"] = this.encrypt(this.ruleForm["mdp"])
       UsersService.createUser(this.ruleForm);
     },
+    encrypt(user) {
+      const passphrase = "YounesEtienneTomMaxime";
+      return CryptoJS.AES.encrypt(user.mdp, passphrase).toString();
+    },
+
+    decrypt(user) {
+      const passphrase = "YounesEtienneTomMaxime";
+      const bytes = CryptoJS.AES.decrypt(user.mdp, passphrase);
+      const originalText = bytes.toString(CryptoJS.enc.Utf8);
+      return originalText;
+    },
   },
+
   computed: {
     isComplete() {
       return (
         this.ruleForm.prenom &&
+        this.ruleForm.email &&
         this.ruleForm.nom &&
         this.ruleForm.ddn &&
         this.ruleForm.mdp &&
@@ -458,5 +473,6 @@ input {
 .el-form-item__label {
   margin-bottom: 5px !important;
 }
+
 </style>
 
