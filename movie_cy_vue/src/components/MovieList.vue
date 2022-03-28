@@ -24,6 +24,7 @@ import axios from "axios";
                         id="photoGroup"
                         :style="{ backgroundColor: '#faa427' }"
                         :size="25"
+                        :alt="genre.key"
                         :src="genre.value"
                       />
                     </div>
@@ -31,9 +32,27 @@ import axios from "axios";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <el-button type="primary" size="large" :icon="Star" circle />
-                  <el-button type="success" size="large" :icon="Check" circle />
-                  <el-button type="danger" size="large" :icon="Delete" circle />
+                  <el-button
+                    type="primary"
+                    title="J'ai vu et j'aime le style"
+                    size="large"
+                    :icon="Star"
+                    circle
+                  />
+                  <el-button
+                    type="success"
+                    title="J'ai vu"
+                    size="large"
+                    :icon="Check"
+                    circle
+                  />
+                  <el-button
+                    type="danger"
+                    title="Je n'aime pas"
+                    size="large"
+                    :icon="Delete"
+                    circle
+                  />
                 </div>
               </div>
             </div>
@@ -58,6 +77,7 @@ import axios from "axios";
                         id="photoGroup"
                         :style="{ backgroundColor: '#faa427' }"
                         :size="25"
+                        :alt="genre.key"
                         :src="genre.value"
                       />
                     </div>
@@ -65,9 +85,27 @@ import axios from "axios";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <el-button type="primary" size="large" :icon="Star" circle />
-                  <el-button type="success" size="large" :icon="Check" circle />
-                  <el-button type="danger" size="large" :icon="Delete" circle />
+                  <el-button
+                    type="primary"
+                    title="J'ai vu et j'aime le style"
+                    size="large"
+                    :icon="Star"
+                    circle
+                  />
+                  <el-button
+                    type="success"
+                    title="J'ai vu"
+                    size="large"
+                    :icon="Check"
+                    circle
+                  />
+                  <el-button
+                    type="danger"
+                    title="Je n'aime pas"
+                    size="large"
+                    :icon="Delete"
+                    circle
+                  />
                 </div>
               </div>
             </div>
@@ -106,11 +144,13 @@ h1 {
 }
 
 img {
-  width: 100%;
+  width: 229px;
+  height: 328px;
 }
 
 .row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   width: 100%;
 }
@@ -152,21 +192,43 @@ img {
   margin: 1px;
 }
 
-@media screen and (max-width: 1050px) and (min-width: 850px) {
+@media screen and (max-width: 760px) and (min-width: 515px) {
   .movie {
-    max-width: 14em !important;
+    width: 30em !important;
+  }
+
+  img {
+    width: 322px;
+    height: 459px;
+  }
+
+  .el-card {
+    width: 322px !important;
+  }
+
+  .movie {
+    width: 322px !important;
+    max-width: 322px !important;
   }
 }
 
-@media screen and (max-width: 850px) and (min-width: 600px) {
+@media screen and (min-width: 1075px) {
   .movie {
-    max-width: 20em !important;
+    width: 30em !important;
   }
-}
 
-@media screen and (max-width: 360px) {
+  img {
+    width: 322px;
+    height: 459px;
+  }
+
+  .el-card {
+    width: 322px !important;
+  }
+
   .movie {
-    max-width: 12em !important;
+    width: 322px !important;
+    max-width: 322px !important;
   }
 }
 </style>
