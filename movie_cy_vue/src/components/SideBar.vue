@@ -31,7 +31,7 @@
               <span>Membres du groupe</span>
             </template>
             <el-menu-item
-              v-for="(membre, membreIndex) in groups[index].membres"
+              v-for="(membre, membreIndex) in groups[index].nom_membres"
               :key="membre"
               :index="membreIndex.toString()"
             >
@@ -60,7 +60,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-
+import  axios  from "axios";
 const isCollapse = ref(true);
 </script>
 
@@ -68,7 +68,8 @@ const isCollapse = ref(true);
 export default {
   data() {
     return {
-      groups: [
+      groups: [],
+      groupes: [
         {
           id: 1,
           nom: "groupe 1",
@@ -92,6 +93,29 @@ export default {
         },
       ],
     };
+  },
+  mounted() {
+    axios
+      .get("http://localhost:8000/users/62417ab001cbe04ba11a6fc2")
+      .then((response) => {
+        // On récupère les id des groupes des utilisateurs
+        this.groupes_id = response.data.data[0].groupes;
+        // Pour chaque groupe, on récupère les id des membres
+        for (let i = 0; i < this.groupes_id.length; i++) {
+          this.request = "http://localhost:8000/groups/" + this.groupes_id[i];
+          axios.get(this.request).then((response) => {
+            this.groups[i] = response.data.data[0];
+            // Pour chaque membre on récupère leur nom
+            for (let j = 0; j < this.groups[i].membres.length; j++){
+              this.groups[i]["nom_membres"] = []
+              this.request_user_infos =  "http://localhost:8000/users/" + this.groups[i].membres[j];
+              axios.get(this.request_user_infos).then((response) => {
+                this.groups[i]["nom_membres"][j] = response.data.data[0].prenom + " " + response.data.data[0].nom
+              });
+            }  
+          });
+        }
+      });
   },
 };
 </script>
