@@ -79,6 +79,19 @@ class UpdateUserModel(BaseModel):
         arbitrary_types_allowed = True
 
 
+class UserLoginSchema(BaseModel):
+    email: EmailStr = Field(...)
+    mdp: str = Field(...)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "email": "abdulazeez@x.com",
+                "mdp": "weakpassword"
+            }
+        }
+
+
 def ResponseModel(data, message):
     return {
         "data": [data],
