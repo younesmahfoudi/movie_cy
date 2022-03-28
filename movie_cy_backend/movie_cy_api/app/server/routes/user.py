@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from app.auth.auth_handler import signJWT
 
 from app.server.database import (
-    add_user, retrieve_user, retrieve_users,update_user,delete_user
+    add_user, retrieve_user, retrieve_users, retrieve_users_filtered,update_user,delete_user
 )
 from app.server.models.user import (
     ErrorResponseModel,
@@ -38,8 +38,12 @@ async def user_login(user: UserLoginSchema = Body(...)):
     }
 
 @router.get("/", response_description="Users retrieved")
-async def get_users():
-    users = await retrieve_users()
+async def get_users(string_entered: str | None= None):
+
+    if(type(string_entered)==str):
+        users = await retrieve_users_filtered(string_entered)
+    else :
+      users = await retrieve_users() 
     if users:
         return users
     return ResponseModel(users, "Empty list returned")
