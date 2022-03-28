@@ -6,35 +6,27 @@ import ToolBar from "../components/ToolBar.vue";
 
 <template>
   <SideBar />
-  <div class="content">
-    <div class="toolbar">
+  <div class="content-profil">
+    <div class="toolbar-profil">
       <ToolBar />
     </div>
-    <div class="form">
+    <div class="form-profil">
       <ProfilManager />
     </div>
   </div>
 </template>
 
 <style>
-.toolbar {
+.toolbar-profil {
   margin-right: 3%;
   height: 50px;
 }
 
-.content {
-  margin-left: 10%;
+.content-profil {
+  margin-left: 5%;
 }
 
-@media screen and (max-width: 1050px) and (min-width: 800px) {
-  .content {
-    margin-left: 15% !important;
-  }
-}
-
-@media screen and (max-width: 800px) and (min-width: 600px) {
-  .content {
-    margin-left: 20% !important;
-  }
+.form-profil {
+  margin-top: 3%;
 }
 </style>

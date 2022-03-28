@@ -150,6 +150,7 @@
 
 <script lang="ts">
 import UsersService from "../services/UsersService.js";
+import CryptoJS from "crypto-js";
 
 export default {
   data() {
@@ -165,9 +166,22 @@ export default {
     },
     createUser() {
       delete this.ruleForm["checkPass"];
+      this.ruleForm["mdp"] = this.encrypt(this.ruleForm["mdp"])
       UsersService.createUser(this.ruleForm);
     },
+    encrypt(user) {
+      const passphrase = "YounesEtienneTomMaxime";
+      return CryptoJS.AES.encrypt(user.mdp, passphrase).toString();
+    },
+
+    decrypt(user) {
+      const passphrase = "YounesEtienneTomMaxime";
+      const bytes = CryptoJS.AES.decrypt(user.mdp, passphrase);
+      const originalText = bytes.toString(CryptoJS.enc.Utf8);
+      return originalText;
+    },
   },
+
   computed: {
     isComplete() {
       return (

@@ -1,46 +1,53 @@
 <template>
   <div class="donnees">
-    <el-row :gutter="10">
-      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="24">
+    <div class="entete">
+      <div class="entete-content">
         <div class="username">
           {{ user.pseudo }}
+          <div class="nom">
+            {{ user.prenom }}
+            {{ user.nom }}
+          </div>
+        </div>
+        <div class="pdp">
           <el-avatar
             class="iconGroup"
             :style="{ backgroundColor: '#faa427' }"
-            :size="100"
+            :size="200"
             :src="user.icon"
           />
         </div>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="10">
-      <el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12">
-        <div class="username">
-          <el-descriptions title="Vos informations">
-            <el-descriptions-item label="Type de film favori n°1">
-              {{ user.genre }}
-            </el-descriptions-item>
-            <el-descriptions-item label="Type de film favori n°2">
-              {{ user.genreFlex }}
-            </el-descriptions-item>
-            <el-descriptions-item label="Acteur favori">
-              {{ user.acteur }}
-            </el-descriptions-item>
-            <el-descriptions-item label="Réalisateur favori">
-              {{ user.realisateur }}
-            </el-descriptions-item>
-            <el-descriptions-item label="Date de naissance">
-              {{ user.ddn }}
-            </el-descriptions-item>
-          </el-descriptions>
+      </div>
+    </div>
+    <div class="information">
+      Vos informations
+      <div class="user-info">
+        <div class="row">
+          <div>Type de film favori n°1</div>
+          <div>{{ user.genre }}</div>
         </div>
-      </el-col>
-    </el-row>
-    <div style="display: flex">
-      <el-button type="primary" class="btnValider"
-        >Modifier ces informations</el-button
-      >
+        <div class="row">
+          <div>Type de film favori n°2</div>
+          <div>{{ user.genreFlex }}</div>
+        </div>
+        <div class="row">
+          <div>Acteur favori</div>
+          <div>{{ user.acteur }}</div>
+        </div>
+        <div class="row">
+          <div>Réalisateur favori</div>
+          <div>{{ user.realisateur }}</div>
+        </div>
+        <div class="row">
+          <div>Date de naissance</div>
+          <div>{{ user.ddn }}</div>
+        </div>
+      </div>
+    </div>
+    <div style="float: right; margin-right: 10%; margin-top: 2%">
+      <el-button type="warning" class="btnValider" round>
+        Modifier ces informations
+      </el-button>
     </div>
   </div>
 </template>
@@ -51,7 +58,9 @@ export default {
     return {
       user: {
         id: 1,
-        pseudo: "KAKASHIIIIIIIIIIIII",
+        pseudo: "Mahfoudiyodiyo",
+        prenom: "younes",
+        nom: "la pute",
         email: "a@a.fr",
         mdp: "ajdzfrezfez",
         films: "bla",
@@ -82,33 +91,50 @@ tr {
 }
 
 .username {
-  font-size: 60px;
+  font-size: 50px;
   display: flex;
+  flex-direction: column;
 }
 
-.btnValider {
-  background-color: $yellow;
-  margin-right: 0px !important;
-  border: none;
-  border-radius: 20px;
-  font-family: "Raleway", sans-serif;
-  font-weight: bold;
+.nom {
   font-size: 20px;
+}
+
+.entete {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.entete-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 80%;
 }
 
 .el-avatar {
   margin-left: 10%;
 }
 
-.el-descriptions__cell {
-  font-size: 20px !important;
+.information {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 40px;
+  align-items: center;
 }
 
-.el-descriptions__cell {
-  width: 100%;
+.user-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
+  width: 80%;
 }
 
-td {
-  width: 100%;
+.row {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
