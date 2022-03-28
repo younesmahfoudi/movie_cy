@@ -150,6 +150,7 @@
 
 <script lang="ts">
 import UsersService from "../services/UsersService.js";
+import AuthService  from "../services/authService.js";
 
 export default {
   data() {
@@ -165,7 +166,7 @@ export default {
     },
     createUser() {
       delete this.ruleForm["checkPass"];
-      UsersService.createUser(this.ruleForm);
+      AuthService.register(this.ruleForm);
     },
   },
   computed: {
