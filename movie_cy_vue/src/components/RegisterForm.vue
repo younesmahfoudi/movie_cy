@@ -150,7 +150,6 @@
 
 <script lang="ts">
 import UsersService from "../services/UsersService.js";
-import axios from 'axios'
 
 export default {
   data() {

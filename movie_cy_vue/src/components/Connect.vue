@@ -1,25 +1,95 @@
-<template >
-  <button @click="fetchUsers">click me</button>
+<template>
+  <div>
+    <el-button
+      class="btn-register-login"
+      type="warning"
+      size="large"
+      @click="dialogVisible = true"
+      round
+    >
+      Connexion
+    </el-button>
+
+    <el-dialog custom-class="dialog" v-model="dialogVisible" width="30%">
+      <img
+        class="imgForm"
+        :style="{ maxWidth: '30%' }"
+        src="/src/components/icon/utilIcon/logo.svg"
+      />
+
+      <span class="title"> Connexion</span>
+
+      <div class="formulaire">
+        <el-form model="formLogin" label-position="top">
+          <el-form-item
+            prop="email"
+            label="Adresse email"
+            :rules="[
+              {
+                required: true,
+                message: 'Entrer une adresse email.',
+                trigger: 'blur',
+              },
+              {
+                type: 'email',
+                message: 'Entrer une adresse email correcte.',
+                trigger: ['blur', 'change'],
+              },
+            ]"
+          >
+            <el-input
+              input-style="border-radius:20px; font-family:'Raleway', sans-serif; font-weight: bold;"
+              name="email"
+              v-model="inputMail"
+              placeholder="Adresse email"
+            />
+          </el-form-item>
+
+          <el-form-item
+            prop="password"
+            label="Mot de passe"
+            :rules="[
+              {
+                required: true,
+                message: 'Entrer un mot de passe.',
+                trigger: 'blur',
+              },
+            ]"
+          >
+            <el-input
+              input-style="border-radius:20px ; font-family:'Raleway', sans-serif; font-weight: bold;"
+              name="password"
+              v-model="inputMdp"
+              type="password"
+              placeholder="Mot de passe"
+              show-password
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <template #footer>
+        <div style="display: flex">
+          <span class="dialog-footer">
+            <el-button
+              type="warning"
+              class="btnValider validate"
+              @click="dialogVisible = false"
+              round
+              >Valider</el-button
+            >
+          </span>
+        </div>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
-<script lang="ts">
-import axios from 'axios';
-export default {
-  name: "app",
-  data() {
-    return {
-      users: [],
-    };
-  },
-  methods: {
-    fetchUsers: function () {
-      const baseURI = "http://localhost:8000/users/";
-      axios.get(baseURI).then((result) => {
-        console.log(result)
-      });
-    },
-  },
-};
+<script lang="ts" setup>
+import { ref } from "vue";
+const dialogVisible = ref(false);
+const inputMail = ref("");
+const inputMdp = ref("");
 </script>
 
 <style lang="scss">
