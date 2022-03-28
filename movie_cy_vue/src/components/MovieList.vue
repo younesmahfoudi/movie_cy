@@ -1,13 +1,18 @@
 <script lang="ts" setup>
-import { Check, Star, Delete } from "@element-plus/icons-vue";
+import { Check, Delete } from "@element-plus/icons-vue";
 import axios from "axios";
+import FilmDetails from "./FilmDetails.vue";
 </script>
 
 <template>
   <div class="movieContent">
     <div class="movieList">
       <div class="row">
-        <div class="movie" v-for="movie in movies.slice(0, 3)" :key="movie">
+        <div
+          class="movie"
+          v-for="(movie, index) in movies.slice(0, 3)"
+          :key="movie"
+        >
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
@@ -24,7 +29,7 @@ import axios from "axios";
                         id="photoGroup"
                         :style="{ backgroundColor: '#faa427' }"
                         :size="25"
-                        :alt="genre.key"
+                        :title="genre.key"
                         :src="genre.value"
                       />
                     </div>
@@ -32,18 +37,13 @@ import axios from "axios";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <el-button
-                    type="primary"
-                    title="J'ai vu et j'aime le style"
-                    size="large"
-                    :icon="Star"
-                    circle
-                  />
+                  <FilmDetails />
                   <el-button
                     type="success"
                     title="J'ai vu"
                     size="large"
                     :icon="Check"
+                    @click="addItem(index)"
                     circle
                   />
                   <el-button
@@ -51,6 +51,7 @@ import axios from "axios";
                     title="Je n'aime pas"
                     size="large"
                     :icon="Delete"
+                    @click="deleteItem(index)"
                     circle
                   />
                 </div>
@@ -60,7 +61,11 @@ import axios from "axios";
         </div>
       </div>
       <div class="row">
-        <div class="movie" v-for="movie in movies.slice(3, 6)" :key="movie">
+        <div
+          class="movie"
+          v-for="(movie, index) in movies.slice(3, 6)"
+          :key="movie"
+        >
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
@@ -77,7 +82,7 @@ import axios from "axios";
                         id="photoGroup"
                         :style="{ backgroundColor: '#faa427' }"
                         :size="25"
-                        :alt="genre.key"
+                        :title="genre.key"
                         :src="genre.value"
                       />
                     </div>
@@ -85,18 +90,13 @@ import axios from "axios";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <el-button
-                    type="primary"
-                    title="J'ai vu et j'aime le style"
-                    size="large"
-                    :icon="Star"
-                    circle
-                  />
+                  <FilmDetails />
                   <el-button
                     type="success"
                     title="J'ai vu"
                     size="large"
                     :icon="Check"
+                    @click="addItem(index)"
                     circle
                   />
                   <el-button
@@ -104,6 +104,7 @@ import axios from "axios";
                     title="Je n'aime pas"
                     size="large"
                     :icon="Delete"
+                    @click="deleteItem(index)"
                     circle
                   />
                 </div>
@@ -121,6 +122,7 @@ export default {
   data() {
     return {
       movies: [],
+      user: "",
     };
   },
   mounted() {
@@ -133,6 +135,16 @@ export default {
       this.movies = response.data.items;
     });
   },
+  methods: {
+    deleteItem(index) {
+      this.movies.splice(index, 1);
+      //TODO add to liste de film non voulu par le groupe
+    },
+    addItem(index) {
+      this.movies.splice(index, 1);
+      //TODO add to liste de film vu par l'user
+    },
+  },
 };
 </script>
 
@@ -143,7 +155,7 @@ h1 {
   text-align: center;
 }
 
-img {
+.image {
   width: 229px;
   height: 328px;
 }
@@ -197,7 +209,7 @@ img {
     width: 30em !important;
   }
 
-  img {
+  .image {
     width: 322px;
     height: 459px;
   }
@@ -217,7 +229,7 @@ img {
     width: 30em !important;
   }
 
-  img {
+  .image {
     width: 322px;
     height: 459px;
   }

@@ -92,7 +92,7 @@ const inputMail = ref("");
 const inputMdp = ref("");
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../assets/constant.scss";
 
 .validate {
@@ -141,6 +141,7 @@ const inputMdp = ref("");
 
 .title {
   display: flex;
+  justify-content: center;
   margin-left: auto;
   margin-right: auto;
   font-weight: bold;

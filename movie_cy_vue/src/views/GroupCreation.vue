@@ -6,14 +6,16 @@ import CreationGroupForm from "../components/CreationGroupForm.vue";
 </script>
 
 <template>
-  <SideBar />
-  <div class="content-group">
-    <div class="toolbar">
-      <ToolBar />
-    </div>
-    <div class="form">
-      <CreationGroupForm />
-      <AddGroupMembers />
+  <div>
+    <SideBar />
+    <div class="content-group">
+      <div class="toolbar">
+        <ToolBar />
+      </div>
+      <div class="form">
+        <CreationGroupForm />
+        <AddGroupMembers />
+      </div>
     </div>
   </div>
 </template>
