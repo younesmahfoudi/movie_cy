@@ -54,7 +54,7 @@
 
 <script lang="ts">
 export default {
-  data: function () {
+  data() {
     return {
       user: {
         id: 1,
@@ -71,7 +71,7 @@ export default {
         genre: "Comédie",
         genreFlex: "Horreur",
         ddn: "19/08/98",
-        icon: "/src/components/icon/CharacterIcon/kakashi.svg",
+        icon: "/src/components/icon/CharacterIcon/avatar.svg"
       },
     };
   },
@@ -114,10 +114,6 @@ tr {
   width: 80%;
 }
 
-.el-avatar {
-  margin-left: 10%;
-}
-
 .information {
   display: flex;
   flex-direction: column;
@@ -136,5 +132,37 @@ tr {
 .row {
   display: flex;
   justify-content: space-between;
+}
+
+@media screen and (max-width: 700px) {
+  .entete-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .username{
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+  }
+
+  .nom {
+    font-size: 15px;
+  }
+
+  .pdp{
+    order:1;
+  }
+
+  .information {
+    font-size: 20px;
+    margin-top: 5%;
+  }
+
+  .user-info {
+    margin-top: 5%;
+    font-size: 15px;
+  }
 }
 </style>

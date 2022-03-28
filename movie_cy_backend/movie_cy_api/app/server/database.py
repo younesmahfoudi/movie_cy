@@ -11,8 +11,9 @@ from app.server.models.group import (
 )
 
 
-##MONGO_DETAILS = "mongodb://localhost:27017"
-MONGO_DETAILS = "mongodb://root:pass12345@localhost:27017"
+# MONGO_DETAILS = "mongodb://localhost:27017"
+MONGO_DETAILS = "mongodb://root:pass12345@mongodb:27017"
+# MONGO_DETAILS = "mongodb://root:pass12345@localhost:27017"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
@@ -185,70 +186,11 @@ async def retrieve_movie_by_id(id: str) -> dict:
     if movie:
         return movie_helper(movie)
 
-# Retrieve a group with a matching ID
-async def retrieve_movies_by_title(title: str) -> dict:
-    movies = []
-    async for movie in movie_collection.find({"title": title}):
-        print(movie)
-        movies.append(movie_helper(movie))
-    return movies
-
-# Retrieve a group with a matching ID
-async def retrieve_movies_by_genre(genre: str) -> dict:
-    movies = []
-    async for movie in movie_collection.find({"genreList": {"$elemMatch": { "value": genre }}}):
-        print(movie)
-        movies.append(movie_helper(movie))
-    return movies
-
-# Retrieve a group with a matching ID
-async def retrieve_movies_by_star(starId: str) -> dict:
-    movies = []
-    async for movie in movie_collection.find(
-        { "starList": { "$elemMatch": { "id": starId } } }):
-        print(movie)
-        movies.append(movie_helper(movie))
-    return movies
-
-# Retrieve a group with a matching ID
-async def retrieve_movies_by_stars(starList: List[str]) -> dict:
-    movies = []
-    for star in starList:
-        async for movie in movie_collection.find(
-            { "starList": { "$elemMatch": { "id": star["id"] } } }):
-            print(movie)
-            movies.append(movie_helper(movie))
-    return movies
-
-# Retrieve a group with a matching ID
-async def retrieve_movies_by_genres(genreList: List[str]) -> dict:
-    movies = []
-    for genre in genreList:
-        async for movie in movie_collection.find({"genreList": {"$elemMatch": { "value": genre }}}):
-            movies.append(movie_helper(movie))
-    return movies
-
-# Retrieve a group with a matching ID
-async def retrieve_movies_by_imdbRating(imdbRating: str) -> dict:
-    movies = []
-    movies = await movie_collection.find({"imdbRating": { "$gt": imdbRating }})
-    if movies:
-        return movies
-
 # Retrieve all groups present in the database
 async def retrieve_movies() -> dict:
     movies = []
     async for movie in movie_collection.find():
         print(movie)
-
-
-
-
-
-
-
-
-
 
 # Retrieve all movies present in the database
 async def retrieve_movies():
@@ -261,8 +203,8 @@ def build_title_request(title: str) -> dict:
     request: dict = { "title": {"$regex":title}}
     return request
 
-def build_imdbRating_request(imdbRating: float) -> dict:
-    request: dict = { "imdbRating": {"$gt":imdbRating}}
+def build_imdbRating_request(imdbRating: str) -> dict:
+    request: dict = { "imDbRating": {"$gt":imdbRating} }
     return request
 
 def build_genres_request(genreList: List[str]) -> dict:
@@ -283,7 +225,7 @@ def build_genres_request(genreList: List[str]) -> dict:
 def build_stars_request(starIDList: List[str]) -> dict:
     requestParameters : List[dict] = []
     for starID in starIDList:
-        requestParameters.append({ "id" : starID })
+        requestParameters.append({ "name" : {"$regex":starID} })
     request: dict = { 
         "starList": 
             { 
@@ -314,7 +256,7 @@ async def retrieve_movies_filtered(
         title: str | None,
         genreList: str | None, 
         starList: str | None,
-        imdbRating: float | None
+        imdbRating: str | None
     ) -> dict:
     request: dict = build_movies_request_filtered(title,genreList,starList,imdbRating)
     movies = []

@@ -23,7 +23,7 @@ import ToolBar from "../components/ToolBar.vue";
 }
 
 .content-profil {
-  margin-left: 5%;
+  margin-left: 56px;
 }
 
 .form-profil {

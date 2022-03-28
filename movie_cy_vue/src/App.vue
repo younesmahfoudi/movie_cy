@@ -8,7 +8,7 @@
 html,
 body {
   font-family: $font;
-  margin: 0px !important;
+  margin: 0px;
   padding: 0px !important;
   height: 100% !important;
 }
