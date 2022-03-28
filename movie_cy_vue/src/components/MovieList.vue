@@ -87,13 +87,12 @@ export default {
   },
   mounted() {
     axios.get("http://localhost:8000/movies/").then((response) => {
-      response.data.data[0].forEach((e) => {
+      response.data.items.forEach((e) => {
         e.genreList.forEach((element) => {
           element.value = `./src/components/icon/ThemeIcon/${element.value.toLowerCase()}.png`;
         });
       });
-      console.log(response.data.data[0]);
-      this.movies = response.data.data[0];
+      this.movies = response.data.items;
     });
   },
 };
