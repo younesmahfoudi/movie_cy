@@ -1,14 +1,5 @@
 <script setup>
 import ProfilManager from "../components/ProfilManager.vue";
-<<<<<<< HEAD
-</script>
-
-<template>
-  <ProfilManager />
-</template>
-
-<style>
-=======
 import SideBar from "../components/SideBar.vue";
 import ToolBar from "../components/ToolBar.vue";
 </script>
@@ -40,5 +31,4 @@ import ToolBar from "../components/ToolBar.vue";
 .form-profil {
   margin-top: 3%;
 }
->>>>>>> efd0783ce845f7d992372ac92097879970ae1318
 </style>

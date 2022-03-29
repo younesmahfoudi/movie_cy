@@ -60,7 +60,7 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
-import  axios  from "axios";
+import axios from "axios";
 const isCollapse = ref(true);
 </script>
 
@@ -106,13 +106,17 @@ export default {
           axios.get(this.request).then((response) => {
             this.groups[i] = response.data.data[0];
             // Pour chaque membre on récupère leur nom
-            for (let j = 0; j < this.groups[i].membres.length; j++){
-              this.groups[i]["nom_membres"] = []
-              this.request_user_infos =  "http://localhost:8000/users/" + this.groups[i].membres[j];
+            for (let j = 0; j < this.groups[i].membres.length; j++) {
+              this.groups[i]["nom_membres"] = [];
+              this.request_user_infos =
+                "http://localhost:8000/users/" + this.groups[i].membres[j];
               axios.get(this.request_user_infos).then((response) => {
-                this.groups[i]["nom_membres"][j] = response.data.data[0].prenom + " " + response.data.data[0].nom
+                this.groups[i]["nom_membres"][j] =
+                  response.data.data[0].prenom +
+                  " " +
+                  response.data.data[0].nom;
               });
-            }  
+            }
           });
         }
       });
