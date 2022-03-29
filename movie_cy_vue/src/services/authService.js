@@ -1,6 +1,5 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
-import sha256 from "crypto-js/sha256";
 
 const API_URL = "http://localhost:8000/";
 class AuthService {
@@ -12,8 +11,8 @@ class AuthService {
       })
       .then((response) => {
         console.log(response);
-        if (response.data[0].access_token) {
-          localStorage.setItem("user", JSON.stringify(response.data[1]));
+        if (response.data.access_token) {
+          localStorage.setItem("user", JSON.stringify(response.data));
         }
         return response.data;
       });
@@ -27,9 +26,8 @@ class AuthService {
     user.mdp = this.encrypt(user.mdp);
     return axios.post(API_URL + "users/signup", user).then((response) => {
       console.log(response);
-
-      if (response.data[0].access_token) {
-        localStorage.setItem("user", JSON.stringify(response.data[1]));
+      if (response.data.access_token) {
+        localStorage.setItem("user", JSON.stringify(response.data));
       }
       return response.data;
     });
