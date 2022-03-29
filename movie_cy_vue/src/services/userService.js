@@ -35,5 +35,20 @@ class UserService {
         return response;
       });
   }
+
+  deleteUser(token) {
+    return axios
+      .delete(
+        `http://localhost:8000/users/${
+          VueJwtDecode.decode(token.access_token).user_id
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.access_token}`,
+          },
+        }
+      )
+      .then((response) => response);
+  }
 }
 export default new UserService();
