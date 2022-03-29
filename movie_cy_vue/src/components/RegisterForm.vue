@@ -134,7 +134,7 @@
             <el-button
               class="validate"
               type="warning"
-              @click="createUser()"
+              @click="register()"
               round
               :disabled="!isComplete"
             >
@@ -149,14 +149,13 @@
 
 
 <script lang="ts">
-import UsersService from "../services/UsersService.js";
 import AuthService  from "../services/authService.js";
 
 export default {
   data() {
     return {
-      imageSrc: "./src/components/icon/CharacterIcon/alien.png",
-      defaultLabel: "Alien",
+      imageSrc: "./src/components/icon/CharacterIcon/avatar.svg",
+      defaultLabel: "Avatar",
       listImages: [],
     };
   },
@@ -164,15 +163,17 @@ export default {
     changeImg(e) {
       this.imageSrc = e;
     },
-    createUser() {
+    register() {
       delete this.ruleForm["checkPass"];
       AuthService.register(this.ruleForm);
-    },
+    }
   },
+
   computed: {
     isComplete() {
       return (
         this.ruleForm.prenom &&
+        this.ruleForm.email &&
         this.ruleForm.nom &&
         this.ruleForm.ddn &&
         this.ruleForm.mdp &&
@@ -188,7 +189,6 @@ export default {
 import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 import { FormInstance } from "element-plus";
-import { avatarForUser } from "./data/avatarForUser";
 const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");
@@ -459,5 +459,6 @@ input {
 .el-form-item__label {
   margin-bottom: 5px !important;
 }
+
 </style>
 
