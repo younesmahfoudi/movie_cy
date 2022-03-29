@@ -78,15 +78,21 @@ export default {
     };
   },
   mounted() {
-    axios.get("http://localhost:8000/movies/").then((response) => {
-      response.data.items.forEach((e) => {
-        e.genreList.forEach((element) => {
-          element.value = `./src/components/icon/ThemeIcon/${element.value.toLowerCase()}.png`;
+    const token = JSON.parse(localStorage.getItem("user"));
+    axios
+      .get("http://localhost:8000/movies/", {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+        },
+      })
+      .then((response) => {
+        response.data.items.forEach((e) => {
+          e.genreList.forEach((element) => {
+            element.value = `./src/components/icon/ThemeIcon/${element.value.toLowerCase()}.png`;
+          });
         });
+        this.movie = response.data.items[0];
       });
-      this.movie = response.data.items[0];
-      console.log(response.data.items[0]);
-    });
   },
 };
 </script>
@@ -137,7 +143,7 @@ export default {
   margin-top: 5%;
 }
 
-@media screen and (max-width: 1550px) and (min-width: 850px){
+@media screen and (max-width: 1550px) and (min-width: 850px) {
   .image-details {
     max-width: 70%;
   }

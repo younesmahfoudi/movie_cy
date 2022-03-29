@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { Check, Delete } from "@element-plus/icons-vue";
-import axios from "axios";
 import FilmDetails from "./FilmDetails.vue";
 </script>
 
@@ -43,7 +42,7 @@ import FilmDetails from "./FilmDetails.vue";
                     title="J'ai vu"
                     size="large"
                     :icon="Check"
-                    @click="addItem(index)"
+                    @click="deleteItem(index)"
                     circle
                   />
                   <el-button
@@ -96,7 +95,7 @@ import FilmDetails from "./FilmDetails.vue";
                     title="J'ai vu"
                     size="large"
                     :icon="Check"
-                    @click="addItem(index)"
+                    @click="deleteItem(index + 3)"
                     circle
                   />
                   <el-button
@@ -104,7 +103,7 @@ import FilmDetails from "./FilmDetails.vue";
                     title="Je n'aime pas"
                     size="large"
                     :icon="Delete"
-                    @click="deleteItem(index)"
+                    @click="deleteItem(index + 3)"
                     circle
                   />
                 </div>
@@ -118,6 +117,9 @@ import FilmDetails from "./FilmDetails.vue";
 </template>
 
 <script lang="ts">
+import movieService from "../services/movieService";
+import userService from "../services/userService";
+
 export default {
   data() {
     return {
@@ -125,24 +127,25 @@ export default {
       user: "",
     };
   },
-  mounted() {
-    axios.get("http://localhost:8000/movies/").then((response) => {
-      response.data.items.forEach((e) => {
-        e.genreList.forEach((element) => {
-          element.value = `./src/components/icon/ThemeIcon/${element.value.toLowerCase()}.png`;
-        });
-      });
-      this.movies = response.data.items;
-    });
+  async mounted() {
+    const token = JSON.parse(localStorage.getItem("user"));
+    this.movies = await movieService.getMovies(token);
+    console.log(this.movies);
   },
   methods: {
-    deleteItem(index) {
+    async deleteItem(index) {
+      const token = JSON.parse(localStorage.getItem("user"));
+      let user = await userService.getUser(token);
+
+      if (user.films != null) {
+        user.films.push(this.movies[index].id);
+      } else {
+        user.films = [this.movies[index].id];
+      }
+      console.log(user);
+      await userService.updateUser(token, { films: user.films });
       this.movies.splice(index, 1);
-      //TODO add to liste de film non voulu par le groupe
-    },
-    addItem(index) {
-      this.movies.splice(index, 1);
-      //TODO add to liste de film vu par l'user
+      console.log(user);
     },
   },
 };
