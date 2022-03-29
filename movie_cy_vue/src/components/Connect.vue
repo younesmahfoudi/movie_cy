@@ -114,8 +114,8 @@ const rules = reactive({
 });
 </script>
 
+<style lang="scss" scoped>
 
-<style lang="scss">
 @import "../assets/constant.scss";
 
 .dialog-connect{
@@ -167,6 +167,7 @@ const rules = reactive({
 
 .title {
   display: flex;
+  justify-content: center;
   margin-left: auto;
   margin-right: auto;
   font-weight: bold;

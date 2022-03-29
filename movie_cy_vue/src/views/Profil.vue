@@ -5,13 +5,15 @@ import ToolBar from "../components/ToolBar.vue";
 </script>
 
 <template>
-  <SideBar />
-  <div class="content-profil">
-    <div class="toolbar-profil">
-      <ToolBar />
-    </div>
-    <div class="form-profil">
-      <ProfilManager />
+  <div>
+    <SideBar />
+    <div class="content-profil">
+      <div class="toolbar-profil">
+        <ToolBar />
+      </div>
+      <div class="form-profil">
+        <ProfilManager />
+      </div>
     </div>
   </div>
 </template>
