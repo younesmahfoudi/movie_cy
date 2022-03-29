@@ -125,6 +125,7 @@ export default {
     return {
       movies: [],
       user: "",
+      groupe_id: "123456", // this.$route.params.id
     };
   },
   async mounted() {
