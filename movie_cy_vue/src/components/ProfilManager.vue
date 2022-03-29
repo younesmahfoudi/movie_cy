@@ -5,7 +5,7 @@
         class="iconGroup avatar-profil"
         :style="{ backgroundColor: '#faa427' }"
         :size="170"
-        :src="user.icon"
+        :src="this.findSrcOfAvatarWithLabel(user.icon)"
       />
     </div>
     <div class="names-bloc">
@@ -78,6 +78,7 @@
               class="btn-modifier"
               :icon="Edit"
               circle
+              @click="dialogInfosContenu = true"
             />
           </div>
           <hr class="ligne" />
@@ -98,15 +99,11 @@
             <el-col class="key" :span="12">Réalisateur favori </el-col>
             <el-col :span="12">{{ user.acteur }} </el-col>
           </el-row>
-          <el-row>
-            <el-col class="key" :span="12">Acteur favori </el-col>
-            <el-col :span="12">{{ user.acteur }} </el-col>
-          </el-row>
         </el-card>
       </el-col>
     </el-row>
 
-    <el-dialog custom-class="dialog" v-model="dialogInfosPerso" width="35%">
+    <el-dialog custom-class="dialog" v-model="dialogInfosPerso" width="35%" >
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
@@ -120,6 +117,7 @@
           label-position="top"
           ref="ruleFormRef"
           :rules="rules"
+          :model="this.user"
         >
           <div class="names">
             <el-form-item
@@ -129,7 +127,7 @@
             >
               <el-input
                 input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
-                v-model="ruleForm.prenom"
+                v-model="user.prenom"
                 placeholder="Prénom"
                 name="user.prenom"
               />
@@ -163,9 +161,9 @@
 
           <el-form-item prop="mdp" label="Mot de passe">
             <el-input
-              v-model="user.mdp"
               input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password"
+              v-model="user.mdp"
               type="password"
               placeholder="Mot de passe"
               show-password
@@ -173,28 +171,25 @@
             />
           </el-form-item>
 
-          <el-form-item prop="checkPass" label="Confirmation mot de passe">
+          <el-form-item prop="checkMdpInput" label="Confirmation mot de passe">
             <el-input
               input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
-              v-model="user.mdp"
-              name="password"
-              type="password"
+              name="password1"
+              v-model="user.checkMdpInput"
+              type="password1"
               placeholder="Mot de passe"
               show-password
               autocomplete="off"
             />
           </el-form-item>
+
           <el-form-item prop="avatar" label="Avatar">
-            <el-select
-              class="m-2"
-              :placeholder="defaultLabel"
-              size="large"
-            >
+            <el-select class="m-2" v-model="user.icon" size="large">
               <div class="iconGrid">
                 <el-option
                   v-for="item in avatarForUser"
                   :key="item.value"
-                  :value="item.photo"
+                  :value="item.label"
                   :label="item.label"
                   @click="changeImg(item.photo)"
                 >
@@ -216,9 +211,154 @@
               :style="{ backgroundColor: '#faa427' }"
               :size="50"
             >
-              <img :src=user.icon />
+              <img :src="findSrcOfAvatarWithLabel(user.icon)" />
             </el-avatar>
           </el-form-item>
+        </el-form>
+      </div>
+
+      <template #footer>
+        <div style="display: flex">
+          <span class="dialog-footer">
+            <el-button
+              class="validate"
+              type="warning"
+              @click="createUser()"
+              round
+              :disabled="!isComplete"
+            >
+              Valider
+            </el-button>
+          </span>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog custom-class="dialog" v-model="dialogInfosContenu" width="35%">
+      <img
+        class="imgForm"
+        :style="{ maxWidth: '30%' }"
+        src="/src/components/icon/utilIcon/logo.svg"
+      />
+
+      <span class="title"> Modification de votre contenu préféré</span>
+
+      <div class="formulaire">
+        <el-form
+          label-position="top"
+          ref="ruleFormRef"
+          :rules="rules"
+          :model="this.user"
+        >
+          <el-row :gutter="10" style="display: flex">
+            <el-col
+              class="responsive-card"
+              :xs="24"
+              :sm="24"
+              :md="24"
+              :lg="12"
+              :xl="12"
+            >
+              <el-form-item label="Type de film favori n°1" prop="type1">
+                <el-select
+                  v-model="user.genre"
+                  class="m-2 contenu-fav"
+                  placeholder="Select"
+                  size="large"
+                >
+                  <el-option
+                    v-for="item in listeGenres"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col
+              class="responsive-card"
+              :xs="24"
+              :sm="24"
+              :md="24"
+              :lg="12"
+              :xl="12"
+            >
+              <el-form-item label="Type de film favori n°2" prop="type2">
+                <el-select
+                  v-model="user.genreFlex"
+                  class="m-2 contenu-fav"
+                  placeholder="Select"
+                  size="large"
+                >
+                  <el-option
+                    v-for="item in listeGenres"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="10" style="display: flex">
+            <el-col
+              class="responsive-card"
+              :xs="24"
+              :sm="24"
+              :md="24"
+              :lg="12"
+              :xl="12"
+            >
+              <el-form-item label="Acteur favori" prop="acteur">
+                <el-select
+                  v-model="user.acteur"
+                  filterable
+                  allow-create
+                  default-first-option
+                  :reserve-keyword="false"
+                  placeholder="Acteur favori"
+                  class="m-2 contenu-fav"
+                >
+                  <el-option
+                    v-for="item in listeActeurs"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+
+            <el-col
+              class="responsive-card"
+              :xs="24"
+              :sm="24"
+              :md="24"
+              :lg="12"
+              :xl="12"
+            >
+              <el-form-item label="Réalisateur favori" prop="type1">
+                <el-select
+                  v-model="user.realisateur"
+                  filterable
+                  allow-create
+                  default-first-option
+                  :reserve-keyword="false"
+                  placeholder="Réalisateur favori"
+                  class="m-2 contenu-fav"
+                >
+                  <el-option
+                    v-for="item in listeRealisateurs"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
       </div>
 
@@ -242,6 +382,16 @@
 </template>
 
 <script lang="ts">
+import { ref, reactive } from "vue";
+import { avatarForUser } from "./data/avatarForUser";
+import { listeGenres } from "./data/listeGenres";
+import { listeActeurs } from "./data/listeActeurs";
+import { listeRealisateurs } from "./data/listeRealisateurs";
+import { FormInstance } from "element-plus";
+const dialogInfosPerso = ref(false);
+const dialogInfosContenu = ref(false);
+const ruleFormRef = ref<FormInstance>();
+
 export default {
   data() {
     return {
@@ -250,7 +400,8 @@ export default {
         prenom: "Younes",
         nom: "Mahfoudi",
         email: "mahfoudiyo@cy-tech.fr",
-        mdp: "bite",
+        mdp: "Motdepasse64",
+        checkMdpInput: "Motdepasse64",
         films: "bla",
         groupes: ["Groupe 1", "Groupe 2", "Groupe 3"],
         mood: "bien",
@@ -258,70 +409,150 @@ export default {
         realisateur: "Clint Eastwood",
         genre: "Comédie",
         genreFlex: "Horreur",
-        ddn: "19/08/98",
-        icon: "/src/components/icon/CharacterIcon/avatar.svg",
-        defaultLabel: "Avatar",
+        ddn: "11/10/2016",
+        icon: "Avatar",
+        iconLabel: "",
         listImages: [],
       },
+      rules: reactive({
+        prenom: [
+          { validator: this.checkPrenom, trigger: "blur", required: true },
+        ],
+        nom: [{ validator: this.checkNom, trigger: "blur", required: true }],
+        email: [
+          {
+            required: true,
+            message: "Veuillez saisir une adresse email.",
+            trigger: "blur",
+          },
+          {
+            type: "email",
+            message: "Veuillez saisir une adresse email correcte.",
+            trigger: ["blur", "change"],
+          },
+        ],
+        ddn: [{ validator: this.checkAge, trigger: "blur", required: true }],
+        mdp: [
+          { validator: this.validatePass, trigger: "blur", required: true },
+        ],
+        checkMdpInput: [
+          { validator: this.validatePass2, trigger: "blur", required: true },
+        ],
+        avatar: [
+          { validator: this.checkAvatar, trigger: "blur", required: true },
+        ],
+      }),
     };
   },
   methods: {
     changeImg(e) {
-      this.user.icon = e;
+      this.user.icon = this.findLabelOfAvatarWithSrc(e);
     },
     getGroupes(groupes) {
       return groupes.map((groupe) => {
         return "<li>" + groupe + "</li>";
       });
     },
+    validatePass(rule, value, callback) {
+      if (value === "") {
+        callback(new Error("Veuillez saisir un mot de passe"));
+      } else {
+        if (value !== "") {
+          if (value.length < 6 || !/\d/.test(value)) {
+            callback(
+              new Error(
+                "Votre mot de passe doit être composé d'au moins 6 caractères et d'au moins un chiffre"
+              )
+            );
+          }
+          if (!this.ruleFormRef.value) return;
+          this.ruleFormRef.value.validateField("checkPass", () => null);
+        }
+        callback();
+      }
+    },
+    validatePass2(rule, value, callback) {
+      if (value === "") {
+        callback(new Error("Réessayez"));
+      } else if (value !== this.user.mdp) {
+        callback(new Error("Les mots de passe sont différents"));
+      } else {
+        callback();
+      }
+    },
+    calculateAgeFromDate(birthday) {
+      var ageDifMs = Date.now() - birthday.getTime();
+      var ageDate = new Date(ageDifMs);
+      return Math.abs(ageDate.getUTCFullYear() - 1970);
+    },
+    isDateBeforeToday(date) {
+      if (date) {
+        return (
+          new Date(date.toDateString()) < new Date(new Date().toDateString())
+        );
+      }
+    },
+    checkAge(rule, value, callback) {
+      setTimeout(() => {
+        if (!value) {
+          callback(new Error("Veuillez choisir une date."));
+        }
+        if (!this.isDateBeforeToday(value)) {
+          callback(
+            new Error("Veuillez choisir une date de naissance correcte.")
+          );
+        } else {
+          if (this.calculateAgeFromDate(value) < 18) {
+            callback(new Error("Vous devez avoir plus de 18 ans."));
+          } else {
+            callback();
+          }
+        }
+      }, 1000);
+    },
+    checkPrenom(rule, value, callback) {
+      if (!value || value === "") {
+        callback(new Error("Veuillez saisir un prénom."));
+      }
+    },
+    checkNom(rule, value, callback) {
+      if (!value || value === "") {
+        callback(new Error("Veuillez saisir un nom."));
+      }
+    },
+    checkAvatar(rule, value, callback) {
+      if (!value || value === "") {
+        callback(new Error("Veuillez choisir un avatar."));
+      }
+    },
+    findLabelOfAvatarWithSrc(src) {
+      src = "." + src;
+      const avatarObject = avatarForUser.filter(
+        (avatar) => avatar.photo === src
+      );
+      return avatarObject[0].label;
+    },
+
+    findSrcOfAvatarWithLabel(label) {
+      const avatarObject = avatarForUser.filter(
+        (avatar) => avatar["label"] === label
+      );
+      return avatarObject[0].photo;
+    },
   },
+    computed: {
+    isComplete() {
+      return (
+        this.user.prenom && this.user.nom && this.user.ddn && this.user.email && this.user.mdp && this.user.checkMdpInput && this.user.icon 
+      );
+    },
+  }
 };
 </script>
 
+
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
 import { Edit } from "@element-plus/icons-vue";
-import { avatarForUser } from "./data/avatarForUser";
-const dialogInfosPerso = ref(false);
-
-const checkPrenom = (rule: any, value: any, callback: any) => {
-  console.log(value)
-  if (!value || value === "") {
-    callback(new Error("Veuillez saisir un prénom."));
-  }
-};
-
-const ruleForm = reactive({
-  prenom: "",
-  nom: "",
-  email: "",
-  ddn: "",
-  mdp: "",
-  checkPass: "",
-  avatar: "",
-});
-
-
-const rules = reactive({
-  prenom: [{ validator: checkPrenom, trigger: "blur", required: true }]
-  // nom: [{ validator: checkNom, trigger: "blur", required: true }],
-  // email: [
-  //   {
-  //     required: true,
-  //     message: "Veuillez saisir une adresse email.",
-  //     trigger: "blur",
-  //   },
-  //   {
-  //     type: "email",
-  //     message: "Veuillez saisir une adresse email correcte.",
-  //     trigger: ["blur", "change"],
-  //   },
-  // ],
-  // ddn: [{ validator: checkAge, trigger: "blur", required: true }],
-  // mdp: [{ validator: validatePass, trigger: "blur", required: true }],
-  // checkPass: [{ validator: validatePass2, trigger: "blur", required: true }],
-  // avatar: [{ validator: checkAvatar, trigger: "blur", required: true }],
-});
 </script>
 
 <style lang="scss" scoped>
@@ -455,9 +686,20 @@ tr {
   margin-top: 5%;
   font-size: 15px;
 }
+
+.contenu-fav{
+  width: 100%;
+}
 </style>
 
 <style>
+.typesPref {
+  display: flex;
+}
+
+.staffPref {
+  display: flex;
+}
 .user-infos {
   background-color: grey;
   border-radius: 20px;
