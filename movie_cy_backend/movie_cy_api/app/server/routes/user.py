@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from app.auth.auth_handler import signJWT
 
 from app.server.database import (
-    add_user, retrieve_user, retrieve_users,update_user,delete_user
+    add_user, retrieve_user, retrieve_users, retrieve_users_filtered,update_user,delete_user
 )
 from app.server.models.user import (
     ErrorResponseModel,
@@ -18,28 +18,32 @@ router = APIRouter()
 async def check_user(data: UserLoginSchema):
     for user in await get_users():
         if user["email"] == data.email and user["mdp"] == data.mdp:
-            return True
-    return False
+            return user
 
 
 @router.post("/signup", response_description="User data added into the database")
 async def add_user_data(user: UserSchema = Body(...)):
     user = jsonable_encoder(user)
-    new_user = await add_user(user)
-    return signJWT(new_user["email"])
+    new_user: dict = await add_user(user)
+    return [signJWT(new_user["email"]),new_user] 
 
 
 @router.post("/login", tags=["user"])
 async def user_login(user: UserLoginSchema = Body(...)):
-    if await    check_user(user):
-        return signJWT(user.email)
+    userlog = await check_user(user)
+    if userlog:
+        return [signJWT(user.email), await get_user_data(userlog["id"])]
     return {
         "error": "Wrong login details!"
     }
 
 @router.get("/", response_description="Users retrieved")
-async def get_users():
-    users = await retrieve_users()
+async def get_users(string_entered: str | None= None):
+
+    if(type(string_entered)==str):
+        users = await retrieve_users_filtered(string_entered)
+    else :
+      users = await retrieve_users() 
     if users:
         return users
     return ResponseModel(users, "Empty list returned")
