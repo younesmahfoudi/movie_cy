@@ -1,17 +1,17 @@
 export const iconForGroup = [
   {
     value: "Option1",
-    label: "Pistolet",
+    label: "Action",
     photo: "./src/components/icon/ThemeIcon/action.png",
   },
   {
     value: "Option2",
-    label: "Mickey",
+    label: "Animation",
     photo: "./src/components/icon/ThemeIcon/animation.png",
   },
   {
     value: "Option3",
-    label: "Boussole",
+    label: "Aventure",
     photo: "./src/components/icon/ThemeIcon/adventure.png",
   },
   {
@@ -21,12 +21,12 @@ export const iconForGroup = [
   },
   {
     value: "Option5",
-    label: "Loupe",
+    label: "Biographie",
     photo: "./src/components/icon/ThemeIcon/biography.png",
   },
   {
     value: "Option6",
-    label: "Caméra",
+    label: "Documentaire",
     photo: "./src/components/icon/ThemeIcon/documentary.png",
   },
   {
@@ -36,77 +36,72 @@ export const iconForGroup = [
   },
   {
     value: "Option8",
-    label: "Espion",
+    label: "Crime",
     photo: "./src/components/icon/ThemeIcon/crime.png",
   },
   {
     value: "Option9",
-    label: "Baguette magique",
+    label: "Fantaisie",
     photo: "./src/components/icon/ThemeIcon/fantasy.png",
   },
   {
     value: "Option10",
-    label: "Chapeau",
+    label: "Film noir",
     photo: "./src/components/icon/ThemeIcon/film-noir.png",
   },
   {
     value: "Option11",
-    label: "Sablier",
+    label: "Histoire",
     photo: "./src/components/icon/ThemeIcon/history.png",
   },
   {
     value: "Option12",
-    label: "Couteau",
+    label: "Horreur",
     photo: "./src/components/icon/ThemeIcon/horror.png",
   },
   {
     value: "Option13",
-    label: "Musique",
+    label: "Musical",
     photo: "./src/components/icon/ThemeIcon/musical.png",
   },
   {
     value: "Option14",
-    label: "Cactus",
+    label: "Famille",
     photo: "./src/components/icon/ThemeIcon/family.png",
   },
   {
     value: "Option15",
-    label: "Coeur",
+    label: "Romance",
     photo: "./src/components/icon/ThemeIcon/romance.png",
   },
   {
     value: "Option16",
-    label: "Sablier",
-    photo: "./src/components/icon/ThemeIcon/music.png",
-  },
-  {
-    value: "Option17",
-    label: "Couteau",
+    label: "Mystère",
     photo: "./src/components/icon/ThemeIcon/mystery.png",
   },
   {
-    value: "Option18",
-    label: "Musique",
+    value: "Option17",
+    label: "Science-Fiction",
     photo: "./src/components/icon/ThemeIcon/sci-fi.png",
   },
   {
-    value: "Option19",
-    label: "Cactus",
+    value: "Option18",
+    label: "Sport",
     photo: "./src/components/icon/ThemeIcon/sport.png",
   },
   {
-    value: "Option20",
-    label: "Coeur",
+    value: "Option19",
+    label: "Thriller",
     photo: "./src/components/icon/ThemeIcon/thriller.png",
   },
   {
-    value: "Option21",
-    label: "Cactus",
+    value: "Option20",
+    label: "War",
     photo: "./src/components/icon/ThemeIcon/war.png",
   },
   {
-    value: "Option22",
-    label: "Coeur",
+    value: "Option21",
+    label: "Western",
     photo: "./src/components/icon/ThemeIcon/western.png",
   },
 ];

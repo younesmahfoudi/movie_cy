@@ -8,7 +8,7 @@
     />
     <el-menu
       class="el-menu-vertical-demo"
-      :collapse="isCollapse"
+      collapse="true"
       background-color="#5a6075"
       text-color="#faa427"
     >
@@ -59,11 +59,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import axios from "axios";
 import userService from "../services/userService";
 import GroupsService from "../services/GroupsService";
-const isCollapse = ref(true);
 </script>
 
 <script lang="ts">
@@ -71,22 +68,6 @@ export default {
   data() {
     return {
       groups: [],
-      created() {
-        window.addEventListener("resize", this.myEventHandler);
-      },
-      destroyed() {
-        window.removeEventListener("resize", this.myEventHandler);
-      },
-      methods: {
-        myEventHandler() {
-          console.log(window.innerWidth);
-          if (window.innerWidth < 1200) {
-            this.isCollapse = true;
-          } else {
-            this.isCollapse = false;
-          }
-        },
-      },
     };
   },
   methods: {
@@ -117,7 +98,6 @@ export default {
     const token = JSON.parse(localStorage.getItem("user"));
     let user = await userService.getUser(token);
     this.afficherGroupe(user);
-    console.log(this.groups);
   },
 };
 </script>
