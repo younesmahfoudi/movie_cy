@@ -15,7 +15,7 @@
       <div v-for="(group, index) in groups" :key="group">
         <el-sub-menu :index="index.toString()">
           <template #title>
-            <router-link to="movieGroupList">
+            <router-link :to="{ path: group.id }">
               <el-icon>
                 <el-avatar
                   id="photoGroup"
