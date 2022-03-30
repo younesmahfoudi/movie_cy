@@ -5,11 +5,24 @@
     </router-link>
 
     <router-link to="/">
-      <el-button type="warning" class="darkGray" round>Déconnexion</el-button>
+      <el-button type="warning" class="darkGray" @click="logout" round
+        >Déconnexion</el-button
+      >
     </router-link>
   </div>
-  <router-view />
 </template>
+
+<script lang="ts">
+import authService from "../services/authService";
+
+export default {
+  methods: {
+    logout() {
+      authService.logout();
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 @import "../assets/constant.scss";
