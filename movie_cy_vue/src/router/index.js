@@ -37,6 +37,12 @@ const router = createRouter({
       component: () =>
         import(/* webpackChunkName : "groups" */ "../views/GroupsView.vue"),
     },
+    {
+      path: "/group",
+      name: "group",
+      component: () =>
+        import(/* webpackChunkName : "group" */ "../views/Group.vue"),
+    },
   ],
 });
 

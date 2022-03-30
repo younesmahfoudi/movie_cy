@@ -175,6 +175,8 @@ const rules = reactive({
   font-size: 24px;
   color: white;
   margin-top: -10px;
+  word-break: keep-all;
+  text-align: center;
 }
 
 .formulaire {
