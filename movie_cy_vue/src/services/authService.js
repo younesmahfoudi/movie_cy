@@ -1,5 +1,6 @@
 import axios from "axios";
 import CryptoJS from "crypto-js";
+import router from "../router/index";
 
 const API_URL = "http://localhost:8000/";
 class AuthService {
@@ -13,6 +14,7 @@ class AuthService {
         console.log(response);
         if (response.data.access_token) {
           localStorage.setItem("user", JSON.stringify(response.data));
+          router.push("/profil");
         }
         return response.data;
       });
@@ -20,6 +22,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem("user");
+    router.push("/");
   }
 
   register(user) {
@@ -28,6 +31,7 @@ class AuthService {
       console.log(response);
       if (response.data.access_token) {
         localStorage.setItem("user", JSON.stringify(response.data));
+        router.push("/profil");
       }
       return response.data;
     });
