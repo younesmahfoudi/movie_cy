@@ -4,7 +4,7 @@
       id="photoGroup"
       :style="{ backgroundColor: '#faa427' }"
       :size="150"
-      src="./src/components/icon/utilIcon/logo.svg"
+      src="../src/components/icon/utilIcon/logo.svg"
     />
     <el-menu
       class="el-menu-vertical-demo"
@@ -15,7 +15,7 @@
       <div v-for="(group, index) in groups" :key="group">
         <el-sub-menu :index="index.toString()">
           <template #title>
-            <router-link to="movieGroupList">
+            <router-link :to="{ path: group.id }">
               <el-icon>
                 <el-avatar
                   id="photoGroup"
