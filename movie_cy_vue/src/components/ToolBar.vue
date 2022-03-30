@@ -1,15 +1,31 @@
 <template>
   <div class="button-list">
-    <router-link to="/profil">
-      <el-button type="warning" class="darkGray" round>Profil</el-button>
-    </router-link>
+    <el-button type="warning" class="darkGray" @click="goProfil" round
+      >Profil</el-button
+    >
 
-    <router-link to="/">
-      <el-button type="warning" class="darkGray" round>Déconnexion</el-button>
-    </router-link>
+    <el-button type="warning" class="darkGray" @click="logout" round
+      >Déconnexion</el-button
+    >
   </div>
-  <router-view />
 </template>
+
+<script lang="ts">
+import authService from "../services/authService";
+import router from "../router/index";
+
+export default {
+  methods: {
+    logout() {
+      authService.logout();
+    },
+
+    goProfil() {
+      router.push("/profil");
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 @import "../assets/constant.scss";

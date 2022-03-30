@@ -129,8 +129,8 @@ const rules = reactive({
 });
 </script>
 
-
 <style lang="scss">
+
 @import "../assets/constant.scss";
 
 
@@ -183,6 +183,7 @@ const rules = reactive({
 
 .title {
   display: flex;
+  justify-content: center;
   margin-left: auto;
   margin-right: auto;
   font-weight: bold;

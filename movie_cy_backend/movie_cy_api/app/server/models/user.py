@@ -54,7 +54,7 @@ class UpdateUserModel(BaseModel):
     realisateur: Optional[str] 
     genre: Optional[str] 
     genreFlex: Optional[str] 
-    ddn: Optional[date] 
+    ddn: Optional[str] 
     avatar: Optional[str]
 
     class Config:
