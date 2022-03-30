@@ -18,7 +18,7 @@ const router = createRouter({
         ),
     },
     {
-      path: "/movieGroupList",
+      path: "/:id",
       name: "Liste de film",
       component: () =>
         import(

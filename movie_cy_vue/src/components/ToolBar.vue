@@ -1,12 +1,15 @@
 <template>
-  <div class="button-list">
-    <el-button type="warning" class="darkGray" @click="goProfil" round
-      >Profil</el-button
-    >
+  <div>
+    <div v-if="route.includes(`http://localhost:3000/movieGroupList`)">hey</div>
+    <div class="button-list">
+      <el-button type="warning" class="darkGray" @click="goProfil" round
+        >Profil</el-button
+      >
 
-    <el-button type="warning" class="darkGray" @click="logout" round
-      >Déconnexion</el-button
-    >
+      <el-button type="warning" class="darkGray" @click="logout" round
+        >Déconnexion</el-button
+      >
+    </div>
   </div>
 </template>
 
@@ -15,6 +18,12 @@ import authService from "../services/authService";
 import router from "../router/index";
 
 export default {
+  data() {
+    return {
+      route: this.$route.params.toString(),
+      groupe: {},
+    };
+  },
   methods: {
     logout() {
       authService.logout();
