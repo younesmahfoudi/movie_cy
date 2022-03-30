@@ -122,7 +122,7 @@
               :style="{ backgroundColor: '#faa427' }"
               :size="50"
             >
-              <img :src="this.findSrcOfAvatarWithLabel(defaultLabel)" />
+              <img :src="ProfilManager.methods.findSrcOfAvatarWithLabel(defaultLabel)" />
             </el-avatar>
           </el-form-item>
         </el-form>
@@ -160,25 +160,9 @@ export default {
     };
   },
   methods: {
-    findLabelOfAvatarWithSrc(src) {
-      if (src.substring(0, 1) !== ".") {
-        src = "." + src;
-      }
-      const avatarObject = avatarForUser.filter(
-        (avatar) => avatar.photo === src
-      );
-      return avatarObject[0].label;
-    },
-
-    findSrcOfAvatarWithLabel(label) {
-      const avatarObject = avatarForUser.filter(
-        (avatar) => avatar["label"] === label
-      );
-      return avatarObject[0].photo;
-    },
     changeImg(e) {
       debugger
-      this.defaultLabel = this.findLabelOfAvatarWithSrc(e);
+      this.defaultLabel = ProfilManager.methods.findLabelOfAvatarWithSrc(e);
     },
     register() {
       delete this.ruleForm["checkPass"];
