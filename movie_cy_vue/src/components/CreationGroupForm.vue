@@ -80,8 +80,9 @@
                 <span>Membres</span>
               </div>
           </template>
-          <div v-for="user in this.tab_members_right" :key="user" class="text item">
-             <div>  <el-button type="danger"  @click="removeToMembersList(user)" round>-</el-button> {{ user.prenom + " " + user.nom + " ( " + user.email + " )" }}  </div>
+          <div v-for="(user,index) in this.tab_members_right" :key="user" class="text item">
+             <div v-if="(index==0)"> Admin : {{ user.prenom + " " + user.nom + " ( " + user.email + " )" }} </div>
+             <div v-if="(index!=0)">  <el-button type="danger"  @click="removeToMembersList(user)" round>-</el-button> {{ user.prenom + " " + user.nom + " ( " + user.email + " )" }}</div>
           </div>
         
         </el-card>
@@ -116,6 +117,7 @@
 <script lang="ts">
 import GroupsService from "../services/GroupsService.js";
 import  axios  from "axios";
+import UserService from "../services/userService.js";
 
 export default {
   data() {
@@ -131,6 +133,13 @@ export default {
       request_not_null : false,
     };
   },
+  async mounted() {
+      const token = JSON.parse(localStorage.getItem("user"));
+      let user = await userService.getUser(token);
+      this.tab_members_right.push(user);
+      this.tab_id_members.push(user["id"]);
+    
+  },
   watch: {
     string_entered: function (value) {
       this.searchUser(value);
@@ -140,9 +149,20 @@ export default {
     changeImg(e) {
       this.imageSrc = e;
     },
-    createGroup() {
+    async createGroup() {
+  
+
       this.ruleForm.membres = this.tab_id_members;
-      GroupsService.createGroup(this.ruleForm);
+      this.ruleForm.admin = this.tab_id_members[0];
+      
+      const new_groupe = await GroupsService.createGroup(JSON.parse(localStorage.getItem("user")),this.ruleForm);
+
+      for(var i = 0; i < this.tab_members_right.length; i++){
+          this.tab_members_right[i]["groupes"].push(new_groupe.data.data[0]["id"]);
+          console.log(JSON.stringify(this.tab_members_right[i]));
+          console.log(JSON.parse(localStorage.getItem("user")));
+          UserService.updateUser(JSON.parse(localStorage.getItem("user")),JSON.parse(JSON.stringify(this.tab_members_right[i])));
+      }
     },
     searchUser(string_entered){
 
@@ -170,7 +190,6 @@ export default {
       
     },
     arrayRemove(arr, value) { 
-    
         return arr.filter(function(ele){ 
             return ele != value; 
         });
@@ -185,6 +204,9 @@ export default {
       this.tab_id_members = this.arrayRemove(this.tab_id_members, user["id"]);
       this.tab_members_right = this.arrayRemove(this.tab_members_right, user);
     },
+    updateGroupsUser(user) {
+      UserService.updateUser(JSON.parse(localStorage.getItem("user")),user)
+    }
   },
   computed: {
     isComplete() {
@@ -198,13 +220,14 @@ export default {
 import { reactive } from "vue";
 import { ref } from "vue";
 import { iconForGroup } from "./data/iconForGroup";
+import userService from '../services/userService.js';
 
 
 const ruleForm = reactive({
   nom: "",
   photo: "",
   membres: "", // A CHANGER AVEC ID DU MEC CONNECTE + LES AUTRES USERS
-  admin: "623db4a15a5a69cbe3666ea1", // A CHANGER AVEC ID DU MEC CONNECTE
+  admin: "", // A CHANGER AVEC ID DU MEC CONNECTE
 });
 
 const checkNom = (rule: any, value: any, callback: any) => {

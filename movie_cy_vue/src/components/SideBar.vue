@@ -61,6 +61,8 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import axios from "axios";
+import userService from "../services/userService";
+import GroupsService from "../services/GroupsService";
 const isCollapse = ref(true);
 </script>
 
@@ -69,57 +71,37 @@ export default {
   data() {
     return {
       groups: [],
-      groupes: [
-        {
-          id: 1,
-          nom: "groupe 1",
-          membres: ["Jean", "Bernard", "Louis"],
-          admin: "Bernard",
-          photo: "./src/components/icon/ThemeIcon/animation.png",
-        },
-        {
-          id: 2,
-          nom: "Groupe 2",
-          membres: ["Jean", "Bernard", "Louis"],
-          admin: "Bernard",
-          photo: "./src/components/icon/ThemeIcon/horror.png",
-        },
-        {
-          id: 3,
-          nom: "Groupe 3",
-          membres: ["Jean", "Bernard", "Louis"],
-          admin: "Louis",
-          photo: "./src/components/icon/ThemeIcon/drama.png",
-        },
-      ],
     };
   },
-  mounted() {
-    axios
-      .get("http://localhost:8000/users/62417ab001cbe04ba11a6fc2")
-      .then((response) => {
-        // On récupère les id des groupes des utilisateurs
-        this.groupes_id = response.data.data[0].groupes;
-        // Pour chaque groupe, on récupère les id des membres
-        for (let i = 0; i < this.groupes_id.length; i++) {
-          this.request = "http://localhost:8000/groups/" + this.groupes_id[i];
-          axios.get(this.request).then((response) => {
-            this.groups[i] = response.data.data[0];
-            // Pour chaque membre on récupère leur nom
-            for (let j = 0; j < this.groups[i].membres.length; j++) {
-              this.groups[i]["nom_membres"] = [];
-              this.request_user_infos =
-                "http://localhost:8000/users/" + this.groups[i].membres[j];
-              axios.get(this.request_user_infos).then((response) => {
-                this.groups[i]["nom_membres"][j] =
-                  response.data.data[0].prenom +
-                  " " +
-                  response.data.data[0].nom;
-              });
-            }
-          });
+  methods: {
+    async afficherGroupe(user) {
+      const token = JSON.parse(localStorage.getItem("user"));
+      //On récupère les id des groupes des utilisateurs
+      const groupes_id = user.groupes;
+
+      // Pour chaque groupe, on récupère les id des membres
+      for (let i = 0; i < groupes_id.length; i++) {
+        this.groups[i] = await GroupsService.getGroup(
+          JSON.parse(localStorage.getItem("user")),
+          groupes_id[i]
+        );
+        this.groups[i]["nom_membres"] = [];
+
+        for (let j = 0; j < this.groups[i].membres.length; j++) {
+          let user = await userService.getSpecificUser(
+            token,
+            this.groups[i].membres[j]
+          );
+          this.groups[i]["nom_membres"][j] = user.prenom + " " + user.nom;
         }
-      });
+      }
+    },
+  },
+  async mounted() {
+    const token = JSON.parse(localStorage.getItem("user"));
+    let user = await userService.getUser(token);
+    this.afficherGroupe(user);
+    console.log(this.groups);
   },
 };
 </script>

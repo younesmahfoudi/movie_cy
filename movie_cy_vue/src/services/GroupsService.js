@@ -2,16 +2,17 @@ import axios from "axios";
 
 const API_URL = "http://localhost:8000/groups/";
 
-class GroupService {
+class GroupsService {
   createGroup(token, group) {
-    console.log(group);
-    axios
+    return axios
       .post(API_URL, group, {
         headers: {
           Authorization: `Bearer ${token.access_token}`,
         },
       })
-      .then((group) => group);
+      .then((group) => {
+        return group;
+      });
   }
 
   getGroup(token, id) {
@@ -22,7 +23,7 @@ class GroupService {
         },
       })
       .then((response) => {
-        return response.data.items;
+        return response.data.data[0];
       });
   }
 
@@ -50,4 +51,4 @@ class GroupService {
       });
   }
 }
-export default new GroupService();
+export default new GroupsService();
