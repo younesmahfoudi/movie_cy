@@ -74,8 +74,6 @@ const ruleFormRef = ref<FormInstance>();
 </script>
 
 <script lang="ts">
-import AuthService  from "../services/authService.js";
-
 export default {
   data: function () {
     return {
@@ -87,14 +85,31 @@ export default {
   },
   methods: {
     login() {
-      AuthService.login(this.ruleForm);
+      this.$store.dispatch("auth/login", this.ruleForm).then(
+        () => {
+          this.$router.push("/profil");
+        },
+        (error) => {
+          console.log(error);
+          // condition de modt de passe incorect
+        }
+      );
     }
+    
   },
   computed: {
     isComplete() {
       return this.ruleForm.email && this.ruleForm.mdp;
     },
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
   },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push("/profil");
+    }
+  }
 };
 
 const rules = reactive({
@@ -117,6 +132,7 @@ const rules = reactive({
 
 <style lang="scss">
 @import "../assets/constant.scss";
+
 
 .dialog-connect{
   margin-top: 10%;

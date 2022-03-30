@@ -149,14 +149,13 @@
 
 
 <script lang="ts">
-import AuthService  from "../services/authService.js";
-
+import AuthService  from "../services/auth.service.js";
 export default {
   data() {
     return {
       imageSrc: "./src/components/icon/CharacterIcon/avatar.svg",
       defaultLabel: "Avatar",
-      listImages: [],
+      listImages: []
     };
   },
   methods: {
@@ -165,7 +164,15 @@ export default {
     },
     register() {
       delete this.ruleForm["checkPass"];
-      AuthService.register(this.ruleForm);
+      this.$store.dispatch("auth/register", this.ruleForm).then(
+        () => {
+          this.$router.push("/profil");
+        },
+        (error) => {
+          console.log(error);
+          // condition de formulaire mal saisie
+        }
+      );
     }
   },
 
@@ -180,7 +187,16 @@ export default {
         this.ruleForm.checkPass
       );
     },
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    }
   },
+
+  mounted() {
+    if (this.loggedIn) {
+      this.$router.push("/profil");
+    }
+  }
 };
 </script>
 
