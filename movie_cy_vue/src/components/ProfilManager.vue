@@ -103,7 +103,7 @@
       </el-col>
     </el-row>
 
-    <el-dialog custom-class="dialog" v-model="dialogInfosPerso" width="35%" >
+    <el-dialog custom-class="dialog" v-model="dialogInfosPerso" width="35%" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" >
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
@@ -223,7 +223,7 @@
             <el-button
               class="validate"
               type="warning"
-              @click="createUser()"
+              @click="updateUser()"
               round
               :disabled="!isComplete"
             >
@@ -234,7 +234,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog custom-class="dialog" v-model="dialogInfosContenu" width="35%">
+    <el-dialog custom-class="dialog" v-model="dialogInfosContenu" width="35%" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false">
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
@@ -368,7 +368,7 @@
             <el-button
               class="validate"
               type="warning"
-              @click="createUser()"
+              @click="updateUser()"
               round
               :disabled="!isComplete"
             >
@@ -539,6 +539,10 @@ export default {
       );
       return avatarObject[0].photo;
     },
+    updateUser(){
+      this.dialogInfosPerso = false
+      this.dialogInfosContenu = false
+    }
   },
     computed: {
     isComplete() {
