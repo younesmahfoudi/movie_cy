@@ -10,7 +10,7 @@
     </div>
     <div class="names-bloc">
       <div class="names">
-        <span>{{ user.prenom }} </span>
+        <span style="margin-right:5%">{{ user.prenom }} </span>
         {{ user.nom }}
       </div>
     </div>
@@ -409,7 +409,7 @@ export default {
         realisateur: "Clint Eastwood",
         genre: "Comédie",
         genreFlex: "Horreur",
-        ddn: "11/10/2016",
+        ddn: "11/10/1990",
         icon: "Avatar",
         iconLabel: "",
         listImages: [],

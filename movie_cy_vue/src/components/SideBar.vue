@@ -1,9 +1,9 @@
 <template>
   <div class="sidebar-container">
     <el-avatar
-      id="photoGroup"
-      :style="{ backgroundColor: '#faa427' }"
-      :size="150"
+      class="photo-logo"
+      :style="{ backgroundColor: $gray }"
+      :size="5"
       src="./src/components/icon/utilIcon/logo.svg"
     />
     <el-menu
@@ -130,5 +130,12 @@ export default {
   height: 130%;
   width: 100%;
   max-width: 30px;
+}
+
+</style>
+
+<style lang="scss">
+.photo-logo > img{
+  height: 33% !important;
 }
 </style>
