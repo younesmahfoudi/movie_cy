@@ -19,16 +19,4 @@ import ToolBar from "../components/ToolBar.vue";
 </template>
 
 <style>
-.toolbar-profil {
-  margin-right: 3%;
-  height: 50px;
-}
-
-.content-profil {
-  margin-left: 56px;
-}
-
-.form-profil {
-  margin-top: 3%;
-}
 </style>
