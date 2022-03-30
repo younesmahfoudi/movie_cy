@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Search, Check, Delete } from "@element-plus/icons-vue";
+import { InfoFilled, Check, Delete } from "@element-plus/icons-vue";
 import axios from "axios";
 </script>
 
@@ -10,7 +10,7 @@ import axios from "axios";
       title="Plus d'info"
       size="large"
       @click="dialogVisible = true"
-      :icon="Search"
+      :icon="InfoFilled"
       circle
     />
     <el-dialog

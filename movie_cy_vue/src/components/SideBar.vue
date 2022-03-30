@@ -16,7 +16,7 @@
         <el-sub-menu :index="index.toString()">
           <template #title>
             <router-link to="movieGroupList">
-              <el-icon v-on:click="isCollapse = !isCollapse">
+              <el-icon>
                 <el-avatar
                   id="photoGroup"
                   :style="{ backgroundColor: '#faa427' }"
@@ -61,7 +61,7 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
-const isCollapse = ref(true);
+const isCollapse = ref(false);
 </script>
 
 <script lang="ts">
@@ -91,6 +91,22 @@ export default {
           photo: "./src/components/icon/ThemeIcon/drama.png",
         },
       ],
+      created() {
+        window.addEventListener("resize", this.myEventHandler);
+      },
+      destroyed() {
+        window.removeEventListener("resize", this.myEventHandler);
+      },
+      methods: {
+        myEventHandler() {
+          console.log(window.innerWidth);
+          if (window.innerWidth < 1200) {
+            this.isCollapse = true;
+          } else {
+            this.isCollapse = false;
+          }
+        },
+      },
     };
   },
 };
