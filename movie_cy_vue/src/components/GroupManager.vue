@@ -147,7 +147,7 @@ export default {
       group: {
         id: 1,
         nom: "Groupe ICC",
-        label: "Espion",
+        label: "War",
         membres: [
           {
             prenom: "Younes",
@@ -222,6 +222,7 @@ export default {
     },
 
     findSrcOfGroupWithLabel(label) {
+      debugger
       const groupObject = iconForGroup.filter((group) => group.label === label);
       return groupObject[0].photo;
     },
