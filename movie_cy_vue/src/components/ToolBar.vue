@@ -2,6 +2,9 @@
   <div>
     <div v-if="route.includes(`http://localhost:3000/movieGroupList`)">hey</div>
     <div class="button-list">
+      <el-button v-if="route.includes(`http://localhost:3000/movieGroupList`)" type="warning" class="darkGray" @click="goProfil" round
+        >Groupe : </el-button
+      >
       <el-button type="warning" class="darkGray" @click="goProfil" round
         >Profil</el-button
       >
