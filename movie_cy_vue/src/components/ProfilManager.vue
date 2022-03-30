@@ -10,7 +10,7 @@
     </div>
     <div class="names-bloc">
       <div class="names">
-        <span style="margin-right:5%">{{ user.prenom }} </span>
+        <span style="margin-right: 5%">{{ user.prenom }} </span>
         {{ user.nom }}
       </div>
     </div>
@@ -103,7 +103,14 @@
       </el-col>
     </el-row>
 
-    <el-dialog custom-class="dialog" v-model="dialogInfosPerso" width="35%" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" >
+    <el-dialog
+      custom-class="dialog"
+      v-model="dialogInfosPerso"
+      width="35%"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+    >
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
@@ -234,7 +241,14 @@
       </template>
     </el-dialog>
 
-    <el-dialog custom-class="dialog" v-model="dialogInfosContenu" width="35%" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false">
+    <el-dialog
+      custom-class="dialog"
+      v-model="dialogInfosContenu"
+      width="35%"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+    >
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
@@ -526,7 +540,9 @@ export default {
       }
     },
     findLabelOfAvatarWithSrc(src) {
-      src = "." + src;
+      if (src.substring(0, 1) !== ".") {
+        src = "." + src;
+      }
       const avatarObject = avatarForUser.filter(
         (avatar) => avatar.photo === src
       );
@@ -539,18 +555,24 @@ export default {
       );
       return avatarObject[0].photo;
     },
-    updateUser(){
-      this.dialogInfosPerso = false
-      this.dialogInfosContenu = false
-    }
+    updateUser() {
+      this.dialogInfosPerso = false;
+      this.dialogInfosContenu = false;
+    },
   },
-    computed: {
+  computed: {
     isComplete() {
       return (
-        this.user.prenom && this.user.nom && this.user.ddn && this.user.email && this.user.mdp && this.user.checkMdpInput && this.user.icon 
+        this.user.prenom &&
+        this.user.nom &&
+        this.user.ddn &&
+        this.user.email &&
+        this.user.mdp &&
+        this.user.checkMdpInput &&
+        this.user.icon
       );
     },
-  }
+  },
 };
 </script>
 
@@ -691,7 +713,7 @@ tr {
   font-size: 15px;
 }
 
-.contenu-fav{
+.contenu-fav {
   width: 100%;
 }
 </style>

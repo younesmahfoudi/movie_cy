@@ -93,14 +93,14 @@
             <el-select
               v-model="ruleForm.avatar"
               class="m-2"
-              :placeholder="defaultLabel"
+              :placeholder="this.defaultLabel"
               size="large"
             >
               <div class="iconGrid">
                 <el-option
                   v-for="item in avatarForUser"
                   :key="item.value"
-                  :value="item.photo"
+                  :value="item.label"
                   :label="item.label"
                   @click="changeImg(item.photo)"
                 >
@@ -122,7 +122,7 @@
               :style="{ backgroundColor: '#faa427' }"
               :size="50"
             >
-              <img :src="imageSrc" />
+              <img :src="ProfilManager.methods.findSrcOfAvatarWithLabel(defaultLabel)" />
             </el-avatar>
           </el-form-item>
         </el-form>
@@ -149,19 +149,20 @@
 
 
 <script lang="ts">
+import ProfilManager from "./ProfilManager.vue"
 import AuthService  from "../services/authService.js";
 
 export default {
   data() {
     return {
-      imageSrc: "./src/components/icon/CharacterIcon/avatar.svg",
       defaultLabel: "Avatar",
       listImages: [],
     };
   },
   methods: {
     changeImg(e) {
-      this.imageSrc = e;
+      debugger
+      this.defaultLabel = ProfilManager.methods.findLabelOfAvatarWithSrc(e);
     },
     register() {
       delete this.ruleForm["checkPass"];
@@ -190,6 +191,8 @@ export default {
 import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 import { FormInstance } from "element-plus";
+import { avatarForUser } from "./data/avatarForUser";
+
 const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");
