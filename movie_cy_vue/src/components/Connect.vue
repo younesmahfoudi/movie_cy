@@ -114,7 +114,7 @@ const rules = reactive({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 @import "../assets/constant.scss";
 
