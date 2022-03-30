@@ -696,6 +696,7 @@ tr {
 }
 </style>
 
+
 <style>
 .typesPref {
   display: flex;
@@ -729,3 +730,4 @@ tr {
   font-weight: bold;
 }
 </style>
+>>>>>>> 42219c4a9770c99abdefd40fd57025b4c78ca419

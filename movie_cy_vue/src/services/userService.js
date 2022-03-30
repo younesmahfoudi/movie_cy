@@ -17,6 +17,16 @@ class UserService {
       .then((response) => response.data.data[0]);
   }
 
+  getSpecificUser(token, user_id) {
+    return axios
+      .get(`http://localhost:8000/users/` + user_id, {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+        },
+      })
+      .then((response) => response.data.data[0]);
+  }
+
   updateUser(token, user) {
     return axios
       .put(
