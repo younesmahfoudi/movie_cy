@@ -8,7 +8,7 @@
     />
     <el-menu
       class="el-menu-vertical-demo"
-      :collapse="isCollapse"
+      collapse="true"
       background-color="#5a6075"
       text-color="#faa427"
     >
@@ -16,7 +16,7 @@
         <el-sub-menu :index="index.toString()">
           <template #title>
             <router-link to="movieGroupList">
-              <el-icon v-on:click="isCollapse = !isCollapse">
+              <el-icon>
                 <el-avatar
                   id="photoGroup"
                   :style="{ backgroundColor: '#faa427' }"
@@ -31,7 +31,7 @@
               <span>Membres du groupe</span>
             </template>
             <el-menu-item
-              v-for="(membre, membreIndex) in groups[index].membres"
+              v-for="(membre, membreIndex) in groups[index].nom_membres"
               :key="membre"
               :index="membreIndex.toString()"
             >
@@ -59,39 +59,45 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-
-const isCollapse = ref(true);
+import userService from "../services/userService";
+import GroupsService from "../services/GroupsService";
 </script>
 
 <script lang="ts">
 export default {
   data() {
     return {
-      groups: [
-        {
-          id: 1,
-          nom: "groupe 1",
-          membres: ["Jean", "Bernard", "Louis"],
-          admin: "Bernard",
-          photo: "./src/components/icon/ThemeIcon/animation.png",
-        },
-        {
-          id: 2,
-          nom: "Groupe 2",
-          membres: ["Jean", "Bernard", "Louis"],
-          admin: "Bernard",
-          photo: "./src/components/icon/ThemeIcon/horror.png",
-        },
-        {
-          id: 3,
-          nom: "Groupe 3",
-          membres: ["Jean", "Bernard", "Louis"],
-          admin: "Louis",
-          photo: "./src/components/icon/ThemeIcon/drama.png",
-        },
-      ],
+      groups: [],
     };
+  },
+  methods: {
+    async afficherGroupe(user) {
+      const token = JSON.parse(localStorage.getItem("user"));
+      //On récupère les id des groupes des utilisateurs
+      const groupes_id = user.groupes;
+
+      // Pour chaque groupe, on récupère les id des membres
+      for (let i = 0; i < groupes_id.length; i++) {
+        this.groups[i] = await GroupsService.getGroup(
+          JSON.parse(localStorage.getItem("user")),
+          groupes_id[i]
+        );
+        this.groups[i]["nom_membres"] = [];
+
+        for (let j = 0; j < this.groups[i].membres.length; j++) {
+          let user = await userService.getSpecificUser(
+            token,
+            this.groups[i].membres[j]
+          );
+          this.groups[i]["nom_membres"][j] = user.prenom + " " + user.nom;
+        }
+      }
+    },
+  },
+  async mounted() {
+    const token = JSON.parse(localStorage.getItem("user"));
+    let user = await userService.getUser(token);
+    this.afficherGroupe(user);
   },
 };
 </script>
