@@ -134,7 +134,7 @@
             <el-button
               class="validate"
               type="warning"
-              @click="createUser()"
+              @click="register()"
               round
               :disabled="!isComplete"
             >
@@ -149,8 +149,7 @@
 
 
 <script lang="ts">
-import UsersService from "../services/UsersService.js";
-import CryptoJS from "crypto-js";
+import AuthService  from "../services/authService.js";
 
 export default {
   data() {
@@ -164,22 +163,10 @@ export default {
     changeImg(e) {
       this.imageSrc = e;
     },
-    createUser() {
+    register() {
       delete this.ruleForm["checkPass"];
-      this.ruleForm["mdp"] = this.encrypt(this.ruleForm["mdp"])
-      UsersService.createUser(this.ruleForm);
-    },
-    encrypt(user) {
-      const passphrase = "YounesEtienneTomMaxime";
-      return CryptoJS.AES.encrypt(user.mdp, passphrase).toString();
-    },
-
-    decrypt(user) {
-      const passphrase = "YounesEtienneTomMaxime";
-      const bytes = CryptoJS.AES.decrypt(user.mdp, passphrase);
-      const originalText = bytes.toString(CryptoJS.enc.Utf8);
-      return originalText;
-    },
+      AuthService.register(this.ruleForm);
+    }
   },
   
 
@@ -203,7 +190,6 @@ export default {
 import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 import { FormInstance } from "element-plus";
-import { avatarForUser } from "./data/avatarForUser";
 const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");

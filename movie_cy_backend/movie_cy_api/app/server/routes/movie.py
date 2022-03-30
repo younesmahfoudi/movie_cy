@@ -1,11 +1,12 @@
 from datetime import date
-from typing import List, Optional
+from typing import List
 
-from click import Option
-from fastapi import APIRouter, Body, Depends, Query
-from fastapi_pagination import Page, Params, add_pagination, paginate
-
+from fastapi import APIRouter, Depends, Query
+from fastapi_pagination import Page, Params, paginate
 from fastapi.encoders import jsonable_encoder
+
+from app.auth.auth_bearer import JWTBearer
+from app.auth.auth_handler import signJWT
 
 from app.server.database import (
     add_movie,
@@ -13,10 +14,7 @@ from app.server.database import (
 )
 
 from app.server.models.movie import (
-    ErrorResponseModel,
-    ResponseModel,
     MovieSchema,
-    UpdateMovieModel,
 )
 
 from app.server.imdb import (
@@ -44,7 +42,7 @@ def movie_helper(movie) -> dict:
         "starList": movie["starList"]
     }
 
-@router.get("/", response_description="Movies data retrieved", response_model=Page[dict])
+@router.get("/", response_description="Movies data retrieved", dependencies=[Depends(JWTBearer())], response_model=Page[dict])
 async def get_movies_data_filtered(
         title: str = None,
         genrelist: List[str] = Query(None),

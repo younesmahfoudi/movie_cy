@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from fastapi.encoders import jsonable_encoder
 from app.auth.auth_handler import signJWT
+from app.auth.auth_bearer import JWTBearer
 
 from app.server.database import (
-    add_user, retrieve_user, retrieve_users,update_user,delete_user
+    add_user, retrieve_user, retrieve_users, retrieve_users_filtered,update_user,delete_user
 )
 from app.server.models.user import (
     ErrorResponseModel,
@@ -18,34 +19,37 @@ router = APIRouter()
 async def check_user(data: UserLoginSchema):
     for user in await get_users():
         if user["email"] == data.email and user["mdp"] == data.mdp:
-            return True
-    return False
+            return user
 
 
 @router.post("/signup", response_description="User data added into the database")
 async def add_user_data(user: UserSchema = Body(...)):
     user = jsonable_encoder(user)
     new_user = await add_user(user)
-    return signJWT(new_user["email"])
+    return signJWT(new_user["id"])
 
 
-@router.post("/login", tags=["user"])
+@router.post("/login")
 async def user_login(user: UserLoginSchema = Body(...)):
-    if await    check_user(user):
-        return signJWT(user.email)
+    userData = await check_user(user)
+    if userData:
+        return signJWT(userData["id"])
     return {
         "error": "Wrong login details!"
     }
 
 @router.get("/", response_description="Users retrieved")
-async def get_users():
-    users = await retrieve_users()
+async def get_users(string_entered: str | None= None):
+    if(type(string_entered)==str):
+        users = await retrieve_users_filtered(string_entered)
+    else :
+      users = await retrieve_users() 
     if users:
         return users
     return ResponseModel(users, "Empty list returned")
 
 
-@router.get("/{id}", response_description="User data retrieved")
+@router.get("/{id}", dependencies=[Depends(JWTBearer())], response_description="User data retrieved")
 async def get_user_data(id):
     user = await retrieve_user(id)
     if user:
@@ -53,7 +57,7 @@ async def get_user_data(id):
     return ErrorResponseModel("An error occurred.", 404, "User doesn't exist.")
 
 
-@router.put("/{id}")
+@router.put("/{id}", dependencies=[Depends(JWTBearer())])
 async def update_user_data(id: str, req: UpdateUserModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_user = await update_user(id, req)
@@ -69,7 +73,7 @@ async def update_user_data(id: str, req: UpdateUserModel = Body(...)):
     )
 
 
-@router.delete("/{id}", response_description="User data deleted from the database")
+@router.delete("/{id}", dependencies=[Depends(JWTBearer())],response_description="User data deleted from the database")
 async def delete_user_data(id: str):
     deleted_user = await delete_user(id)
     if deleted_user:

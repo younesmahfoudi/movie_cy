@@ -1,13 +1,17 @@
 <script lang="ts" setup>
-import { Check, Star, Delete } from "@element-plus/icons-vue";
-import axios from "axios";
+import { Check, Delete } from "@element-plus/icons-vue";
+import FilmDetails from "./FilmDetails.vue";
 </script>
 
 <template>
   <div class="movieContent">
     <div class="movieList">
       <div class="row">
-        <div class="movie" v-for="movie in movies.slice(0, 3)" :key="movie">
+        <div
+          class="movie"
+          v-for="(movie, index) in movies.slice(0, 3)"
+          :key="movie"
+        >
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
@@ -24,6 +28,7 @@ import axios from "axios";
                         id="photoGroup"
                         :style="{ backgroundColor: '#faa427' }"
                         :size="25"
+                        :title="genre.key"
                         :src="genre.value"
                       />
                     </div>
@@ -31,9 +36,23 @@ import axios from "axios";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <el-button type="primary" size="large" :icon="Star" circle />
-                  <el-button type="success" size="large" :icon="Check" circle />
-                  <el-button type="danger" size="large" :icon="Delete" circle />
+                  <FilmDetails />
+                  <el-button
+                    type="success"
+                    title="J'ai vu"
+                    size="large"
+                    :icon="Check"
+                    @click="deleteItem(index)"
+                    circle
+                  />
+                  <el-button
+                    type="danger"
+                    title="Je n'aime pas"
+                    size="large"
+                    :icon="Delete"
+                    @click="deleteItem(index)"
+                    circle
+                  />
                 </div>
               </div>
             </div>
@@ -41,7 +60,11 @@ import axios from "axios";
         </div>
       </div>
       <div class="row">
-        <div class="movie" v-for="movie in movies.slice(3, 6)" :key="movie">
+        <div
+          class="movie"
+          v-for="(movie, index) in movies.slice(3, 6)"
+          :key="movie"
+        >
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
@@ -58,6 +81,7 @@ import axios from "axios";
                         id="photoGroup"
                         :style="{ backgroundColor: '#faa427' }"
                         :size="25"
+                        :title="genre.key"
                         :src="genre.value"
                       />
                     </div>
@@ -65,9 +89,23 @@ import axios from "axios";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <el-button type="primary" size="large" :icon="Star" circle />
-                  <el-button type="success" size="large" :icon="Check" circle />
-                  <el-button type="danger" size="large" :icon="Delete" circle />
+                  <FilmDetails />
+                  <el-button
+                    type="success"
+                    title="J'ai vu"
+                    size="large"
+                    :icon="Check"
+                    @click="deleteItem(index + 3)"
+                    circle
+                  />
+                  <el-button
+                    type="danger"
+                    title="Je n'aime pas"
+                    size="large"
+                    :icon="Delete"
+                    @click="deleteItem(index + 3)"
+                    circle
+                  />
                 </div>
               </div>
             </div>
@@ -79,21 +117,37 @@ import axios from "axios";
 </template>
 
 <script lang="ts">
+import movieService from "../services/movieService";
+import userService from "../services/userService";
+
 export default {
   data() {
     return {
       movies: [],
+      user: "",
+      groupe_id: "123456", // this.$route.params.id
     };
   },
-  mounted() {
-    axios.get("http://localhost:8000/movies/").then((response) => {
-      response.data.items.forEach((e) => {
-        e.genreList.forEach((element) => {
-          element.value = `./src/components/icon/ThemeIcon/${element.value.toLowerCase()}.png`;
-        });
-      });
-      this.movies = response.data.items;
-    });
+  async mounted() {
+    const token = JSON.parse(localStorage.getItem("user"));
+    this.movies = await movieService.getMovies(token);
+    console.log(this.movies);
+  },
+  methods: {
+    async deleteItem(index) {
+      const token = JSON.parse(localStorage.getItem("user"));
+      let user = await userService.getUser(token);
+
+      if (user.films != null) {
+        user.films.push(this.movies[index].id);
+      } else {
+        user.films = [this.movies[index].id];
+      }
+      console.log(user);
+      await userService.updateUser(token, { films: user.films });
+      this.movies.splice(index, 1);
+      console.log(user);
+    },
   },
 };
 </script>
@@ -105,12 +159,14 @@ h1 {
   text-align: center;
 }
 
-img {
-  width: 100%;
+.image {
+  width: 229px;
+  height: 328px;
 }
 
 .row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   width: 100%;
 }
@@ -152,21 +208,43 @@ img {
   margin: 1px;
 }
 
-@media screen and (max-width: 1050px) and (min-width: 850px) {
+@media screen and (max-width: 760px) and (min-width: 515px) {
   .movie {
-    max-width: 14em !important;
+    width: 30em !important;
+  }
+
+  .image {
+    width: 322px;
+    height: 459px;
+  }
+
+  .el-card {
+    width: 322px !important;
+  }
+
+  .movie {
+    width: 322px !important;
+    max-width: 322px !important;
   }
 }
 
-@media screen and (max-width: 850px) and (min-width: 600px) {
+@media screen and (min-width: 1075px) {
   .movie {
-    max-width: 20em !important;
+    width: 30em !important;
   }
-}
 
-@media screen and (max-width: 360px) {
+  .image {
+    width: 322px;
+    height: 459px;
+  }
+
+  .el-card {
+    width: 322px !important;
+  }
+
   .movie {
-    max-width: 12em !important;
+    width: 322px !important;
+    max-width: 322px !important;
   }
 }
 </style>

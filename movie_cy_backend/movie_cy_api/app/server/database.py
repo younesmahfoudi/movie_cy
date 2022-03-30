@@ -1,7 +1,9 @@
 import datetime
 from distutils.command.build import build
 from enum import unique
+from this import d
 from typing import List, Optional
+from urllib import request
 from app.server.models.movie import Genre, StarList
 import motor.motor_asyncio
 from bson.objectid import ObjectId
@@ -10,10 +12,8 @@ from app.server.models.group import (
     ErrorResponseModel
 )
 
-
-# MONGO_DETAILS = "mongodb://localhost:27017"
 MONGO_DETAILS = "mongodb://root:pass12345@mongodb:27017"
-# MONGO_DETAILS = "mongodb://root:pass12345@localhost:27017"
+#MONGO_DETAILS = "mongodb://root:pass12345@localhost:27017"
 
 client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_DETAILS)
 
@@ -134,6 +134,57 @@ async def retrieve_users():
         print(users)
         users.append(user_helper(user))
     return users
+
+
+def build_nom_research_request(string_entered: str) -> dict: 
+    request : dict = {
+        "nom" : {
+            "$regex" : string_entered, "$options" : "i"
+        }
+        
+        }   
+    return request 
+
+def build_prenom_research_request(string_entered: str) -> dict: 
+    request : dict = {
+        "prenom" : {
+            "$regex" : string_entered, "$options" : "i"
+        }
+        
+        }    
+    return request 
+
+def build_email_research_request(string_entered: str) -> dict: 
+    request : dict = {
+        "email" : {
+            "$regex" : string_entered, "$options" : "i"
+        }
+        
+        }    
+    return request 
+    
+def build_research_user_request(string_entered: str) -> dict: 
+    requestList: List[dict] = []
+    requestList.append(build_email_research_request(string_entered))
+    requestList.append(build_nom_research_request(string_entered))
+    requestList.append(build_prenom_research_request(string_entered))
+
+    request : dict = {
+        "$or" : requestList
+    }
+    return request 
+
+
+
+async def retrieve_users_filtered(string_entered: str)->dict:
+    users = []
+
+    async for user in user_collection.find(build_research_user_request(string_entered)):
+        print(users)
+        users.append(user_helper(user))
+    return users
+
+
 
 
 # Update a user with a matching ID
