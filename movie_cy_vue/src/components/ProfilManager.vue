@@ -56,7 +56,7 @@
           </el-row>
           <el-row>
             <el-col class="key" :span="12"> Groupes </el-col>
-            <el-col :span="12" v-html="getGroupes()"> </el-col> 
+            <el-col :span="12" v-html="getGroupes()"> </el-col>
           </el-row>
         </el-card>
       </el-col>
@@ -278,13 +278,14 @@
             >
               <el-form-item label="Genre préféré n°1" prop="genre">
                 <el-select
+                  @change="changeListeGenres2()"
                   v-model="user.genre"
                   class="m-2 contenu-fav"
-                  placeholder="Select"
+                  placeholder="Genre préféré n°1"
                   size="large"
                 >
                   <el-option
-                    v-for="item in listeGenres"
+                    v-for="item in listeGenres1"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -303,13 +304,14 @@
             >
               <el-form-item label="Genre préféré n°2" prop="genreFlex">
                 <el-select
+                  @change="changeListeGenres1()"
                   v-model="user.genreFlex"
                   class="m-2 contenu-fav"
-                  placeholder="Select"
+                  placeholder="Genre préféré n°2"
                   size="large"
                 >
                   <el-option
-                    v-for="item in listeGenres"
+                    v-for="item in listeGenres2"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -328,24 +330,34 @@
               :lg="12"
               :xl="12"
             >
-              <el-form-item label="Acteur favori" prop="acteur">
-                <el-select
-                  v-model="user.acteur"
-                  filterable
-                  allow-create
-                  default-first-option
-                  :reserve-keyword="false"
-                  placeholder="Acteur favori"
-                  class="m-2 contenu-fav"
-                >
-                  <el-option
-                    v-for="item in listeActeurs"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
+              <el-popover
+                placement="top-start"
+                title="Acteur favori"
+                :width="200"
+                trigger="hover"
+                content="Pour votre acteur favori, vous pouvez sélectionner un des choix existants ou alors en saisir un nouveau et cliquer dessus."
+              >
+                <template #reference>
+                  <el-form-item label="Acteur favori" prop="acteur">
+                    <el-select
+                      v-model="user.acteur"
+                      filterable
+                      allow-create
+                      default-first-option
+                      :reserve-keyword="false"
+                      placeholder="Acteur favori"
+                      class="m-2 contenu-fav"
+                    >
+                      <el-option
+                        v-for="item in listeActeurs"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </template>
+              </el-popover>
             </el-col>
 
             <el-col
@@ -356,24 +368,34 @@
               :lg="12"
               :xl="12"
             >
-              <el-form-item label="Réalisateur favori" prop="type1">
-                <el-select
-                  v-model="user.realisateur"
-                  filterable
-                  allow-create
-                  default-first-option
-                  :reserve-keyword="false"
-                  placeholder="Réalisateur favori"
-                  class="m-2 contenu-fav"
-                >
-                  <el-option
-                    v-for="item in listeRealisateurs"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
+              <el-popover
+                placement="top-start"
+                title="Réalisateur favori"
+                :width="200"
+                trigger="hover"
+                content="Pour votre réalisateur favori, vous pouvez sélectionner un des choix existants ou alors en saisir un nouveau et cliquer dessus."
+              >
+                <template #reference>
+                  <el-form-item label="Réalisateur favori" prop="type1"> 
+                    <el-select
+                      v-model="user.realisateur"
+                      filterable
+                      allow-create
+                      default-first-option
+                      :reserve-keyword="false"
+                      placeholder="Réalisateur favori"
+                      class="m-2 contenu-fav"
+                    >
+                      <el-option
+                        v-for="item in listeRealisateurs"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </template>
+              </el-popover>
             </el-col>
           </el-row>
         </el-form>
@@ -404,6 +426,8 @@ import { avatarForUser } from "./data/avatarForUser";
 import { listeGenres } from "./data/listeGenres";
 import { listeActeurs } from "./data/listeActeurs";
 import { listeRealisateurs } from "./data/listeRealisateurs";
+import { InfoFilled } from "@element-plus/icons-vue";
+
 import { FormInstance } from "element-plus";
 const dialogInfosPerso = ref(false);
 const dialogInfosContenu = ref(false);
@@ -416,8 +440,9 @@ export default {
       label: "",
       avatar_src: "",
       displayedDateFormat: "",
-      groupes:[],
-
+      groupes: [],
+      listeGenres1: [],
+      listeGenres2: [],
 
       rules: reactive({
         prenom: [
@@ -457,11 +482,29 @@ export default {
     changeImg(e) {
       this.avatar_src = e;
     },
-    getGroupes() { 
-      if (this.groupes !== undefined || this.groupes !== [] || this.groupes !== null){
-      return this.groupes.map((groupe) => {
-        return "<li>" + groupe.nom + "</li>";
-      });
+    changeListeGenres1() {
+      debugger;
+      this.listeGenres1 = listeGenres;
+      this.listeGenres1 = this.listeGenres1.filter(
+        (genre) => genre.value !== this.user.genreFlex
+      );
+    },
+    changeListeGenres2() {
+      debugger;
+      this.listeGenres2 = listeGenres;
+      this.listeGenres2 = this.listeGenres1.filter(
+        (genre) => genre.value !== this.user.genre
+      );
+    },
+    getGroupes() {
+      if (
+        this.groupes !== undefined ||
+        this.groupes !== [] ||
+        this.groupes !== null
+      ) {
+        return this.groupes.map((groupe) => {
+          return "<li>" + groupe.nom + "</li>";
+        });
       }
     },
     async getUserGroups(user) {
@@ -587,6 +630,8 @@ export default {
     },
   },
   async mounted() {
+    this.listeGenres1 = listeGenres;
+    this.listeGenres2 = listeGenres;
     const token = JSON.parse(localStorage.getItem("user"));
     this.user = await userService.getUser(token);
     console.log(this.user);
@@ -607,8 +652,8 @@ export default {
 
 <script lang="ts" setup>
 import { Edit } from "@element-plus/icons-vue";
-import userService from '../services/userService';
-import GroupsService from '../services/GroupsService';
+import userService from "../services/userService";
+import GroupsService from "../services/GroupsService";
 </script>
 
 <style lang="scss" scoped>
