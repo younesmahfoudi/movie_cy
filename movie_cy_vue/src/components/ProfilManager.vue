@@ -56,7 +56,7 @@
           </el-row>
           <el-row>
             <el-col class="key" :span="12"> Groupes </el-col>
-            <el-col :span="12" v-html="getGroupes()"> </el-col> 
+            <el-col :span="12" v-html="getGroupes()"> </el-col>
           </el-row>
         </el-card>
       </el-col>
@@ -278,13 +278,14 @@
             >
               <el-form-item label="Genre préféré n°1" prop="genre">
                 <el-select
+                  @change="changeListeGenres2()"
                   v-model="user.genre"
                   class="m-2 contenu-fav"
                   placeholder="Select"
                   size="large"
                 >
                   <el-option
-                    v-for="item in listeGenres"
+                    v-for="item in listeGenres1"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -303,13 +304,14 @@
             >
               <el-form-item label="Genre préféré n°2" prop="genreFlex">
                 <el-select
+                  @change="changeListeGenres1()"
                   v-model="user.genreFlex"
                   class="m-2 contenu-fav"
                   placeholder="Select"
                   size="large"
                 >
                   <el-option
-                    v-for="item in listeGenres"
+                    v-for="item in listeGenres2"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -416,8 +418,9 @@ export default {
       label: "",
       avatar_src: "",
       displayedDateFormat: "",
-      groupes:[],
-
+      groupes: [],
+      listeGenres1: [],
+      listeGenres2: [],
 
       rules: reactive({
         prenom: [
@@ -457,11 +460,29 @@ export default {
     changeImg(e) {
       this.avatar_src = e;
     },
-    getGroupes() { 
-      if (this.groupes !== undefined || this.groupes !== [] || this.groupes !== null){
-      return this.groupes.map((groupe) => {
-        return "<li>" + groupe.nom + "</li>";
-      });
+    changeListeGenres1() {
+      debugger;
+      this.listeGenres1 = listeGenres;
+      this.listeGenres1 = this.listeGenres1.filter(
+        (genre) => genre.value !== this.user.genreFlex
+      );
+    },
+    changeListeGenres2() {
+      debugger;
+      this.listeGenres2 = listeGenres;
+      this.listeGenres2 = this.listeGenres1.filter(
+        (genre) => genre.value !== this.user.genre
+      );
+    },
+    getGroupes() {
+      if (
+        this.groupes !== undefined ||
+        this.groupes !== [] ||
+        this.groupes !== null
+      ) {
+        return this.groupes.map((groupe) => {
+          return "<li>" + groupe.nom + "</li>";
+        });
       }
     },
     async getUserGroups(user) {
@@ -584,6 +605,8 @@ export default {
     },
   },
   async mounted() {
+    this.listeGenres1 = listeGenres;
+    this.listeGenres2 = listeGenres;
     const token = JSON.parse(localStorage.getItem("user"));
     this.user = await userService.getUser(token);
     this.getUserGroups(this.user);
@@ -601,8 +624,8 @@ export default {
 
 <script lang="ts" setup>
 import { Edit } from "@element-plus/icons-vue";
-import userService from '../services/userService';
-import GroupsService from '../services/GroupsService';
+import userService from "../services/userService";
+import GroupsService from "../services/GroupsService";
 </script>
 
 <style lang="scss" scoped>
