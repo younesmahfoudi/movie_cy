@@ -119,19 +119,229 @@ import FilmDetails from "./FilmDetails.vue";
 <script lang="ts">
 import movieService from "../services/movieService";
 import userService from "../services/userService";
+import GroupsService from "../services/GroupsService";
 
 export default {
   data() {
     return {
       movies: [],
       user: "",
-      groupe_id: "123456", // this.$route.params.id
+      groupe: {},
     };
   },
   async mounted() {
     const token = JSON.parse(localStorage.getItem("user"));
-    this.movies = await movieService.getMovies(token);
-    console.log(this.movies);
+    const genre = [
+      {
+        genre: "action",
+        vote: 0,
+      },
+      {
+        genre: "animation",
+        vote: 0,
+      },
+      {
+        genre: "adventure",
+        vote: 0,
+      },
+      {
+        genre: "comedy",
+        vote: 0,
+      },
+      {
+        genre: "biography",
+        vote: 0,
+      },
+      {
+        genre: "documentary",
+        vote: 0,
+      },
+      {
+        genre: "drama",
+        vote: 0,
+      },
+      {
+        genre: "crime",
+        vote: 0,
+      },
+      {
+        genre: "fantasy",
+        vote: 0,
+      },
+      {
+        genre: "film-noir",
+        vote: 0,
+      },
+      {
+        genre: "history",
+        vote: 0,
+      },
+      {
+        genre: "horror",
+        vote: 0,
+      },
+      {
+        genre: "musical",
+        vote: 0,
+      },
+      {
+        genre: "family",
+        vote: 0,
+      },
+      {
+        genre: "romance",
+        vote: 0,
+      },
+      {
+        genre: "mystery",
+        vote: 0,
+      },
+      {
+        genre: "sci-fi",
+        vote: 0,
+      },
+      {
+        genre: "sport",
+        vote: 0,
+      },
+      {
+        genre: "thriller",
+        vote: 0,
+      },
+      {
+        genre: "war",
+        vote: 0,
+      },
+      {
+        genre: "western",
+        vote: 0,
+      },
+    ];
+    const genreFlex = [
+      {
+        genre: "action",
+        vote: 0,
+      },
+      {
+        genre: "animation",
+        vote: 0,
+      },
+      {
+        genre: "adventure",
+        vote: 0,
+      },
+      {
+        genre: "comedy",
+        vote: 0,
+      },
+      {
+        genre: "biography",
+        vote: 0,
+      },
+      {
+        genre: "documentary",
+        vote: 0,
+      },
+      {
+        genre: "drama",
+        vote: 0,
+      },
+      {
+        genre: "crime",
+        vote: 0,
+      },
+      {
+        genre: "fantasy",
+        vote: 0,
+      },
+      {
+        genre: "film-noir",
+        vote: 0,
+      },
+      {
+        genre: "history",
+        vote: 0,
+      },
+      {
+        genre: "horror",
+        vote: 0,
+      },
+      {
+        genre: "musical",
+        vote: 0,
+      },
+      {
+        genre: "family",
+        vote: 0,
+      },
+      {
+        genre: "romance",
+        vote: 0,
+      },
+      {
+        genre: "mystery",
+        vote: 0,
+      },
+      {
+        genre: "sci-fi",
+        vote: 0,
+      },
+      {
+        genre: "sport",
+        vote: 0,
+      },
+      {
+        genre: "thriller",
+        vote: 0,
+      },
+      {
+        genre: "war",
+        vote: 0,
+      },
+      {
+        genre: "western",
+        vote: 0,
+      },
+    ];
+    const filmVu = [];
+    let url = "http://localhost:8000/movies/";
+    this.groupe = await GroupsService.getGroup(token, this.$route.params.id);
+
+    await this.groupe.membres.forEach(async (element, index) => {
+      const user = await userService.getSpecificUser(token, element);
+      user.films.forEach((element) => filmVu.push(element));
+      genre.forEach((e) => {
+        if (user.genre.toLowerCase() == e.genre) {
+          e.vote += 1;
+        }
+      });
+      genreFlex.forEach((e) => {
+        if (user.genreFlex.toLowerCase() == e.genre) {
+          e.vote += 1;
+        }
+      });
+      if (index === this.groupe.membres.length - 1) {
+        genre.sort(function compare(a, b) {
+          if (a.vote < b.vote) return 1;
+          if (a.vote > b.vote) return -1;
+          return 0;
+        });
+        genreFlex.sort(function compare(a, b) {
+          if (a.vote < b.vote) return 1;
+          if (a.vote > b.vote) return -1;
+          return 0;
+        });
+        url += `?genrelist=${genre[0].genre}?genrelist=${genre[1].genre}?genrelist=${genreFlex[0].genre}&imdbrating=8`;
+        filmVu.forEach(async (e, indexFilm) => {
+          url += `&movielist=${e}`;
+          if (indexFilm == filmVu.length - 1) {
+            console.log(url);
+            this.movies = await movieService.getMovies(token, url, 50);
+            console.log(this.movies);
+          }
+        });
+      }
+    });
   },
   methods: {
     async deleteItem(index) {
@@ -143,10 +353,8 @@ export default {
       } else {
         user.films = [this.movies[index].id];
       }
-      console.log(user);
       await userService.updateUser(token, { films: user.films });
       this.movies.splice(index, 1);
-      console.log(user);
     },
   },
 };
