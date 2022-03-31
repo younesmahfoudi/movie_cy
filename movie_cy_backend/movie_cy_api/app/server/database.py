@@ -263,18 +263,13 @@ def build_imdbRating_request(imdbRating: str) -> dict:
 def build_genres_request(genreList: List[str]) -> dict:
     requestParameters : List[dict] = []
     for genre in genreList:
-        requestParameters.append({ "value" : genre })
-    request: dict = { 
-        "genreList": 
-            { 
-                "$elemMatch": 
-                    {
-                        "$or" : requestParameters
-                    }
-            }
-        }
-    return request
+        requestParameters.append({"genreList" : { "$elemMatch" :{ "value" : genre }}})
+        request: dict = { 
+        "$and": requestParameters
+        }    
 
+    return request
+    
 def build_stars_request(starIDList: List[str]) -> dict:
     requestParameters : List[dict] = []
     for starID in starIDList:
