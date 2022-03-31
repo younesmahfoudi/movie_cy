@@ -13,7 +13,7 @@
       text-color="#faa427"
     >
       <div v-for="(group, index) in groups" :key="group">
-        <el-sub-menu :index="index.toString()">
+        <el-sub-menu class="arrow" :index="index.toString()">
           <template #title>
             <router-link :to="{ path: group.id }">
               <el-icon>
@@ -137,11 +137,17 @@ export default {
   width: 100%;
   max-width: 30px;
 }
-
 </style>
 
 <style lang="scss">
-.photo-logo > img{
+.photo-logo > img {
   height: 33% !important;
+}
+
+.el-sub-menu .el-sub-menu__icon-arrow {
+  position: inherit !important;
+  top: 0 !important;
+  right: 0 !important;
+  margin-top: 0 !important;
 }
 </style>
