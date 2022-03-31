@@ -565,6 +565,9 @@ export default {
     updateUser() {
       this.dialogInfosPerso = false;
       this.dialogInfosContenu = false;
+      const token = JSON.parse(localStorage.getItem("user"));
+      userService.updateUser(token,this.user);
+      
     },
   },
   computed: {
@@ -586,13 +589,16 @@ export default {
   async mounted() {
     const token = JSON.parse(localStorage.getItem("user"));
     this.user = await userService.getUser(token);
+    console.log(this.user);
     this.getUserGroups(this.user);
     this.user.checkMdpInput = this.user.mdp;
     this.label = this.user.avatar;
     this.findSrcOfAvatarWithLabel();
-    this.dialogInfosContenu =
-      typeof this.user.genre !== "undefined" &&
-      typeof this.user.genreFlex !== "undefined";
+    console.log(this.user.genre!=null);
+    console.log(this.user.genre!=null);
+
+    this.dialogInfosContenu = ( (this.user.genre == null) || (this.user.genreFlex == null) || (this.user.realisateur == null) || (this.user.acteur == null) );
+
     this.displayedDateFormat = this.user.ddn.substring(0, 10);
   },
 };
