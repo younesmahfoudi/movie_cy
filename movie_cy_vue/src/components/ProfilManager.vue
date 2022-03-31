@@ -5,7 +5,8 @@
         class="iconGroup avatar-profil"
         :style="{ backgroundColor: '#faa427' }"
         :size="170"
-        :src="this.findSrcOfAvatarWithLabel(user.icon)"
+        :src="this.avatar_src"
+       
       />
     </div>
     <div class="names-bloc">
@@ -218,7 +219,7 @@
               :style="{ backgroundColor: '#faa427' }"
               :size="50"
             >
-              <img :src="findSrcOfAvatarWithLabel(user.icon)" />
+              <!-- <img :src="findSrcOfAvatarWithLabel(user.avatar)" /> -->
             </el-avatar>
           </el-form-item>
         </el-form>
@@ -410,24 +411,10 @@ export default {
   data() {
     return {
       user: {
-        id: 1,
-        prenom: "Younes",
-        nom: "Mahfoudi",
-        email: "mahfoudiyo@cy-tech.fr",
-        mdp: "Motdepasse64",
-        checkMdpInput: "Motdepasse64",
-        films: "bla",
-        groupes: ["Groupe 1", "Groupe 2", "Groupe 3"],
-        mood: "bien",
-        acteur: "Tom Hanks",
-        realisateur: "Clint Eastwood",
-        genre: "Comédie",
-        genreFlex: "Horreur",
-        ddn: "11/10/1990",
-        icon: "Avatar",
-        iconLabel: "",
-        listImages: [],
       },
+      label:'',
+      avatar_src:'',
+
       rules: reactive({
         prenom: [
           { validator: this.checkPrenom, trigger: "blur", required: true },
@@ -462,10 +449,12 @@ export default {
     changeImg(e) {
       this.user.icon = this.findLabelOfAvatarWithSrc(e);
     },
-    getGroupes(groupes) {
-      return groupes.map((groupe) => {
-        return "<li>" + groupe + "</li>";
-      });
+    getGroupes(groupes) { 
+      // if (groupes !== undefined || groupes !== [] || groupes !== null){
+      // return groupes.map((groupe) => {
+      //   return "<li>" + groupe + "</li>";
+      // });
+      // }
     },
     validatePass(rule, value, callback) {
       if (value === "") {
@@ -549,11 +538,11 @@ export default {
       return avatarObject[0].label;
     },
 
-    findSrcOfAvatarWithLabel(label) {
+    async findSrcOfAvatarWithLabel() {
       const avatarObject = avatarForUser.filter(
-        (avatar) => avatar["label"] === label
+        (avatar) => avatar["label"] === this.label
       );
-      return avatarObject[0].photo;
+      this.avatar_src = avatarObject[0].photo;
     },
     updateUser() {
       this.dialogInfosPerso = false;
@@ -573,12 +562,19 @@ export default {
       );
     },
   },
+  async mounted() {
+    const token = JSON.parse(localStorage.getItem("user"));
+    this.user = await userService.getUser(token);
+    this.label = this.user.avatar;
+    this.findSrcOfAvatarWithLabel();
+  }
 };
 </script>
 
 
 <script lang="ts" setup>
 import { Edit } from "@element-plus/icons-vue";
+import userService from '../services/userService';
 </script>
 
 <style lang="scss" scoped>
