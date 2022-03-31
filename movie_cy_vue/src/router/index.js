@@ -18,7 +18,7 @@ const router = createRouter({
         ),
     },
     {
-      path: "/movieGroupList",
+      path: "/:id",
       name: "Liste de film",
       component: () =>
         import(
@@ -30,6 +30,18 @@ const router = createRouter({
       name: "profil",
       component: () =>
         import(/* webpackChunkName : "profil" */ "../views/Profil.vue"),
+    },
+    {
+      path: "/groups",
+      name: "groups",
+      component: () =>
+        import(/* webpackChunkName : "groups" */ "../views/GroupsView.vue"),
+    },
+    {
+      path: "/group",
+      name: "group",
+      component: () =>
+        import(/* webpackChunkName : "group" */ "../views/Group.vue"),
     },
   ],
 });

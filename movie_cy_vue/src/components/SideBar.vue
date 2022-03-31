@@ -1,21 +1,21 @@
 <template>
   <div class="sidebar-container">
     <el-avatar
-      id="photoGroup"
-      :style="{ backgroundColor: '#faa427' }"
-      :size="150"
+      class="photo-logo"
+      :style="{ backgroundColor: $gray }"
+      :size="5"
       src="./src/components/icon/utilIcon/logo.svg"
     />
     <el-menu
       class="el-menu-vertical-demo"
-      :collapse="isCollapse"
+      collapse="true"
       background-color="#5a6075"
       text-color="#faa427"
     >
       <div v-for="(group, index) in groups" :key="group">
-        <el-sub-menu :index="index.toString()">
+        <el-sub-menu class="arrow" :index="index.toString()">
           <template #title>
-            <router-link to="movieGroupList">
+            <router-link :to="{ path: group.id }">
               <el-icon>
                 <el-avatar
                   id="photoGroup"
@@ -59,11 +59,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import axios from "axios";
 import userService from "../services/userService";
 import GroupsService from "../services/GroupsService";
-const isCollapse = ref(true);
 </script>
 
 <script lang="ts">
@@ -71,22 +68,6 @@ export default {
   data() {
     return {
       groups: [],
-      created() {
-        window.addEventListener("resize", this.myEventHandler);
-      },
-      destroyed() {
-        window.removeEventListener("resize", this.myEventHandler);
-      },
-      methods: {
-        myEventHandler() {
-          console.log(window.innerWidth);
-          if (window.innerWidth < 1200) {
-            this.isCollapse = true;
-          } else {
-            this.isCollapse = false;
-          }
-        },
-      },
     };
   },
   methods: {
@@ -117,7 +98,6 @@ export default {
     const token = JSON.parse(localStorage.getItem("user"));
     let user = await userService.getUser(token);
     this.afficherGroupe(user);
-    console.log(this.groups);
   },
 };
 </script>
@@ -156,5 +136,18 @@ export default {
   height: 130%;
   width: 100%;
   max-width: 30px;
+}
+</style>
+
+<style lang="scss">
+.photo-logo > img {
+  height: 33% !important;
+}
+
+.el-sub-menu .el-sub-menu__icon-arrow {
+  position: inherit !important;
+  top: 0 !important;
+  right: 0 !important;
+  margin-top: 0 !important;
 }
 </style>

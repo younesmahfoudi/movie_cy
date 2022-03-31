@@ -54,18 +54,18 @@
       <el-form-item prop="membres" label="Membres du groupe">
      
      
-      <el-input v-model="string_entered" placeholder="Chercher des utilisateurs" />
+      <el-input v-model="string_entered" placeholder="Chercher des utilisateurs (par le nom, prénom ou email )" />
 
       <div class="div-add-and-research-user">
 
         <el-card class="box-card">
           <template #header>
               <div class="card-header">
-                <span>Utilisateurs</span>
+                <span>Liste utilisateurs</span>
               </div>
           </template>
           <div v-if="this.request_not_null">
-            <div v-for="user in this.tab_members_left" :key="user" class="text item">
+            <div v-for="user in this.tab_users_list" :key="user" class="text item">
              <div> <el-button type="primary" @click="addToMembersList(user)" round>+</el-button>  {{ user.prenom + " " + user.nom + " ( " + user.email + " )" }} </div> 
             </div>
           </div>
@@ -80,7 +80,7 @@
                 <span>Membres</span>
               </div>
           </template>
-          <div v-for="(user,index) in this.tab_members_right" :key="user" class="text item">
+          <div v-for="(user,index) in this.tab_members_list" :key="user" class="text item">
              <div v-if="(index==0)"> Admin : {{ user.prenom + " " + user.nom + " ( " + user.email + " )" }} </div>
              <div v-if="(index!=0)">  <el-button type="danger"  @click="removeToMembersList(user)" round>-</el-button> {{ user.prenom + " " + user.nom + " ( " + user.email + " )" }}</div>
           </div>
@@ -125,9 +125,9 @@ export default {
       imageSrc: "./src/components/icon/ThemeIcon/action.png",
       defaultLabel: "Pistolet",
       listImages: [],
-      users_result: [],
-      tab_members_left: [],
-      tab_members_right : [],
+      users_find: [],
+      tab_users_list: [],
+      tab_members_list : [],
       tab_id_members: [],
       string_entered : "",
       request_not_null : false,
@@ -136,7 +136,7 @@ export default {
   async mounted() {
       const token = JSON.parse(localStorage.getItem("user"));
       let user = await userService.getUser(token);
-      this.tab_members_right.push(user);
+      this.tab_members_list.push(user);
       this.tab_id_members.push(user["id"]);
     
   },
@@ -150,43 +150,54 @@ export default {
       this.imageSrc = e;
     },
     async createGroup() {
-  
-
+      
+      const token = JSON.parse(localStorage.getItem("user"))
       this.ruleForm.membres = this.tab_id_members;
       this.ruleForm.admin = this.tab_id_members[0];
       
-      const new_groupe = await GroupsService.createGroup(JSON.parse(localStorage.getItem("user")),this.ruleForm);
-
-      for(var i = 0; i < this.tab_members_right.length; i++){
-          this.tab_members_right[i]["groupes"].push(new_groupe.data.data[0]["id"]);
-          // console.log(JSON.stringify(this.tab_members_right[i]));
-          // console.log(JSON.parse(localStorage.getItem("user")));
-          UserService.updateUser(JSON.parse(localStorage.getItem("user")),JSON.parse(JSON.stringify(this.tab_members_right[i])));
-      }
+      const new_groupe = await GroupsService.createGroup(token,this.ruleForm);
+      
+      this.tab_members_list.map((element) => {
+          element["groupes"].push(new_groupe.data.data[0]["id"]);
+          UserService.updateUser(token,JSON.parse(JSON.stringify(element)))
+      })
     },
-    searchUser(string_entered){
+    async searchUser(string_entered){
 
-      this.request = "http://localhost:8000/users/?string_entered=" + string_entered;
-      axios
-        .get(this.request)
-        .then((response) => {
-          if((response.data[0]!=undefined)&&(string_entered!='')&&(string_entered[0]!=' ')){
-            this.request_not_null = true; 
-            this.users_result = response.data;
-            //Vérifie qu'on ait pas deux fois les mêmes utilisateurs dans les deux tableaux
-            for(var i =0;i<this.users_result.length;i++){
-                for(var j =0;j<this.tab_members_right.length;j++){
-                  if(this.users_result[i]["id"] == this.tab_members_right[j]["id"]) {
-                    this.users_result.splice(i,1);
-                  }
-                }
+        const token = JSON.parse(localStorage.getItem("user"));
+
+        const users = await UserService.getUsersWithStringEntered(token,string_entered);
+
+        if((users!=undefined)&&(users.code!=200)){ 
+    
+            // On enlève l'admin du résultat de recherches d'utilisateurs
+            this.users_find = users.filter( user => user["id"] != this.tab_id_members[0]);
+
+
+            if((this.users_find.length!=0)&&(string_entered!='')&&(string_entered[0]!=' ')){
+      
+                //On enlève tous les utilisateurs ajoutés dans le tableau membre du résultat de recherches d'utilisateurs
+                this.users_find.map((element1) => {   
+                    this.tab_members_list.map((element2) => {
+                        if(element1["id"]==element2["id"]){
+                          this.users_find.splice(this.users_find.indexOf(element1),1);
+                        }
+                    })
+                })
+            
+            this.tab_users_list = this.users_find;
+
+            if(this.tab_users_list.length!=0){
+                this.request_not_null = true; 
             }
-            this.tab_members_left = this.users_result;
-          }else{
+
+            }else{
+
             this.request_not_null = false; 
-          }
-          
-        });
+
+            }
+        }
+
       
     },
     arrayRemove(arr, value) { 
@@ -195,14 +206,14 @@ export default {
         });
     },
     addToMembersList(user) {
-      this.tab_members_right.push(user);
+      this.tab_members_list.push(user);
       this.tab_id_members.push(user["id"]);
-      this.tab_members_left = this.arrayRemove(this.tab_members_left, user);
+      this.tab_users_list = this.arrayRemove(this.tab_users_list, user);
     },
     removeToMembersList(user) {
-      this.tab_members_left.push(user);
+      this.tab_users_list.push(user);
       this.tab_id_members = this.arrayRemove(this.tab_id_members, user["id"]);
-      this.tab_members_right = this.arrayRemove(this.tab_members_right, user);
+      this.tab_members_list = this.arrayRemove(this.tab_members_list, user);
     },
     updateGroupsUser(user) {
       UserService.updateUser(JSON.parse(localStorage.getItem("user")),user)
@@ -237,7 +248,6 @@ const checkNom = (rule: any, value: any, callback: any) => {
 };
 
 const checkPhoto = (rule: any, value: any, callback: any) => {
-  debugger;
   if (!value || value === "") {
     callback(new Error("Veuillez choisir une photo."));
   }

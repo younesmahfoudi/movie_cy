@@ -1,11 +1,9 @@
 import axios from "axios";
 
 class MovieService {
-  getMovies(token) {
-    let url = "http://localhost:8000/movies/";
-
+  async getMovies(token, url, limit) {
     return axios
-      .get(url, {
+      .get(`${url}size=${limit}`, {
         headers: {
           Authorization: `Bearer ${token.access_token}`,
         },

@@ -1,5 +1,5 @@
 <script setup>
-import ProfilManager from "../components/ProfilManager.vue";
+import GroupManager from "../components/GroupManager.vue";
 import SideBar from "../components/SideBar.vue";
 import ToolBar from "../components/ToolBar.vue";
 </script>
@@ -12,7 +12,7 @@ import ToolBar from "../components/ToolBar.vue";
         <ToolBar />
       </div>
       <div class="form-profil">
-        <ProfilManager />
+        <GroupManager />
       </div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import ToolBar from "../components/ToolBar.vue";
 import MovieList from "../components/MovieList.vue";
 import SideBar from "../components/SideBar.vue";
@@ -25,6 +25,6 @@ import SideBar from "../components/SideBar.vue";
 }
 
 .content-movieGroupList {
-  margin-left: 56px;
+  margin-left: 68px;
 }
 </style>

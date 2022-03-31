@@ -93,14 +93,14 @@
             <el-select
               v-model="ruleForm.avatar"
               class="m-2"
-              :placeholder="defaultLabel"
+              :placeholder="this.defaultLabel"
               size="large"
             >
               <div class="iconGrid">
                 <el-option
                   v-for="item in avatarForUser"
                   :key="item.value"
-                  :value="item.photo"
+                  :value="item.label"
                   :label="item.label"
                   @click="changeImg(item.photo)"
                 >
@@ -122,7 +122,7 @@
               :style="{ backgroundColor: '#faa427' }"
               :size="50"
             >
-              <img :src="imageSrc" />
+              <img :src="this.findSrcOfAvatarWithLabel(defaultLabel)" />
             </el-avatar>
           </el-form-item>
         </el-form>
@@ -152,14 +152,29 @@
 export default {
   data() {
     return {
-      imageSrc: "./src/components/icon/CharacterIcon/avatar.svg",
       defaultLabel: "Avatar",
       listImages: []
     };
   },
   methods: {
+    findLabelOfAvatarWithSrc(src) {
+      if (src.substring(0, 1) !== ".") {
+        src = "." + src;
+      }
+      const avatarObject = avatarForUser.filter(
+        (avatar) => avatar.photo === src
+      );
+      return avatarObject[0].label;
+    },
+
+    findSrcOfAvatarWithLabel(label) {
+      const avatarObject = avatarForUser.filter(
+        (avatar) => avatar["label"] === label
+      );
+      return avatarObject[0].photo;
+    },
     changeImg(e) {
-      this.imageSrc = e;
+      this.defaultLabel = this.findLabelOfAvatarWithSrc(e);
     },
     register() {
       delete this.ruleForm["checkPass"];
@@ -205,6 +220,8 @@ export default {
 import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 import { FormInstance } from "element-plus";
+import { avatarForUser } from "./data/avatarForUser";
+
 const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");
@@ -253,7 +270,6 @@ const checkNom = (rule: any, value: any, callback: any) => {
 };
 
 const checkAvatar = (rule: any, value: any, callback: any) => {
-  debugger;
   if (!value || value === "") {
     callback(new Error("Veuillez choisir un avatar."));
   }

@@ -5,12 +5,12 @@
         class="iconGroup avatar-profil"
         :style="{ backgroundColor: '#faa427' }"
         :size="170"
-        :src="this.findSrcOfAvatarWithLabel(user.icon)"
+        :src="this.avatar_src"
       />
     </div>
     <div class="names-bloc">
       <div class="names">
-        <span>{{ user.prenom }} </span>
+        <span style="margin-right: 5%">{{ user.prenom }} </span>
         {{ user.nom }}
       </div>
     </div>
@@ -52,11 +52,11 @@
 
           <el-row>
             <el-col class="key" :span="12">Date de naissance </el-col>
-            <el-col :span="12">{{ user.ddn }} </el-col>
+            <el-col :span="12">{{ this.displayedDateFormat }} </el-col>
           </el-row>
           <el-row>
             <el-col class="key" :span="12"> Groupes </el-col>
-            <el-col :span="12" v-html="getGroupes(user.groupes)"> </el-col>
+            <el-col :span="12" v-html="getGroupes()"> </el-col> 
           </el-row>
         </el-card>
       </el-col>
@@ -103,14 +103,21 @@
       </el-col>
     </el-row>
 
-    <el-dialog custom-class="dialog" v-model="dialogInfosPerso" width="35%" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false" >
+    <el-dialog
+      custom-class="dialog"
+      v-model="dialogInfosPerso"
+      width="35%"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+    >
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
         src="/src/components/icon/utilIcon/logo.svg"
       />
 
-      <span class="title"> Modification de vos informations personnelles</span>
+      <span class="title"> Informations personnelles</span>
 
       <div class="formulaire">
         <el-form
@@ -166,7 +173,6 @@
               v-model="user.mdp"
               type="password"
               placeholder="Mot de passe"
-              show-password
               autocomplete="off"
             />
           </el-form-item>
@@ -176,15 +182,19 @@
               input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password1"
               v-model="user.checkMdpInput"
-              type="password1"
+              type="password"
               placeholder="Mot de passe"
-              show-password
               autocomplete="off"
             />
           </el-form-item>
 
           <el-form-item prop="avatar" label="Avatar">
-            <el-select class="m-2" v-model="user.icon" size="large">
+            <el-select
+              class="m-2"
+              v-model="user.icon"
+              size="large"
+              :placeholder="user.avatar"
+            >
               <div class="iconGrid">
                 <el-option
                   v-for="item in avatarForUser"
@@ -211,7 +221,7 @@
               :style="{ backgroundColor: '#faa427' }"
               :size="50"
             >
-              <img :src="findSrcOfAvatarWithLabel(user.icon)" />
+              <img :src="this.avatar_src" />
             </el-avatar>
           </el-form-item>
         </el-form>
@@ -225,7 +235,7 @@
               type="warning"
               @click="updateUser()"
               round
-              :disabled="!isComplete"
+              :disabled="!isCompleteInfosPerso"
             >
               Valider
             </el-button>
@@ -234,20 +244,27 @@
       </template>
     </el-dialog>
 
-    <el-dialog custom-class="dialog" v-model="dialogInfosContenu" width="35%" :close-on-click-modal="false" :show-close="false" :close-on-press-escape="false">
+    <el-dialog
+      custom-class="dialog"
+      v-model="dialogInfosContenu"
+      width="35%"
+      :close-on-click-modal="false"
+      :show-close="false"
+      :close-on-press-escape="false"
+    >
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
         src="/src/components/icon/utilIcon/logo.svg"
       />
 
-      <span class="title"> Modification de votre contenu préféré</span>
+      <span class="title"> Contenu préféré</span>
 
       <div class="formulaire">
         <el-form
           label-position="top"
           ref="ruleFormRef"
-          :rules="rules"
+          :rules="rulesContenu"
           :model="this.user"
         >
           <el-row :gutter="10" style="display: flex">
@@ -259,7 +276,7 @@
               :lg="12"
               :xl="12"
             >
-              <el-form-item label="Type de film favori n°1" prop="type1">
+              <el-form-item label="Genre préféré n°1" prop="genre">
                 <el-select
                   v-model="user.genre"
                   class="m-2 contenu-fav"
@@ -284,7 +301,7 @@
               :lg="12"
               :xl="12"
             >
-              <el-form-item label="Type de film favori n°2" prop="type2">
+              <el-form-item label="Genre préféré n°2" prop="genreFlex">
                 <el-select
                   v-model="user.genreFlex"
                   class="m-2 contenu-fav"
@@ -370,7 +387,7 @@
               type="warning"
               @click="updateUser()"
               round
-              :disabled="!isComplete"
+              :disabled="!isCompleteInfosContenu"
             >
               Valider
             </el-button>
@@ -396,25 +413,13 @@ const ruleFormRef = ref<FormInstance>();
 export default {
   data() {
     return {
-      user: {
-        id: 1,
-        prenom: "Younes",
-        nom: "Mahfoudi",
-        email: "mahfoudiyo@cy-tech.fr",
-        mdp: "Motdepasse64",
-        checkMdpInput: "Motdepasse64",
-        films: "bla",
-        groupes: ["Groupe 1", "Groupe 2", "Groupe 3"],
-        mood: "bien",
-        acteur: "Tom Hanks",
-        realisateur: "Clint Eastwood",
-        genre: "Comédie",
-        genreFlex: "Horreur",
-        ddn: "11/10/2016",
-        icon: "Avatar",
-        iconLabel: "",
-        listImages: [],
-      },
+      user: {},
+      label: "",
+      avatar_src: "",
+      displayedDateFormat: "",
+      groupes:[],
+
+
       rules: reactive({
         prenom: [
           { validator: this.checkPrenom, trigger: "blur", required: true },
@@ -443,15 +448,31 @@ export default {
           { validator: this.checkAvatar, trigger: "blur", required: true },
         ],
       }),
+      rulesContenu: reactive({
+        genre: [{ required: true }],
+        genreFlex: [{ required: true }],
+      }),
     };
   },
   methods: {
     changeImg(e) {
-      this.user.icon = this.findLabelOfAvatarWithSrc(e);
+      this.avatar_src = e;
     },
-    getGroupes(groupes) {
-      return groupes.map((groupe) => {
-        return "<li>" + groupe + "</li>";
+    getGroupes() { 
+      if (this.groupes !== undefined || this.groupes !== [] || this.groupes !== null){
+      return this.groupes.map((groupe) => {
+        return "<li>" + groupe.nom + "</li>";
+      });
+      }
+    },
+    async getUserGroups(user) {
+      const token = JSON.parse(localStorage.getItem("user"));
+      //On récupère les id des groupes de l'utilisateur
+      const groupes_id = user.groupes;
+      console.log(groupes_id);
+
+      groupes_id.forEach(async (element) => {
+        this.groupes.push(await GroupsService.getGroup(token, element));
       });
     },
     validatePass(rule, value, callback) {
@@ -527,28 +548,36 @@ export default {
       }
     },
     findLabelOfAvatarWithSrc(src) {
-      src = "." + src;
+      if (src.substring(0, 1) !== ".") {
+        src = "." + src;
+      }
       const avatarObject = avatarForUser.filter(
         (avatar) => avatar.photo === src
       );
       return avatarObject[0].label;
     },
 
-    findSrcOfAvatarWithLabel(label) {
+    async findSrcOfAvatarWithLabel() {
       const avatarObject = avatarForUser.filter(
-        (avatar) => avatar["label"] === label
+        (avatar) => avatar["label"] === this.label
       );
-      return avatarObject[0].photo;
+      this.avatar_src = avatarObject[0].photo;
     },
-    updateUser(){
-      this.dialogInfosPerso = false
-      this.dialogInfosContenu = false
-    }
+    updateUser() {
+      this.dialogInfosPerso = false;
+      this.dialogInfosContenu = false;
+    },
   },
   computed: {
-    isComplete() {
+    isCompleteInfosPerso() {
       return (
-        this.user.prenom && this.user.nom && this.user.ddn && this.user.email && this.user.mdp && this.user.checkMdpInput && this.user.icon 
+        this.user.prenom &&
+        this.user.nom &&
+        this.user.ddn &&
+        this.user.email &&
+        this.user.mdp &&
+        this.user.checkMdpInput &&
+        this.user.mdp === this.user.checkMdpInput
       );
     },
     currentUser() {
@@ -567,6 +596,8 @@ export default {
 
 <script lang="ts" setup>
 import { Edit } from "@element-plus/icons-vue";
+import userService from '../services/userService';
+import GroupsService from '../services/GroupsService';
 </script>
 
 <style lang="scss" scoped>
@@ -701,7 +732,7 @@ tr {
   font-size: 15px;
 }
 
-.contenu-fav{
+.contenu-fav {
   width: 100%;
 }
 </style>
@@ -740,4 +771,3 @@ tr {
   font-weight: bold;
 }
 </style>
->>>>>>> 42219c4a9770c99abdefd40fd57025b4c78ca419
