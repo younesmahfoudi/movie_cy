@@ -1,40 +1,42 @@
-import axios from "axios";
 import CryptoJS from "crypto-js";
-import router from "../router/index";
+import api from "./api";
+import TokenService from "./token.service";
 
-const API_URL = "http://localhost:8000/";
 class AuthService {
-  login(user) {
-    return axios
-      .post(API_URL + "users/login", {
-        email: user.email,
-        mdp: this.encrypt(user.mdp),
+  login({ email, mdp }) {
+    mdp = this.encrypt(mdp);
+    return api
+      .post("/users/login", {
+        email,
+        mdp,
       })
       .then((response) => {
-        console.log(response);
         if (response.data.access_token) {
-          localStorage.setItem("user", JSON.stringify(response.data));
-          router.push("/profil");
+          TokenService.setUser(response.data);
         }
         return response.data;
       });
   }
-
   logout() {
-    localStorage.removeItem("user");
-    router.push("/");
+    TokenService.removeUser();
   }
 
   register(user) {
-    user.mdp = this.encrypt(user.mdp);
-    return axios.post(API_URL + "users/signup", user).then((response) => {
-      if (response.data.access_token) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        router.push("/profil");
-      }
-      return response.data;
+    return api.post("/auth/register", {
+      user,
     });
   }
+
+  // register(user) {
+  //   user.mdp = this.encrypt(user.mdp);
+  //   return axios.post(API_URL + "users/signup", user).then((response) => {
+  //     if (response.data.access_token) {
+  //       localStorage.setItem("user", JSON.stringify(response.data));
+  //       router.push("/profil");
+  //     }
+  //     return response.data;
+  //   });
+  // }
 
   encrypt(user) {
     const passphrase = "deff1952d59f883ece260e8683fed21ab0ad9a53323eca4f";

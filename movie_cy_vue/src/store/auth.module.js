@@ -1,4 +1,5 @@
 import AuthService from "../services/auth.service";
+
 const user = JSON.parse(localStorage.getItem("user"));
 const initialState = user
   ? { status: { loggedIn: true }, user }
@@ -34,6 +35,9 @@ export const auth = {
         }
       );
     },
+    refreshToken({ commit }, accessToken) {
+      commit("refreshToken", accessToken);
+    },
   },
   mutations: {
     loginSuccess(state, user) {
@@ -50,9 +54,14 @@ export const auth = {
     },
     registerSuccess(state) {
       state.status.loggedIn = false;
+      state.user = user;
     },
     registerFailure(state) {
       state.status.loggedIn = false;
+    },
+    refreshToken(state, accessToken) {
+      state.status.loggedIn = true;
+      state.user = { ...state.user, accessToken: accessToken };
     },
   },
 };

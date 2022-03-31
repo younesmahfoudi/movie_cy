@@ -5,8 +5,7 @@ const setup = (store) => {
     (config) => {
       const token = TokenService.getLocalAccessToken();
       if (token) {
-        // config.headers["Authorization"] = 'Bearer ' + token;  // for Spring Boot back-end
-        config.headers["x-access-token"] = token; // for Node.js Express back-end
+        config.headers["Authorization"] = "Bearer " + token;
       }
       return config;
     },
@@ -20,8 +19,8 @@ const setup = (store) => {
     },
     async (err) => {
       const originalConfig = err.config;
-      if (originalConfig.url !== "/auth/signin" && err.response) {
-        // Access Token was expired
+      if (originalConfig.url !== "/auth/login" && err.response) {
+        // Access Token expiré
         if (err.response.status === 401 && !originalConfig._retry) {
           originalConfig._retry = true;
           try {

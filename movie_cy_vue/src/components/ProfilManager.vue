@@ -544,12 +544,21 @@ export default {
       this.dialogInfosContenu = false
     }
   },
-    computed: {
+  computed: {
     isComplete() {
       return (
         this.user.prenom && this.user.nom && this.user.ddn && this.user.email && this.user.mdp && this.user.checkMdpInput && this.user.icon 
       );
     },
+    currentUser() {
+      console.log(this.$store.state.auth.user)
+      return this.$store.state.auth.user;
+    }
+  },
+  mounted() {
+    if (!this.currentUser) {
+      this.$router.push('/');
+    }
   }
 };
 </script>

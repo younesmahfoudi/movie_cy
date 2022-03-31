@@ -159,8 +159,8 @@ export default {
 
       for(var i = 0; i < this.tab_members_right.length; i++){
           this.tab_members_right[i]["groupes"].push(new_groupe.data.data[0]["id"]);
-          console.log(JSON.stringify(this.tab_members_right[i]));
-          console.log(JSON.parse(localStorage.getItem("user")));
+          // console.log(JSON.stringify(this.tab_members_right[i]));
+          // console.log(JSON.parse(localStorage.getItem("user")));
           UserService.updateUser(JSON.parse(localStorage.getItem("user")),JSON.parse(JSON.stringify(this.tab_members_right[i])));
       }
     },

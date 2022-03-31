@@ -149,7 +149,6 @@
 
 
 <script lang="ts">
-import AuthService  from "../services/auth.service.js";
 export default {
   data() {
     return {

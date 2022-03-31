@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts">
-import authService from "../services/authService";
 import router from "../router/index";
+import authService from "../services/auth.service";
 
 export default {
   methods: {
