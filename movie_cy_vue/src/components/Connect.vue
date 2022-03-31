@@ -227,6 +227,9 @@ const rules = reactive({
   margin-left: auto !important;
   margin-right: auto !important;
 }
+.el-popper.is-light{
+  word-break: keep-all;
+}
 </style>
 
 <style scoped>

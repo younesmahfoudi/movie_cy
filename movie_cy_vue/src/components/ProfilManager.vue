@@ -281,7 +281,7 @@
                   @change="changeListeGenres2()"
                   v-model="user.genre"
                   class="m-2 contenu-fav"
-                  placeholder="Select"
+                  placeholder="Genre préféré n°1"
                   size="large"
                 >
                   <el-option
@@ -307,7 +307,7 @@
                   @change="changeListeGenres1()"
                   v-model="user.genreFlex"
                   class="m-2 contenu-fav"
-                  placeholder="Select"
+                  placeholder="Genre préféré n°2"
                   size="large"
                 >
                   <el-option
@@ -330,24 +330,34 @@
               :lg="12"
               :xl="12"
             >
-              <el-form-item label="Acteur favori" prop="acteur">
-                <el-select
-                  v-model="user.acteur"
-                  filterable
-                  allow-create
-                  default-first-option
-                  :reserve-keyword="false"
-                  placeholder="Acteur favori"
-                  class="m-2 contenu-fav"
-                >
-                  <el-option
-                    v-for="item in listeActeurs"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
+              <el-popover
+                placement="top-start"
+                title="Acteur favori"
+                :width="200"
+                trigger="hover"
+                content="Pour votre acteur favori, vous pouvez sélectionner un des choix existants ou alors en saisir un nouveau et cliquer dessus."
+              >
+                <template #reference>
+                  <el-form-item label="Acteur favori" prop="acteur">
+                    <el-select
+                      v-model="user.acteur"
+                      filterable
+                      allow-create
+                      default-first-option
+                      :reserve-keyword="false"
+                      placeholder="Acteur favori"
+                      class="m-2 contenu-fav"
+                    >
+                      <el-option
+                        v-for="item in listeActeurs"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </template>
+              </el-popover>
             </el-col>
 
             <el-col
@@ -358,24 +368,34 @@
               :lg="12"
               :xl="12"
             >
-              <el-form-item label="Réalisateur favori" prop="type1">
-                <el-select
-                  v-model="user.realisateur"
-                  filterable
-                  allow-create
-                  default-first-option
-                  :reserve-keyword="false"
-                  placeholder="Réalisateur favori"
-                  class="m-2 contenu-fav"
-                >
-                  <el-option
-                    v-for="item in listeRealisateurs"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
+              <el-popover
+                placement="top-start"
+                title="Réalisateur favori"
+                :width="200"
+                trigger="hover"
+                content="Pour votre réalisateur favori, vous pouvez sélectionner un des choix existants ou alors en saisir un nouveau et cliquer dessus."
+              >
+                <template #reference>
+                  <el-form-item label="Réalisateur favori" prop="type1"> 
+                    <el-select
+                      v-model="user.realisateur"
+                      filterable
+                      allow-create
+                      default-first-option
+                      :reserve-keyword="false"
+                      placeholder="Réalisateur favori"
+                      class="m-2 contenu-fav"
+                    >
+                      <el-option
+                        v-for="item in listeRealisateurs"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </el-form-item>
+                </template>
+              </el-popover>
             </el-col>
           </el-row>
         </el-form>
@@ -406,6 +426,8 @@ import { avatarForUser } from "./data/avatarForUser";
 import { listeGenres } from "./data/listeGenres";
 import { listeActeurs } from "./data/listeActeurs";
 import { listeRealisateurs } from "./data/listeRealisateurs";
+import { InfoFilled } from "@element-plus/icons-vue";
+
 import { FormInstance } from "element-plus";
 const dialogInfosPerso = ref(false);
 const dialogInfosContenu = ref(false);
