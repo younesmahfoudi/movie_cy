@@ -28,6 +28,6 @@ import CreationGroupForm from "../components/CreationGroupForm.vue";
 }
 
 .content-group {
-  margin-right: 56px;
+  margin-left: 68px;
 }
 </style>

@@ -1,13 +1,3 @@
-<script setup>
-import RegisterForm from "../components/RegisterForm.vue";
-import Connect from "../components/Connect.vue";
-import { Plus } from "@element-plus/icons-vue";
-import router from "../router/index";
-const redirectCreateGroup = () => {
-    router.push("/")
-}
-</script>
-
 <template>
   <div class="centerItems">
     <div class="accueil">
@@ -20,27 +10,68 @@ const redirectCreateGroup = () => {
           type="card"
           height="200px"
         >
-          <el-carousel-item v-for="item in 6" :key="item">
-            <h3>{{ item }}</h3>
+          <el-carousel-item v-for="item in this.groupes" :key="item">
+            <span class="title-carousel-item">{{ item.nom }}</span>
+            <el-avatar
+              class="iconGroup avatar-profil"
+              :style="{ backgroundColor: '#faa427' }"
+              :size="130"
+              :src="item.photo"
+            />
           </el-carousel-item>
         </el-carousel>
       </div>
       <div class="go-create-group">
         <span>Ou créez en un</span>
         <router-link to="/groupCreation">
-        <el-avatar :size="40" class="icon-add">
-          <el-icon><plus /></el-icon
-        ></el-avatar>
+          <el-avatar :size="40" class="icon-add">
+            <el-icon><plus /></el-icon
+          ></el-avatar>
         </router-link>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-
+<script lang="ts" setup>
+import RegisterForm from "../components/RegisterForm.vue";
+import Connect from "../components/Connect.vue";
+import { Plus } from "@element-plus/icons-vue";
+import router from "../router/index";
+import GroupsService from "../services/GroupsService";
+import userService from "../services/userService";
+const redirectCreateGroup = () => {
+  router.push("/");
+};
 </script>
 
+<script lang="ts">
+export default {
+  data() {
+    return {
+      groupes: [],
+    };
+  },
+  methods: {
+    async getUserGroups(user) {
+      const token = JSON.parse(localStorage.getItem("user"));
+      //On récupère les id des groupes de l'utilisateur
+      const groupes_id = user.groupes;
+
+      groupes_id.forEach(async (element) => {
+        this.groupes.push(await GroupsService.getGroup(token, element));
+      });
+      console.log(this.groupes);
+    },
+  },
+  async mounted() {
+    const token = JSON.parse(localStorage.getItem("user"));
+    let user = await userService.getUser(token);
+    this.getUserGroups(user);
+    console.log(this.groupes);
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 @import "../assets/constant.scss";
@@ -93,7 +124,7 @@ img {
 }
 
 .go-create-group {
-  padding-bottom: 10%!important;
+  padding-bottom: 10% !important;
   font-style: $font;
   font-size: 22px;
   color: white;
@@ -101,12 +132,12 @@ img {
   display: contents;
 }
 
-.icon-add{
-    margin-top: 5%;
-    margin-bottom: 5%;
-    background-color : $yellow;
-    color : white;
-    border: solid #D57E00;
+.icon-add {
+  margin-top: 5%;
+  margin-bottom: 5%;
+  background-color: $yellow;
+  color: white;
+  border: solid #d57e00;
 }
 @media screen and (max-width: 1000px) and (min-width: 601px) {
   .accueil {
@@ -120,8 +151,11 @@ img {
   }
 }
 
+.el-carousel {
+  width: 300px;
+}
+
 .el-carousel__item h3 {
-  color: #475669;
   font-size: 14px;
   opacity: 0.75;
   line-height: 200px;
@@ -130,10 +164,18 @@ img {
 }
 
 .el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
 }
 
 .el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
+}
+
+.title-carousel-item {
+  text-align: center;
+  color: white;
+}
+</style>
+<style>
+.el-carousel__mask {
+  background-color: transparent !important;
 }
 </style>

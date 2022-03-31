@@ -25,6 +25,6 @@ import SideBar from "../components/SideBar.vue";
 }
 
 .content-movieGroupList {
-  margin-left: 56px;
+  margin-left: 68px;
 }
 </style>

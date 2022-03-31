@@ -45,6 +45,10 @@ Run FastApi
 ```
 
 ```bash
+  python3.10 -m venv .venv
+```
+
+```bash
   source .venv/bin/activate
 ```
 
