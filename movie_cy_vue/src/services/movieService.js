@@ -2,7 +2,6 @@ import axios from "axios";
 
 class MovieService {
   async getMovies(token, url, limit) {
-    console.log(`${url}&page=1&size=${limit}`);
     return axios
       .get(`${url}&page=1&size=${limit}`, {
         headers: {
