@@ -56,7 +56,7 @@
           </el-row>
           <el-row>
             <el-col class="key" :span="12"> Groupes </el-col>
-            <el-col :span="12" v-html="getGroupes(user.groupes)"> </el-col>
+            <el-col :span="12" v-html="getGroupes()"> </el-col> 
           </el-row>
         </el-card>
       </el-col>
@@ -416,6 +416,8 @@ export default {
       label: "",
       avatar_src: "",
       displayedDateFormat: "",
+      groupes:[],
+
 
       rules: reactive({
         prenom: [
@@ -455,14 +457,22 @@ export default {
     changeImg(e) {
       this.avatar_src = e;
     },
-    getGroupes(groupes) {
-      if (typeof groupes !== 'undefined' && groupes !== [] && groupes !== null) {
-        return groupes.map((groupe) => {
-          return "<li>" + groupe + "</li>";
-        });
-      }else {
-        return ""
+    getGroupes() { 
+      if (this.groupes !== undefined || this.groupes !== [] || this.groupes !== null){
+      return this.groupes.map((groupe) => {
+        return "<li>" + groupe.nom + "</li>";
+      });
       }
+    },
+    async getUserGroups(user) {
+      const token = JSON.parse(localStorage.getItem("user"));
+      //On récupère les id des groupes de l'utilisateur
+      const groupes_id = user.groupes;
+      console.log(groupes_id);
+
+      groupes_id.forEach(async (element) => {
+        this.groupes.push(await GroupsService.getGroup(token, element));
+      });
     },
     validatePass(rule, value, callback) {
       if (value === "") {
@@ -576,6 +586,7 @@ export default {
   async mounted() {
     const token = JSON.parse(localStorage.getItem("user"));
     this.user = await userService.getUser(token);
+    this.getUserGroups(this.user);
     this.user.checkMdpInput = this.user.mdp;
     this.label = this.user.avatar;
     this.findSrcOfAvatarWithLabel();
@@ -590,7 +601,8 @@ export default {
 
 <script lang="ts" setup>
 import { Edit } from "@element-plus/icons-vue";
-import userService from "../services/userService";
+import userService from '../services/userService';
+import GroupsService from '../services/GroupsService';
 </script>
 
 <style lang="scss" scoped>
