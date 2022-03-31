@@ -22,9 +22,16 @@ class AuthService {
   }
 
   register(user) {
-    return api.post("/auth/register", {
-      user,
-    });
+    return api
+      .post("/users/register", {
+        user,
+      })
+      .then((response) => {
+        if (response.data.access_token) {
+          TokenService.setUser(response.data);
+        }
+        return response.data;
+      });
   }
 
   // register(user) {

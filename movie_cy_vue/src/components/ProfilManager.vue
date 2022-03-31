@@ -382,6 +382,7 @@
 </template>
 
 <script lang="ts">
+import UserService from "../services/user.service"
 import { ref, reactive } from "vue";
 import { avatarForUser } from "./data/avatarForUser";
 import { listeGenres } from "./data/listeGenres";
@@ -551,7 +552,7 @@ export default {
       );
     },
     currentUser() {
-      console.log(this.$store.state.auth.user)
+      UserService.getUser(this.$store.state.auth.user);
       return this.$store.state.auth.user;
     }
   },

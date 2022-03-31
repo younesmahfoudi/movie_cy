@@ -12,12 +12,18 @@
 
 <script lang="ts">
 import router from "../router/index";
-import authService from "../services/auth.service";
 
 export default {
   methods: {
     logout() {
-      authService.logout();
+      this.$store.dispatch("auth/logout").then(
+        () => {
+          this.$router.go();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
 
     goProfil() {
