@@ -133,190 +133,195 @@ export default {
     const token = JSON.parse(localStorage.getItem("user"));
     const genre = [
       {
-        genre: "action",
+        genre: "Action",
         vote: 0,
       },
       {
-        genre: "animation",
+        genre: "Animation",
         vote: 0,
       },
       {
-        genre: "adventure",
+        genre: "Adventure",
         vote: 0,
       },
       {
-        genre: "comedy",
+        genre: "Comedy",
         vote: 0,
       },
       {
-        genre: "biography",
+        genre: "Biography",
         vote: 0,
       },
       {
-        genre: "documentary",
+        genre: "Documentary",
         vote: 0,
       },
       {
-        genre: "drama",
+        genre: "Drama",
         vote: 0,
       },
       {
-        genre: "crime",
+        genre: "Crime",
         vote: 0,
       },
       {
-        genre: "fantasy",
+        genre: "Fantasy",
         vote: 0,
       },
       {
-        genre: "film-noir",
+        genre: "Film-noir",
         vote: 0,
       },
       {
-        genre: "history",
+        genre: "History",
         vote: 0,
       },
       {
-        genre: "horror",
+        genre: "Horror",
         vote: 0,
       },
       {
-        genre: "musical",
+        genre: "Musical",
         vote: 0,
       },
       {
-        genre: "family",
+        genre: "Family",
         vote: 0,
       },
       {
-        genre: "romance",
+        genre: "Romance",
         vote: 0,
       },
       {
-        genre: "mystery",
+        genre: "Mystery",
         vote: 0,
       },
       {
-        genre: "sci-fi",
+        genre: "Sci-fi",
         vote: 0,
       },
       {
-        genre: "sport",
+        genre: "Sport",
         vote: 0,
       },
       {
-        genre: "thriller",
+        genre: "Thriller",
         vote: 0,
       },
       {
-        genre: "war",
+        genre: "War",
         vote: 0,
       },
       {
-        genre: "western",
+        genre: "Western",
         vote: 0,
       },
     ];
     const genreFlex = [
       {
-        genre: "action",
+        genre: "Action",
         vote: 0,
       },
       {
-        genre: "animation",
+        genre: "Animation",
         vote: 0,
       },
       {
-        genre: "adventure",
+        genre: "Adventure",
         vote: 0,
       },
       {
-        genre: "comedy",
+        genre: "Comedy",
         vote: 0,
       },
       {
-        genre: "biography",
+        genre: "Biography",
         vote: 0,
       },
       {
-        genre: "documentary",
+        genre: "Documentary",
         vote: 0,
       },
       {
-        genre: "drama",
+        genre: "Drama",
         vote: 0,
       },
       {
-        genre: "crime",
+        genre: "Crime",
         vote: 0,
       },
       {
-        genre: "fantasy",
+        genre: "Fantasy",
         vote: 0,
       },
       {
-        genre: "film-noir",
+        genre: "Film-noir",
         vote: 0,
       },
       {
-        genre: "history",
+        genre: "History",
         vote: 0,
       },
       {
-        genre: "horror",
+        genre: "Horror",
         vote: 0,
       },
       {
-        genre: "musical",
+        genre: "Musical",
         vote: 0,
       },
       {
-        genre: "family",
+        genre: "Family",
         vote: 0,
       },
       {
-        genre: "romance",
+        genre: "Romance",
         vote: 0,
       },
       {
-        genre: "mystery",
+        genre: "Mystery",
         vote: 0,
       },
       {
-        genre: "sci-fi",
+        genre: "Sci-fi",
         vote: 0,
       },
       {
-        genre: "sport",
+        genre: "Sport",
         vote: 0,
       },
       {
-        genre: "thriller",
+        genre: "Thriller",
         vote: 0,
       },
       {
-        genre: "war",
+        genre: "War",
         vote: 0,
       },
       {
-        genre: "western",
+        genre: "Western",
         vote: 0,
       },
     ];
     const filmVu = [];
+    const actor = [];
     let url = "http://localhost:8000/movies/";
     this.groupe = await GroupsService.getGroup(token, this.$route.params.id);
 
     await this.groupe.membres.forEach(async (element, index) => {
       const user = await userService.getSpecificUser(token, element);
-      user.films.forEach((element) => filmVu.push(element));
+      console.log(user);
+      if (user.films != null) {
+        user.films.forEach((element) => filmVu.push(element));
+      }
+      actor.push(user.acteur);
       genre.forEach((e) => {
-        if (user.genre.toLowerCase() == e.genre) {
+        if (user.genre == e.genre) {
           e.vote += 1;
         }
       });
       genreFlex.forEach((e) => {
-        if (user.genreFlex.toLowerCase() == e.genre) {
+        if (user.genreFlex == e.genre) {
           e.vote += 1;
         }
       });
@@ -331,13 +336,11 @@ export default {
           if (a.vote > b.vote) return -1;
           return 0;
         });
-        url += `?genrelist=${genre[0].genre}?genrelist=${genre[1].genre}?genrelist=${genreFlex[0].genre}&imdbrating=8`;
+        url += `?genrelist=${genre[0].genre}&genrelist=${genreFlex[0].genre}&imdbrating=8`;
         filmVu.forEach(async (e, indexFilm) => {
           url += `&movielist=${e}`;
           if (indexFilm == filmVu.length - 1) {
-            console.log(url);
             this.movies = await movieService.getMovies(token, url, 50);
-            console.log(this.movies);
           }
         });
       }
@@ -347,13 +350,13 @@ export default {
     async deleteItem(index) {
       const token = JSON.parse(localStorage.getItem("user"));
       let user = await userService.getUser(token);
-
+      console.log(user);
       if (user.films != null) {
         user.films.push(this.movies[index].id);
       } else {
         user.films = [this.movies[index].id];
       }
-      await userService.updateUser(token, { films: user.films });
+      await userService.updateUser(token, { id: user.id, films: user.films });
       this.movies.splice(index, 1);
     },
   },

@@ -17,7 +17,7 @@ class UserService {
       .then((response) => response.data.data[0]);
   }
 
-  getUsersWithStringEntered(token,string_entered) {
+  getUsersWithStringEntered(token, string_entered) {
     return axios
       .get(`http://localhost:8000/users/?string_entered=` + string_entered, {
         headers: {
