@@ -483,14 +483,12 @@ export default {
       this.avatar_src = e;
     },
     changeListeGenres1() {
-      debugger;
       this.listeGenres1 = listeGenres;
       this.listeGenres1 = this.listeGenres1.filter(
         (genre) => genre.value !== this.user.genreFlex
       );
     },
     changeListeGenres2() {
-      debugger;
       this.listeGenres2 = listeGenres;
       this.listeGenres2 = this.listeGenres1.filter(
         (genre) => genre.value !== this.user.genre
