@@ -1,13 +1,17 @@
 <script lang="ts" setup>
-import { Check, Star, Delete } from "@element-plus/icons-vue";
-import axios from "axios";
+import { Check, Delete } from "@element-plus/icons-vue";
+import FilmDetails from "./FilmDetails.vue";
 </script>
 
 <template>
   <div class="movieContent">
     <div class="movieList">
       <div class="row">
-        <div class="movie" v-for="movie in movies.slice(0, 3)" :key="movie">
+        <div
+          class="movie"
+          v-for="(movie, index) in movies.slice(0, 3)"
+          :key="movie"
+        >
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
@@ -24,6 +28,7 @@ import axios from "axios";
                         id="photoGroup"
                         :style="{ backgroundColor: '#faa427' }"
                         :size="25"
+                        :title="genre.key"
                         :src="genre.value"
                       />
                     </div>
@@ -31,9 +36,23 @@ import axios from "axios";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <el-button type="primary" size="large" :icon="Star" circle />
-                  <el-button type="success" size="large" :icon="Check" circle />
-                  <el-button type="danger" size="large" :icon="Delete" circle />
+                  <FilmDetails />
+                  <el-button
+                    type="success"
+                    title="J'ai vu"
+                    size="large"
+                    :icon="Check"
+                    @click="deleteItem(index)"
+                    circle
+                  />
+                  <el-button
+                    type="danger"
+                    title="Je n'aime pas"
+                    size="large"
+                    :icon="Delete"
+                    @click="deleteItem(index)"
+                    circle
+                  />
                 </div>
               </div>
             </div>
@@ -41,7 +60,11 @@ import axios from "axios";
         </div>
       </div>
       <div class="row">
-        <div class="movie" v-for="movie in movies.slice(3, 6)" :key="movie">
+        <div
+          class="movie"
+          v-for="(movie, index) in movies.slice(3, 6)"
+          :key="movie"
+        >
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
@@ -58,6 +81,7 @@ import axios from "axios";
                         id="photoGroup"
                         :style="{ backgroundColor: '#faa427' }"
                         :size="25"
+                        :title="genre.key"
                         :src="genre.value"
                       />
                     </div>
@@ -65,9 +89,23 @@ import axios from "axios";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <el-button type="primary" size="large" :icon="Star" circle />
-                  <el-button type="success" size="large" :icon="Check" circle />
-                  <el-button type="danger" size="large" :icon="Delete" circle />
+                  <FilmDetails />
+                  <el-button
+                    type="success"
+                    title="J'ai vu"
+                    size="large"
+                    :icon="Check"
+                    @click="deleteItem(index + 3)"
+                    circle
+                  />
+                  <el-button
+                    type="danger"
+                    title="Je n'aime pas"
+                    size="large"
+                    :icon="Delete"
+                    @click="deleteItem(index + 3)"
+                    circle
+                  />
                 </div>
               </div>
             </div>
@@ -79,21 +117,245 @@ import axios from "axios";
 </template>
 
 <script lang="ts">
+import movieService from "../services/movieService";
+import userService from "../services/userService";
+import GroupsService from "../services/GroupsService";
+
 export default {
   data() {
     return {
       movies: [],
+      user: "",
+      groupe: {},
     };
   },
-  mounted() {
-    axios.get("http://localhost:8000/movies/").then((response) => {
-      response.data.items.forEach((e) => {
-        e.genreList.forEach((element) => {
-          element.value = `./src/components/icon/ThemeIcon/${element.value.toLowerCase()}.png`;
-        });
+  async mounted() {
+    const token = JSON.parse(localStorage.getItem("user"));
+    const genre = [
+      {
+        genre: "action",
+        vote: 0,
+      },
+      {
+        genre: "animation",
+        vote: 0,
+      },
+      {
+        genre: "adventure",
+        vote: 0,
+      },
+      {
+        genre: "comedy",
+        vote: 0,
+      },
+      {
+        genre: "biography",
+        vote: 0,
+      },
+      {
+        genre: "documentary",
+        vote: 0,
+      },
+      {
+        genre: "drama",
+        vote: 0,
+      },
+      {
+        genre: "crime",
+        vote: 0,
+      },
+      {
+        genre: "fantasy",
+        vote: 0,
+      },
+      {
+        genre: "film-noir",
+        vote: 0,
+      },
+      {
+        genre: "history",
+        vote: 0,
+      },
+      {
+        genre: "horror",
+        vote: 0,
+      },
+      {
+        genre: "musical",
+        vote: 0,
+      },
+      {
+        genre: "family",
+        vote: 0,
+      },
+      {
+        genre: "romance",
+        vote: 0,
+      },
+      {
+        genre: "mystery",
+        vote: 0,
+      },
+      {
+        genre: "sci-fi",
+        vote: 0,
+      },
+      {
+        genre: "sport",
+        vote: 0,
+      },
+      {
+        genre: "thriller",
+        vote: 0,
+      },
+      {
+        genre: "war",
+        vote: 0,
+      },
+      {
+        genre: "western",
+        vote: 0,
+      },
+    ];
+    const genreFlex = [
+      {
+        genre: "action",
+        vote: 0,
+      },
+      {
+        genre: "animation",
+        vote: 0,
+      },
+      {
+        genre: "adventure",
+        vote: 0,
+      },
+      {
+        genre: "comedy",
+        vote: 0,
+      },
+      {
+        genre: "biography",
+        vote: 0,
+      },
+      {
+        genre: "documentary",
+        vote: 0,
+      },
+      {
+        genre: "drama",
+        vote: 0,
+      },
+      {
+        genre: "crime",
+        vote: 0,
+      },
+      {
+        genre: "fantasy",
+        vote: 0,
+      },
+      {
+        genre: "film-noir",
+        vote: 0,
+      },
+      {
+        genre: "history",
+        vote: 0,
+      },
+      {
+        genre: "horror",
+        vote: 0,
+      },
+      {
+        genre: "musical",
+        vote: 0,
+      },
+      {
+        genre: "family",
+        vote: 0,
+      },
+      {
+        genre: "romance",
+        vote: 0,
+      },
+      {
+        genre: "mystery",
+        vote: 0,
+      },
+      {
+        genre: "sci-fi",
+        vote: 0,
+      },
+      {
+        genre: "sport",
+        vote: 0,
+      },
+      {
+        genre: "thriller",
+        vote: 0,
+      },
+      {
+        genre: "war",
+        vote: 0,
+      },
+      {
+        genre: "western",
+        vote: 0,
+      },
+    ];
+    const filmVu = [];
+    let url = "http://localhost:8000/movies/";
+    this.groupe = await GroupsService.getGroup(token, this.$route.params.id);
+
+    await this.groupe.membres.forEach(async (element, index) => {
+      const user = await userService.getSpecificUser(token, element);
+      user.films.forEach((element) => filmVu.push(element));
+      genre.forEach((e) => {
+        if (user.genre.toLowerCase() == e.genre) {
+          e.vote += 1;
+        }
       });
-      this.movies = response.data.items;
+      genreFlex.forEach((e) => {
+        if (user.genreFlex.toLowerCase() == e.genre) {
+          e.vote += 1;
+        }
+      });
+      if (index === this.groupe.membres.length - 1) {
+        genre.sort(function compare(a, b) {
+          if (a.vote < b.vote) return 1;
+          if (a.vote > b.vote) return -1;
+          return 0;
+        });
+        genreFlex.sort(function compare(a, b) {
+          if (a.vote < b.vote) return 1;
+          if (a.vote > b.vote) return -1;
+          return 0;
+        });
+        url += `?genrelist=${genre[0].genre}?genrelist=${genre[1].genre}?genrelist=${genreFlex[0].genre}&imdbrating=8`;
+        filmVu.forEach(async (e, indexFilm) => {
+          url += `&movielist=${e}`;
+          if (indexFilm == filmVu.length - 1) {
+            console.log(url);
+            this.movies = await movieService.getMovies(token, url, 50);
+            console.log(this.movies);
+          }
+        });
+      }
     });
+  },
+  methods: {
+    async deleteItem(index) {
+      const token = JSON.parse(localStorage.getItem("user"));
+      let user = await userService.getUser(token);
+
+      if (user.films != null) {
+        user.films.push(this.movies[index].id);
+      } else {
+        user.films = [this.movies[index].id];
+      }
+      await userService.updateUser(token, { films: user.films });
+      this.movies.splice(index, 1);
+    },
   },
 };
 </script>
@@ -105,12 +367,14 @@ h1 {
   text-align: center;
 }
 
-img {
-  width: 100%;
+.image {
+  width: 229px;
+  height: 328px;
 }
 
 .row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-evenly;
   width: 100%;
 }
@@ -152,21 +416,43 @@ img {
   margin: 1px;
 }
 
-@media screen and (max-width: 1050px) and (min-width: 850px) {
+@media screen and (max-width: 760px) and (min-width: 515px) {
   .movie {
-    max-width: 14em !important;
+    width: 30em !important;
+  }
+
+  .image {
+    width: 322px;
+    height: 459px;
+  }
+
+  .el-card {
+    width: 322px !important;
+  }
+
+  .movie {
+    width: 322px !important;
+    max-width: 322px !important;
   }
 }
 
-@media screen and (max-width: 850px) and (min-width: 600px) {
+@media screen and (min-width: 1075px) {
   .movie {
-    max-width: 20em !important;
+    width: 30em !important;
   }
-}
 
-@media screen and (max-width: 360px) {
+  .image {
+    width: 322px;
+    height: 459px;
+  }
+
+  .el-card {
+    width: 322px !important;
+  }
+
   .movie {
-    max-width: 12em !important;
+    width: 322px !important;
+    max-width: 322px !important;
   }
 }
 </style>

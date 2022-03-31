@@ -54,7 +54,7 @@
             <el-button
               type="warning"
               class="btnValider validate"
-              @click="dialogVisible = false"
+              @click="login()"
               round
               >Valider</el-button
             >
@@ -74,28 +74,28 @@ const ruleFormRef = ref<FormInstance>();
 </script>
 
 <script lang="ts">
-import CryptoJS from "crypto-js";
-export default {
-  methods: {
-    decrypt(user) {
-      const passphrase = "YounesEtienneTomMaxime";
-      const bytes = CryptoJS.AES.decrypt(user.mdp, passphrase);
-      const originalText = bytes.toString(CryptoJS.enc.Utf8);
-      return originalText;
-    },
-  },
+import AuthService  from "../services/authService.js";
 
+export default {
+  data: function () {
+    return {
+      ruleForm : reactive({
+        email: "",
+        mdp: "",
+      })
+    }
+  },
+  methods: {
+    login() {
+      AuthService.login(this.ruleForm);
+    }
+  },
   computed: {
     isComplete() {
       return this.ruleForm.email && this.ruleForm.mdp;
     },
   },
 };
-
-const ruleForm = reactive({
-  email: "",
-  mdp: "",
-});
 
 const rules = reactive({
   email: [
@@ -114,8 +114,8 @@ const rules = reactive({
 });
 </script>
 
-
 <style lang="scss">
+
 @import "../assets/constant.scss";
 
 .dialog-connect{
@@ -167,6 +167,7 @@ const rules = reactive({
 
 .title {
   display: flex;
+  justify-content: center;
   margin-left: auto;
   margin-right: auto;
   font-weight: bold;
@@ -174,6 +175,8 @@ const rules = reactive({
   font-size: 24px;
   color: white;
   margin-top: -10px;
+  word-break: keep-all;
+  text-align: center;
 }
 
 .formulaire {

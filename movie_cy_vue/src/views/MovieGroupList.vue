@@ -1,17 +1,19 @@
-<script setup>
+<script lang="ts" setup>
 import ToolBar from "../components/ToolBar.vue";
 import MovieList from "../components/MovieList.vue";
 import SideBar from "../components/SideBar.vue";
 </script>
 
 <template>
-  <SideBar />
-  <div class="content-movieGroupList">
-    <div class="toolbar">
-      <ToolBar />
-    </div>
-    <div class="form">
-      <MovieList />
+  <div>
+    <SideBar />
+    <div class="content-movieGroupList">
+      <div class="toolbar">
+        <ToolBar />
+      </div>
+      <div class="form">
+        <MovieList />
+      </div>
     </div>
   </div>
 </template>
@@ -25,5 +27,4 @@ import SideBar from "../components/SideBar.vue";
 .content-movieGroupList {
   margin-left: 56px;
 }
-
 </style>
