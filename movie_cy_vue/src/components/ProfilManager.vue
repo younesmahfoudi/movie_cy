@@ -511,8 +511,6 @@ export default {
       const token = JSON.parse(localStorage.getItem("user"));
       //On récupère les id des groupes de l'utilisateur
       const groupes_id = user.groupes;
-      console.log(groupes_id);
-
       groupes_id.forEach(async (element) => {
         this.groupes.push(await GroupsService.getGroup(token, element));
       });
@@ -634,16 +632,11 @@ export default {
     this.listeGenres2 = listeGenres;
     const token = JSON.parse(localStorage.getItem("user"));
     this.user = await userService.getUser(token);
-    console.log(this.user);
     this.getUserGroups(this.user);
     this.user.checkMdpInput = this.user.mdp;
     this.label = this.user.avatar;
     this.findSrcOfAvatarWithLabel();
-    console.log(this.user.genre!=null);
-    console.log(this.user.genre!=null);
-
-    this.dialogInfosContenu = ( (this.user.genre == null) || (this.user.genreFlex == null) || (this.user.realisateur == null) || (this.user.acteur == null) );
-
+    this.dialogInfosContenu = ( (this.user.genre == null) || (this.user.genreFlex == null)  );
     this.displayedDateFormat = this.user.ddn.substring(0, 10);
   },
 };
