@@ -1,6 +1,6 @@
-<script lang="ts" setup>
+<script setup>
+/* eslint-disable vue/no-mutating-props */
 import { InfoFilled, Check, Delete } from "@element-plus/icons-vue";
-import axios from "axios";
 </script>
 
 <template>
@@ -9,13 +9,13 @@ import axios from "axios";
       type="primary"
       title="Plus d'info"
       size="large"
-      @click="dialogVisible = true"
+      @click="show = true"
       :icon="InfoFilled"
       circle
     />
     <el-dialog
       custom-class="dialog dialog-detail"
-      v-model="dialogVisible"
+      v-model="show"
       :title="movie.title"
     >
       <div class="entete-details">
@@ -67,33 +67,11 @@ import axios from "axios";
   </div>
 </template>
 
-<script lang="ts">
-import { ref } from "vue";
-const dialogVisible = ref(false);
-
+<script>
 export default {
-  data() {
-    return {
-      movie: [],
-    };
-  },
-  mounted() {
-    const token = JSON.parse(localStorage.getItem("user"));
-    axios
-      .get("http://localhost:8000/movies/", {
-        headers: {
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      })
-      .then((response) => {
-        response.data.items.forEach((e) => {
-          e.genreList.forEach((element) => {
-            element.value = `./src/components/icon/ThemeIcon/${element.value.toLowerCase()}.png`;
-          });
-        });
-        this.movie = response.data.items[0];
-      });
-  },
+  movie: Object,
+  show: Boolean,
+  props: ["movie", "show"],
 };
 </script>
 

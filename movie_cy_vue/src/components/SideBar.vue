@@ -2,13 +2,13 @@
   <div class="sidebar-container">
     <el-avatar
       class="photo-logo"
-      :style="{ backgroundColor: $gray }"
+      style="logoBack"
       :size="5"
       src="./src/components/icon/utilIcon/logo.svg"
     />
     <el-menu
       class="el-menu-vertical-demo"
-      collapse="true"
+      :collapse="true"
       background-color="#5a6075"
       text-color="#faa427"
     >
@@ -107,6 +107,9 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/constant.scss";
 
+.logoBack {
+  background-color: $gray;
+}
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;

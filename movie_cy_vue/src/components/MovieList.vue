@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { Check, Delete } from "@element-plus/icons-vue";
 import FilmDetails from "./FilmDetails.vue";
+import movieService from "../services/movieService";
+import userService from "../services/userService";
+import GroupsService from "../services/GroupsService";
 </script>
 
 <template>
@@ -15,7 +18,14 @@ import FilmDetails from "./FilmDetails.vue";
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
-              <span>{{ movie.title }}</span>
+              <span
+                style="
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  white-space: nowrap;
+                "
+                >{{ movie.title }}</span
+              >
               <div class="bottom">
                 <div class="info">
                   <div class="iconGenre">
@@ -36,7 +46,7 @@ import FilmDetails from "./FilmDetails.vue";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <FilmDetails />
+                  <FilmDetails :movie="movie" :show="showDetails[index]" />
                   <el-button
                     type="success"
                     title="J'ai vu"
@@ -68,7 +78,14 @@ import FilmDetails from "./FilmDetails.vue";
           <el-card :body-style="{ padding: '0px' }">
             <img :src="movie.image" class="image" />
             <div style="padding: 14px">
-              <span>{{ movie.title }}</span>
+              <span
+                style="
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  white-space: nowrap;
+                "
+                >{{ movie.title }}</span
+              >
               <div class="bottom">
                 <div class="info">
                   <div class="iconGenre">
@@ -89,7 +106,7 @@ import FilmDetails from "./FilmDetails.vue";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <FilmDetails />
+                  <FilmDetails :movie="movie" :show="showDetails[index + 3]" />
                   <el-button
                     type="success"
                     title="J'ai vu"
@@ -117,14 +134,11 @@ import FilmDetails from "./FilmDetails.vue";
 </template>
 
 <script lang="ts">
-import movieService from "../services/movieService";
-import userService from "../services/userService";
-import GroupsService from "../services/GroupsService";
-
 export default {
   data() {
     return {
       movies: [],
+      showDetails: [false, false, false, false, false, false],
       user: "",
       groupe: {},
     };
@@ -303,14 +317,19 @@ export default {
         vote: 0,
       },
     ];
-    const filmVu = [];
-    const actor = [];
+    const filmVu = ["1"];
+    const actor = [""];
     let url = "http://localhost:8000/movies/";
     this.groupe = await GroupsService.getGroup(token, this.$route.params.id);
 
     await this.groupe.membres.forEach(async (element, index) => {
       const user = await userService.getSpecificUser(token, element);
-      console.log(user);
+      if (user.acteur != null) {
+        actor.push(user.acteur);
+      }
+      if (user.realisateur != null) {
+        actor.push(user.realisateur);
+      }
       if (user.films != null) {
         user.films.forEach((element) => filmVu.push(element));
       }
@@ -337,10 +356,15 @@ export default {
           return 0;
         });
         url += `?genrelist=${genre[0].genre}&genrelist=${genreFlex[0].genre}&imdbrating=8`;
-        filmVu.forEach(async (e, indexFilm) => {
-          url += `&movielist=${e}`;
-          if (indexFilm == filmVu.length - 1) {
-            this.movies = await movieService.getMovies(token, url, 50);
+        actor.forEach((element, indexActor) => {
+          url += `&starlist=${element}`;
+          if (indexActor == actor.length - 1) {
+            filmVu.forEach(async (e, indexFilm) => {
+              url += `&movielist=${e}`;
+              if (indexFilm == filmVu.length - 1) {
+                this.movies = await movieService.getMovies(token, url, 50);
+              }
+            });
           }
         });
       }
@@ -359,6 +383,9 @@ export default {
       await userService.updateUser(token, { id: user.id, films: user.films });
       this.movies.splice(index, 1);
     },
+  },
+  component: {
+    FilmDetails,
   },
 };
 </script>
