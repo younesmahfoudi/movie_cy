@@ -22,16 +22,13 @@ class AuthService {
   }
 
   register(user) {
-    return api
-      .post("/users/register", {
-        user,
-      })
-      .then((response) => {
-        if (response.data.access_token) {
-          TokenService.setUser(response.data);
-        }
-        return response.data;
-      });
+    user.mdp = this.encrypt(user.mdp);
+    return api.post("/users/signup", user).then((response) => {
+      if (response.data.access_token) {
+        TokenService.setUser(response.data);
+      }
+      return response.data;
+    });
   }
 
   // register(user) {

@@ -400,6 +400,8 @@
 
 <script lang="ts">
 import UserService from "../services/user.service"
+import GroupService from "../services/group.service"
+
 import { ref, reactive } from "vue";
 import { avatarForUser } from "./data/avatarForUser";
 import { listeGenres } from "./data/listeGenres";
@@ -472,7 +474,8 @@ export default {
       console.log(groupes_id);
 
       groupes_id.forEach(async (element) => {
-        this.groupes.push(await GroupsService.getGroup(token, element));
+        console.log("salutttt")
+        this.groupes.push(await GroupService.getGroups(element));
       });
     },
     validatePass(rule, value, callback) {
@@ -581,15 +584,26 @@ export default {
       );
     },
     currentUser() {
-      UserService.getUser(this.$store.state.auth.user);
       return this.$store.state.auth.user;
     }
   },
-  mounted() {
+  async mounted() {
     if (!this.currentUser) {
       this.$router.push('/');
     }
-  }
+  
+    await UserService.getUser(this.$store.state.auth.user).then(user => this.user = user);
+
+    this.getUserGroups(this.user);
+
+    this.user.checkMdpInput = this.user.mdp;
+    this.label = this.user.avatar;
+    // this.findSrcOfAvatarWithLabel();
+    // this.dialogInfosContenu =
+    //   typeof this.user.genre !== "undefined" &&
+    //   typeof this.user.genreFlex !== "undefined";
+    // this.displayedDateFormat = this.user.ddn.substring(0, 10);
+  },
 };
 </script>
 

@@ -24,16 +24,15 @@ export const auth = {
       commit("logout");
     },
     register({ commit }, user) {
-      return AuthService.register(user).then(
-        (response) => {
-          commit("registerSuccess");
-          return Promise.resolve(response.data);
-        },
-        (error) => {
+      return AuthService.register(user).then((data) => {
+        if (data.access_token) {
+          commit("registerSuccess", data);
+          return Promise.resolve(user);
+        } else {
           commit("registerFailure");
-          return Promise.reject(error);
+          return Promise.reject(data);
         }
-      );
+      });
     },
     refreshToken({ commit }, accessToken) {
       commit("refreshToken", accessToken);
@@ -52,7 +51,7 @@ export const auth = {
       state.status.loggedIn = false;
       state.user = null;
     },
-    registerSuccess(state) {
+    registerSuccess(state, user) {
       state.status.loggedIn = false;
       state.user = user;
     },
