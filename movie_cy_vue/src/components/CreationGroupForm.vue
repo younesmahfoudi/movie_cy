@@ -27,7 +27,11 @@
             <el-input v-model="ruleForm.nom" />
           </el-form-item>
 
-          <el-form-item prop="photo" label="Image du groupe" class="input-image-groupe">
+          <el-form-item
+            prop="photo"
+            label="Image du groupe"
+            class="input-image-groupe"
+          >
             <el-select
               @change="(e) => changeImg(e)"
               v-model="ruleForm.photo"
@@ -195,11 +199,11 @@ export default {
       console.log(this.ruleForm);
 
       const new_groupe = await GroupsService.createGroup(token, this.ruleForm);
-
       this.tab_members_list.map((element) => {
         element["groupes"].push(new_groupe.data.data[0]["id"]);
         UserService.updateUser(token, JSON.parse(JSON.stringify(element)));
       });
+      router.push("/group?ref="+new_groupe.data.data[0].id);
     },
     async searchUser(string_entered) {
       const token = JSON.parse(localStorage.getItem("user"));
@@ -269,6 +273,7 @@ export default {
   <script lang="ts" setup>
 import { iconForGroup } from "./data/iconForGroup";
 import userService from "../services/userService.js";
+import router from '../router/index.js';
 
 const ruleForm = reactive({
   nom: "",
@@ -352,48 +357,47 @@ const value = ref("");
   display: flex;
 }
 
-.div-add-and-research-user{
-  display: block
+.div-add-and-research-user {
+  display: block;
 }
 
-.div-add-and-research-user{
-  width : 100%
+.div-add-and-research-user {
+  width: 100%;
 }
 
-.box-card{
-  width : 100%
+.box-card {
+  width: 100%;
 }
 
 .el-avatar {
-  margin-left : auto!important;
-  margin-right : auto!important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   margin-top: 2%;
 }
 
-.input-image-groupe{
-  margin-bottom : 4%!important;
+.input-image-groupe {
+  margin-bottom: 4% !important;
 }
 
-.el-card__header{
+.el-card__header {
   padding-top: 0px !important;
-  padding-bottom : 0px !important;
+  padding-bottom: 0px !important;
 }
 
-.el-card{
-  margin-bottom : 5%
+.el-card {
+  margin-bottom: 5%;
 }
 
-.card-header{
-  margin-left : auto;
+.card-header {
+  margin-left: auto;
   margin-right: auto;
 }
 </style>
 
 <style >
-
-.el-card__header{
+.el-card__header {
   padding-top: 0px !important;
-  padding-bottom : 0px !important;
-  display : flex;
+  padding-bottom: 0px !important;
+  display: flex;
 }
 </style>
