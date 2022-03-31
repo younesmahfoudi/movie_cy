@@ -295,7 +295,7 @@ def build_movies_request_filtered(
     if genreList is not None: requestParameters.append(build_genres_request(genreList))
     if starList is not None: requestParameters.append(build_stars_request(starList))
     if imdbRating is not None: requestParameters.append(build_imdbRating_request(imdbRating))
-    if requestParameters: request: dict = {"$or" : requestParameters}
+    if requestParameters: request: dict = {"$and" : requestParameters}
     return request
 
 async def retrieve_movies_filtered(
