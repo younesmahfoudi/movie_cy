@@ -177,7 +177,6 @@ export default {
       return avatarObject[0].photo;
     },
     changeImg(e) {
-      debugger
       this.defaultLabel = this.findLabelOfAvatarWithSrc(e);
     },
     register() {
@@ -257,7 +256,6 @@ const checkNom = (rule: any, value: any, callback: any) => {
 };
 
 const checkAvatar = (rule: any, value: any, callback: any) => {
-  debugger;
   if (!value || value === "") {
     callback(new Error("Veuillez choisir un avatar."));
   }

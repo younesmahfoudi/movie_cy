@@ -222,7 +222,6 @@ export default {
     },
 
     findSrcOfGroupWithLabel(label) {
-      debugger
       const groupObject = iconForGroup.filter((group) => group.label === label);
       return groupObject[0].photo;
     },

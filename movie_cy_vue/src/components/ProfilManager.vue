@@ -6,7 +6,6 @@
         :style="{ backgroundColor: '#faa427' }"
         :size="170"
         :src="this.avatar_src"
-       
       />
     </div>
     <div class="names-bloc">
@@ -118,7 +117,7 @@
         src="/src/components/icon/utilIcon/logo.svg"
       />
 
-      <span class="title"> Modification de vos informations personnelles</span>
+      <span class="title"> Informations personnelles</span>
 
       <div class="formulaire">
         <el-form
@@ -174,7 +173,6 @@
               v-model="user.mdp"
               type="password"
               placeholder="Mot de passe"
-              show-password
               autocomplete="off"
             />
           </el-form-item>
@@ -184,15 +182,19 @@
               input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password1"
               v-model="user.checkMdpInput"
-              type="password1"
+              type="password"
               placeholder="Mot de passe"
-              show-password
               autocomplete="off"
             />
           </el-form-item>
 
           <el-form-item prop="avatar" label="Avatar">
-            <el-select class="m-2" v-model="user.icon" size="large">
+            <el-select
+              class="m-2"
+              v-model="user.icon"
+              size="large"
+              :placeholder="user.avatar"
+            >
               <div class="iconGrid">
                 <el-option
                   v-for="item in avatarForUser"
@@ -219,7 +221,7 @@
               :style="{ backgroundColor: '#faa427' }"
               :size="50"
             >
-              <!-- <img :src="findSrcOfAvatarWithLabel(user.avatar)" /> -->
+              <img :src="this.avatar_src" />
             </el-avatar>
           </el-form-item>
         </el-form>
@@ -233,7 +235,7 @@
               type="warning"
               @click="updateUser()"
               round
-              :disabled="!isComplete"
+              :disabled="!isCompleteInfosPerso"
             >
               Valider
             </el-button>
@@ -256,13 +258,13 @@
         src="/src/components/icon/utilIcon/logo.svg"
       />
 
-      <span class="title"> Modification de votre contenu préféré</span>
+      <span class="title"> Contenu préféré</span>
 
       <div class="formulaire">
         <el-form
           label-position="top"
           ref="ruleFormRef"
-          :rules="rules"
+          :rules="rulesContenu"
           :model="this.user"
         >
           <el-row :gutter="10" style="display: flex">
@@ -274,7 +276,7 @@
               :lg="12"
               :xl="12"
             >
-              <el-form-item label="Type de film favori n°1" prop="type1">
+              <el-form-item label="Genre préféré n°1" prop="genre">
                 <el-select
                   v-model="user.genre"
                   class="m-2 contenu-fav"
@@ -299,7 +301,7 @@
               :lg="12"
               :xl="12"
             >
-              <el-form-item label="Type de film favori n°2" prop="type2">
+              <el-form-item label="Genre préféré n°2" prop="genreFlex">
                 <el-select
                   v-model="user.genreFlex"
                   class="m-2 contenu-fav"
@@ -385,7 +387,7 @@
               type="warning"
               @click="updateUser()"
               round
-              :disabled="!isComplete"
+              :disabled="!isCompleteInfosContenu"
             >
               Valider
             </el-button>
@@ -404,16 +406,15 @@ import { listeActeurs } from "./data/listeActeurs";
 import { listeRealisateurs } from "./data/listeRealisateurs";
 import { FormInstance } from "element-plus";
 const dialogInfosPerso = ref(false);
-const dialogInfosContenu = ref(false);
+const dialogInfosContenu = ref(true);
 const ruleFormRef = ref<FormInstance>();
 
 export default {
   data() {
     return {
-      user: {
-      },
-      label:'',
-      avatar_src:'',
+      user: {},
+      label: "",
+      avatar_src: "",
 
       rules: reactive({
         prenom: [
@@ -443,13 +444,17 @@ export default {
           { validator: this.checkAvatar, trigger: "blur", required: true },
         ],
       }),
+      rulesContenu: reactive({
+        genre: [{ required: true }],
+        genreFlex: [{ required: true }],
+      }),
     };
   },
   methods: {
     changeImg(e) {
-      this.user.icon = this.findLabelOfAvatarWithSrc(e);
+      this.avatar_src = e;
     },
-    getGroupes(groupes) { 
+    getGroupes(groupes) {
       // if (groupes !== undefined || groupes !== [] || groupes !== null){
       // return groupes.map((groupe) => {
       //   return "<li>" + groupe + "</li>";
@@ -550,7 +555,7 @@ export default {
     },
   },
   computed: {
-    isComplete() {
+    isCompleteInfosPerso() {
       return (
         this.user.prenom &&
         this.user.nom &&
@@ -558,23 +563,28 @@ export default {
         this.user.email &&
         this.user.mdp &&
         this.user.checkMdpInput &&
-        this.user.icon
+        this.user.mdp === this.user.checkMdpInput
       );
+    },
+    isCompleteInfosContenu() {
+      return this.user.genre && this.user.genreFlex;
     },
   },
   async mounted() {
     const token = JSON.parse(localStorage.getItem("user"));
     this.user = await userService.getUser(token);
+    this.user.checkMdpInput = this.user.mdp
     this.label = this.user.avatar;
     this.findSrcOfAvatarWithLabel();
-  }
+    //this.dialogInfosContenu = typeof this.user.genre !== "undefined" && typeof this.user.genreFlex !== "undefined";
+  },
 };
 </script>
 
 
 <script lang="ts" setup>
 import { Edit } from "@element-plus/icons-vue";
-import userService from '../services/userService';
+import userService from "../services/userService";
 </script>
 
 <style lang="scss" scoped>
