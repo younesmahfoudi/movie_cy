@@ -181,6 +181,10 @@ export default {
     changeImg(e) {
       this.user.icon = this.findLabelOfAvatarWithSrc(e);
     },
+    async getGroupMembres(){
+        const token = JSON.parse(localStorage.getItem("user"));
+        GroupsService.getGroup(token, this.user.id)
+    },  
     getMembres(membres) {
       return membres.map((membre) => {
         const imgMembre = this.findSrcOfAvatarWithLabel(membre.label);
@@ -242,6 +246,7 @@ export default {
 
 <script lang="ts" setup>
 import { Edit } from "@element-plus/icons-vue";
+import GroupsService from '../services/GroupsService';
 </script>
 
 <style lang="scss" scoped>

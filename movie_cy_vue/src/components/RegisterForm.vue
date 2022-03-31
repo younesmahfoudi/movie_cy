@@ -177,7 +177,6 @@ export default {
       return avatarObject[0].photo;
     },
     changeImg(e) {
-      debugger
       this.defaultLabel = this.findLabelOfAvatarWithSrc(e);
     },
     register() {
