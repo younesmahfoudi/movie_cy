@@ -52,7 +52,7 @@
 
           <el-row>
             <el-col class="key" :span="12">Date de naissance </el-col>
-            <el-col :span="12">{{ user.ddn }} </el-col>
+            <el-col :span="12">{{ this.displayedDateFormat }} </el-col>
           </el-row>
           <el-row>
             <el-col class="key" :span="12"> Groupes </el-col>
@@ -406,7 +406,7 @@ import { listeActeurs } from "./data/listeActeurs";
 import { listeRealisateurs } from "./data/listeRealisateurs";
 import { FormInstance } from "element-plus";
 const dialogInfosPerso = ref(false);
-const dialogInfosContenu = ref(true);
+const dialogInfosContenu = ref(false);
 const ruleFormRef = ref<FormInstance>();
 
 export default {
@@ -415,6 +415,7 @@ export default {
       user: {},
       label: "",
       avatar_src: "",
+      displayedDateFormat: "",
 
       rules: reactive({
         prenom: [
@@ -455,11 +456,13 @@ export default {
       this.avatar_src = e;
     },
     getGroupes(groupes) {
-      // if (groupes !== undefined || groupes !== [] || groupes !== null){
-      // return groupes.map((groupe) => {
-      //   return "<li>" + groupe + "</li>";
-      // });
-      // }
+      if (typeof groupes !== 'undefined' && groupes !== [] && groupes !== null) {
+        return groupes.map((groupe) => {
+          return "<li>" + groupe + "</li>";
+        });
+      }else {
+        return ""
+      }
     },
     validatePass(rule, value, callback) {
       if (value === "") {
@@ -573,10 +576,13 @@ export default {
   async mounted() {
     const token = JSON.parse(localStorage.getItem("user"));
     this.user = await userService.getUser(token);
-    this.user.checkMdpInput = this.user.mdp
+    this.user.checkMdpInput = this.user.mdp;
     this.label = this.user.avatar;
     this.findSrcOfAvatarWithLabel();
-    //this.dialogInfosContenu = typeof this.user.genre !== "undefined" && typeof this.user.genreFlex !== "undefined";
+    this.dialogInfosContenu =
+      typeof this.user.genre !== "undefined" &&
+      typeof this.user.genreFlex !== "undefined";
+    this.displayedDateFormat = this.user.ddn.substring(0, 10);
   },
 };
 </script>
