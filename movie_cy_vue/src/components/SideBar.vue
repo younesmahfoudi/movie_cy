@@ -2,22 +2,20 @@
   <div class="sidebar-container">
     <el-avatar
       class="photo-logo"
-      style="logoBack"
+      :style="{ backgroundColor: $gray }"
       :size="5"
       src="./src/components/icon/utilIcon/logo.svg"
     />
     <el-menu
       class="el-menu-vertical-demo"
-      :collapse="true"
+      collapse="true"
       background-color="#5a6075"
       text-color="#faa427"
     >
       <div v-for="(group, index) in groups" :key="group">
         <el-sub-menu class="arrow" :index="index.toString()">
           <template #title>
-            <router-link
-              :to="{ path: '/movieGroupList', query: { id: group.id } }"
-            >
+            <router-link :to="{ path: group.id }">
               <el-icon>
                 <el-avatar
                   id="photoGroup"
@@ -107,9 +105,6 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/constant.scss";
 
-.logoBack {
-  background-color: $gray;
-}
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
