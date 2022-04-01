@@ -113,9 +113,11 @@ def user_helper(user) -> dict:
 
 # Add a new user into to the database
 async def add_user(user_data: dict) -> dict:
-    user = await user_collection.insert_one(user_data)
-    new_user = await user_collection.find_one({"_id": user.inserted_id})
-    return user_helper(new_user)
+    user = await user_collection.find_one({"email": user_data["email"]})
+    if not user:
+        user = await user_collection.insert_one(user_data)
+        new_user = await user_collection.find_one({"_id": user.inserted_id})
+        return user_helper(new_user)
 
 
 # Retrieve a user with a matching ID

@@ -74,7 +74,7 @@ const ruleFormRef = ref<FormInstance>();
 </script>
 
 <script lang="ts">
-import AuthService  from "../services/authService.js";
+import AuthService  from "../services/auth.service";
 
 export default {
   data: function () {
@@ -87,13 +87,29 @@ export default {
   },
   methods: {
     login() {
-      AuthService.login(this.ruleForm);
+      //AuthService.login(this.ruleForm);
+      this.$store.dispatch("auth/login", this.ruleForm).then(
+        () => {
+          this.$router.push("/profil");
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     }
   },
   computed: {
     isComplete() {
       return this.ruleForm.email && this.ruleForm.mdp;
     },
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
+  },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push("/profil");
+    }
   },
 };
 

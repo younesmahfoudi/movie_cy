@@ -39,26 +39,27 @@
             <el-col class="key" :span="12">Nom du groupe </el-col>
             <el-col :span="12">{{ groupe.nom }} </el-col>
           </el-row>
-          <el-row>
-            <el-col class="key" :span="12">Admin du groupe </el-col>
-            <el-col :span="12">
-              <div class="info-admin-groupe">
-                <img :src="findSrcOfAvatarWithLabel('Avatar')" />
-                <li class="li-membre">Nom admin</li>
-              </div></el-col
-            >
-          </el-row>
 
           <el-row>
             <el-col class="key" :span="12">Membres du groupe </el-col>
             <el-col :span="12">
               <div class="info-membre-groupe">
-                <span style="display:flex; margin-bottom : 3%;" v-for="membre in groupe.membres_groupe" :key="membre">
+                <span style="display:flex; margin-bottom : 3%;" v-for="(membre,index) in groupe.membres_groupe" :key="membre">
+                  <div class="admin-li" v-if="index==0">
                   <img :src="findSrcOfAvatarWithLabel(membre.avatar)" />
                   <li
                     class="li-membre"
                   >
-                    <span class="nom-membre">{{ membre.nom }} </span>
+                    <span  class="nom-membre">{{ membre.nom }} </span>
+                  </li>
+                  </div>
+
+                  <img v-if="index!=0" :src="findSrcOfAvatarWithLabel(membre.avatar)" />
+                  <li
+                  v-if="index!=0"
+                    class="li-membre"
+                  >
+                    <span v-if="index!=0" class="nom-membre">{{ membre.nom }} </span>
                   </li>
                 </span>
               </div>
@@ -165,6 +166,7 @@ export default {
   data() {
     return {
       groupe: [],
+      user_admin: [],
       rules: reactive({
         nom: [{ validator: this.checkNom, trigger: "blur", required: true }],
         avatar: [
@@ -218,6 +220,13 @@ export default {
       const token = JSON.parse(localStorage.getItem("user"));
 
       for (let i = 0; i < this.groupe.membres.length; i++) {
+        if (this.groupe.membres[i] == this.groupe.admin) {
+          this.user_admin = await userService.getSpecificUser(
+            token,
+            this.groupe.membres[i]
+          );
+          
+        }
         let user = await userService.getSpecificUser(
           token,
           this.groupe.membres[i]
@@ -232,10 +241,9 @@ export default {
   async mounted() {
     const token = JSON.parse(localStorage.getItem("user"));
     this.groupe = await GroupsService.getGroup(token, this.$route.query.ref);
-    this.groupe["nom_membres"] = [];
-    this.groupe["avatar_membres"] = [];
-    this.getInfosMembreGroupe();
     this.groupe["membres_groupe"] = [];
+    this.getInfosMembreGroupe();
+
   },
   computed: {
     isComplete() {
@@ -419,11 +427,17 @@ tr {
   font-size: 25px;
   margin-top: 10px;
   margin-bottom: 10px;
-  text-align : center;
+  text-align: center;
 }
 
 .names span {
   font-weight: bold;
+}
+
+.admin-li {
+    display: flex;
+    border: 1px solid $yellow;
+    padding-right: 5px;
 }
 </style>
 
