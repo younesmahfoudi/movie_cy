@@ -57,13 +57,14 @@
         <template #title>Créer un groupe</template>
       </el-menu-item>
     </el-menu>
-    <router-view />
+    <router-view :key="$route.name" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import userService from "../services/userService";
 import GroupsService from "../services/GroupsService";
+import movieList from "../components/MovieList.vue";
 import movieGroupList from "../views/MovieGroupList.vue";
 </script>
 
@@ -77,7 +78,7 @@ export default {
   methods: {
     updateMovieList(id) {
       movieGroupList.computed.key.set(id);
-      console.log("update");
+      movieList.methods.getMovies(id);
     },
     async afficherGroupe(user) {
       const token = JSON.parse(localStorage.getItem("user"));

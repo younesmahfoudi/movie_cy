@@ -27,11 +27,12 @@
           <div class="card-header">
             <span class="title-card">Informations du groupe</span>
             <el-button
+              v-if="this.estAdmin(this.user_connecte, this.groupe)"
               type="primary"
               class="btn-modifier"
               :icon="Edit"
               circle
-              @click="dialogInfosPerso = true"
+              @click="dialogInfosGroupe = true"
             />
           </div>
           <hr class="ligne" />
@@ -44,22 +45,26 @@
             <el-col class="key" :span="12">Membres du groupe </el-col>
             <el-col :span="12">
               <div class="info-membre-groupe">
-                <span style="display:flex; margin-bottom : 3%;" v-for="(membre,index) in groupe.membres_groupe" :key="membre">
-                  <div class="admin-li" v-if="index==0">
-                  <img :src="findSrcOfAvatarWithLabel(membre.avatar)" />
-                  <li
-                    class="li-membre"
-                  >
-                    <span  class="nom-membre">{{ membre.nom }} </span>
-                  </li>
+                <span
+                  style="display: flex; margin-bottom: 3%"
+                  v-for="(membre, index) in groupe.membres_groupe"
+                  :key="membre"
+                >
+                  <div class="admin-li" v-if="index == 0">
+                    <img :src="findSrcOfAvatarWithLabel(membre.avatar)" />
+                    <li class="li-membre">
+                      <span class="nom-membre">{{ membre.nom }} </span>
+                    </li>
                   </div>
 
-                  <img v-if="index!=0" :src="findSrcOfAvatarWithLabel(membre.avatar)" />
-                  <li
-                  v-if="index!=0"
-                    class="li-membre"
-                  >
-                    <span v-if="index!=0" class="nom-membre">{{ membre.nom }} </span>
+                  <img
+                    v-if="index != 0"
+                    :src="findSrcOfAvatarWithLabel(membre.avatar)"
+                  />
+                  <li v-if="index != 0" class="li-membre">
+                    <span v-if="index != 0" class="nom-membre"
+                      >{{ membre.nom }}
+                    </span>
                   </li>
                 </span>
               </div>
@@ -71,7 +76,7 @@
 
     <el-dialog
       custom-class="dialog"
-      v-model="dialogInfosPerso"
+      v-model="dialogInfosGroupe"
       width="35%"
       :close-on-click-modal="false"
       :show-close="false"
@@ -128,8 +133,73 @@
               :style="{ backgroundColor: '#faa427' }"
               :size="70"
             >
-              <img :src="findSrcOfGroupWithLabel(groupe.label)" />
+              <img :src="this.groupe.photo" />
             </el-avatar>
+          </el-form-item>
+
+          <el-form-item prop="membres" label="Membres du groupe">
+            <el-input
+              v-model="string_entered"
+              placeholder="Chercher des utilisateurs (par le nom, prénom ou email )"
+            />
+
+            <div class="div-add-and-research-user">
+              <el-card class="box-card">
+                <div v-if="this.request_not_null">
+                  <div
+                    v-for="user in this.tab_users_list"
+                    :key="user"
+                    class="text item"
+                  >
+                    <div>
+                      <el-button
+                        type="primary"
+                        @click="addToMembersList(user)"
+                        round
+                        >+</el-button
+                      >
+                      {{
+                        user.prenom + " " + user.nom + " ( " + user.email + " )"
+                      }}
+                    </div>
+                  </div>
+                </div>
+                <div v-if="!this.request_not_null">
+                  <span> Aucun utilisateur trouvé</span>
+                </div>
+              </el-card>
+
+              <el-card class="box-card">
+                <template #header>
+                  <div class="card-header">
+                    <span>Membres du groupe</span>
+                  </div>
+                </template>
+                <div
+                  v-for="(user, index) in this.tab_members_list"
+                  :key="user"
+                  class="text item"
+                >
+                  <div v-if="index == 0">
+                    Admin :
+                    {{
+                      user.prenom + " " + user.nom + " ( " + user.email + " )"
+                    }}
+                  </div>
+                  <div v-if="index != 0">
+                    <el-button
+                      type="danger"
+                      @click="removeToMembersList(user)"
+                      round
+                      >-</el-button
+                    >
+                    {{
+                      user.prenom + " " + user.nom + " ( " + user.email + " )"
+                    }}
+                  </div>
+                </div>
+              </el-card>
+            </div>
           </el-form-item>
         </el-form>
       </div>
@@ -140,7 +210,7 @@
             <el-button
               class="validate"
               type="warning"
-              @click="updateUser()"
+              @click="updateGroup()"
               round
               :disabled="!isComplete"
             >
@@ -158,7 +228,7 @@ import { ref, reactive } from "vue";
 import { iconForGroup } from "./data/iconForGroup";
 import { avatarForUser } from "./data/avatarForUser";
 import { FormInstance } from "element-plus";
-const dialogInfosPerso = ref(false);
+const dialogInfosGroupe = ref(false);
 const dialogInfosContenu = ref(false);
 const ruleFormRef = ref<FormInstance>();
 
@@ -167,6 +237,13 @@ export default {
     return {
       groupe: [],
       user_admin: [],
+      user_connecte: [],
+      users_find: [],
+      tab_users_list: [],
+      tab_members_list: [],
+      tab_id_members: [],
+      string_entered: "",
+      request_not_null: false,
       rules: reactive({
         nom: [{ validator: this.checkNom, trigger: "blur", required: true }],
         avatar: [
@@ -174,6 +251,11 @@ export default {
         ],
       }),
     };
+  },
+  watch: {
+    string_entered: function (value) {
+      this.searchUser(value);
+    },
   },
   methods: {
     changeImg(e) {
@@ -212,9 +294,19 @@ export default {
       const groupObject = iconForGroup.filter((group) => group.label === label);
       return groupObject[0].photo;
     },
-    updateUser() {
-      this.dialogInfosPerso = false;
-      this.dialogInfosContenu = false;
+    updateGroup() {
+      this.dialogInfosGroupe = false;
+      // this.dialogInfosContenu = false;
+      const token = JSON.parse(localStorage.getItem("user"));
+      //this.ruleForm.membres = this.tab_id_members;
+      //this.ruleForm.admin = this.tab_id_members[0];
+      
+      this.groupe["membres_groupe"] = [];
+      // ENLEVER LE CHAMP : "membres_groupes" de this.groupe
+
+      // FORME DE L'OBJET this.groupe a changé : JSON.stringify?
+      
+      GroupsService.updateGroup(token,this.groupe["id"],this.groupe);
     },
     async getInfosMembreGroupe() {
       const token = JSON.parse(localStorage.getItem("user"));
@@ -225,7 +317,6 @@ export default {
             token,
             this.groupe.membres[i]
           );
-          
         }
         let user = await userService.getSpecificUser(
           token,
@@ -237,13 +328,93 @@ export default {
         };
       }
     },
+    estAdmin(user, groupe) {
+      return user.id == groupe.admin;
+    },
+    async searchUser(string_entered) {
+      const token = JSON.parse(localStorage.getItem("user"));
+
+      const users = await userService.getUsersWithStringEntered(
+        token,
+        string_entered
+      );
+
+      if (users != undefined && users.code != 200) {
+        // On enlève l'admin du résultat de recherches d'utilisateurs
+        this.users_find = users.filter(
+          (user) => user["id"] != this.tab_id_members[0]
+        );
+
+        if (
+          this.users_find.length != 0 &&
+          string_entered != "" &&
+          string_entered[0] != " "
+        ) {
+          //On enlève tous les utilisateurs ajoutés dans le tableau membre du résultat de recherches d'utilisateurs
+          this.users_find.map((element1) => {
+            this.tab_members_list.map((element2) => {
+              if (element1["id"] == element2["id"]) {
+                this.users_find.splice(this.users_find.indexOf(element1), 1);
+              }
+            });
+          });
+
+          this.tab_users_list = this.users_find;
+
+          if (this.tab_users_list.length != 0) {
+            this.request_not_null = true;
+          }
+        } else {
+          this.request_not_null = false;
+        }
+      }
+    },
+    arrayRemove(arr, value) {
+      return arr.filter(function (ele) {
+        return ele != value;
+      });
+    },
+    addToMembersList(user) {
+      this.tab_members_list.push(user);
+      this.tab_id_members.push(user["id"]);
+      this.tab_users_list = this.arrayRemove(this.tab_users_list, user);
+    },
+    removeToMembersList(user) {
+      console.log(this.tab_users_list);
+      console.log(user);
+      console.log("c'est remove");
+      this.tab_users_list.push(user);
+      console.log(this.tab_users_list);
+      this.tab_id_members = this.arrayRemove(this.tab_id_members, user["id"]);
+      this.tab_members_list = this.arrayRemove(this.tab_members_list, user);
+    },
+    updateGroupsUser(user) {
+      userService.updateUser(JSON.parse(localStorage.getItem("user")), user);
+    },
+    getMembresToUpdate(groupe) {
+        const token = JSON.parse(localStorage.getItem("user"));
+        groupe.membres.forEach(async (element,index) => 
+        {
+          if(index!=0){
+            let user = await userService.getSpecificUser(token,element)
+            console.log(user);
+            this.addToMembersList(user);
+          }
+        });
+    }
   },
   async mounted() {
     const token = JSON.parse(localStorage.getItem("user"));
-    this.groupe = await GroupsService.getGroup(token, this.$route.query.ref);
-    this.groupe["membres_groupe"] = [];
-    this.getInfosMembreGroupe();
+    this.user_connecte = await userService.getUser(token);
+    
+    this.tab_members_list.push( this.user_connecte );
+    this.tab_id_members.push(this.user_connecte.id);
 
+    this.groupe = await GroupsService.getGroup(token, this.$route.query.ref);
+    this.getInfosMembreGroupe();
+    this.groupe["membres_groupe"] = [];
+    this.getMembresToUpdate(this.groupe);
+    
   },
   computed: {
     isComplete() {
@@ -258,6 +429,14 @@ export default {
 import { Edit } from "@element-plus/icons-vue";
 import GroupsService from "../services/GroupsService";
 import userService from "../services/userService";
+
+const ruleForm = reactive({
+  nom: "",
+  photo: "",
+  membres: "", 
+  admin: "", 
+});
+
 </script>
 
 <style lang="scss" scoped>
@@ -435,9 +614,9 @@ tr {
 }
 
 .admin-li {
-    display: flex;
-    border: 1px solid $yellow;
-    padding-right: 5px;
+  display: flex;
+  border: 1px solid $yellow;
+  padding-right: 5px;
 }
 </style>
 
