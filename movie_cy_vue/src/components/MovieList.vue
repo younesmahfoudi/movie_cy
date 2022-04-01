@@ -258,92 +258,8 @@ export default {
           vote: 0,
         },
       ];
-      const genreFlex = [
-        {
-          genre: "Action",
-          vote: 0,
-        },
-        {
-          genre: "Animation",
-          vote: 0,
-        },
-        {
-          genre: "Adventure",
-          vote: 0,
-        },
-        {
-          genre: "Comedy",
-          vote: 0,
-        },
-        {
-          genre: "Biography",
-          vote: 0,
-        },
-        {
-          genre: "Documentary",
-          vote: 0,
-        },
-        {
-          genre: "Drama",
-          vote: 0,
-        },
-        {
-          genre: "Crime",
-          vote: 0,
-        },
-        {
-          genre: "Fantasy",
-          vote: 0,
-        },
-        {
-          genre: "Film-noir",
-          vote: 0,
-        },
-        {
-          genre: "History",
-          vote: 0,
-        },
-        {
-          genre: "Horror",
-          vote: 0,
-        },
-        {
-          genre: "Musical",
-          vote: 0,
-        },
-        {
-          genre: "Family",
-          vote: 0,
-        },
-        {
-          genre: "Romance",
-          vote: 0,
-        },
-        {
-          genre: "Mystery",
-          vote: 0,
-        },
-        {
-          genre: "Sci-fi",
-          vote: 0,
-        },
-        {
-          genre: "Sport",
-          vote: 0,
-        },
-        {
-          genre: "Thriller",
-          vote: 0,
-        },
-        {
-          genre: "War",
-          vote: 0,
-        },
-        {
-          genre: "Western",
-          vote: 0,
-        },
-      ];
+      const genreFlex = ["Romance", "Fantasy", "Drama", "Action", "Comedy"];
+      let counterMood = 0;
       const filmVu = ["1"];
       const actor = [""];
       let url = "http://localhost:8000/movies/";
@@ -360,29 +276,20 @@ export default {
         if (user.films != null) {
           user.films.forEach((element) => filmVu.push(element));
         }
-        actor.push(user.acteur);
         genre.forEach((e) => {
           if (user.genre == e.genre) {
             e.vote += 1;
           }
         });
-        genreFlex.forEach((e) => {
-          if (user.genreFlex == e.genre) {
-            e.vote += 1;
-          }
-        });
+        counterMood += user.genreFlex;
         if (index === this.groupe.membres.length - 1) {
           genre.sort(function compare(a, b) {
             if (a.vote < b.vote) return 1;
             if (a.vote > b.vote) return -1;
             return 0;
           });
-          genreFlex.sort(function compare(a, b) {
-            if (a.vote < b.vote) return 1;
-            if (a.vote > b.vote) return -1;
-            return 0;
-          });
-          url += `?genrelist=${genre[0].genre}&genrelist=${genreFlex[0].genre}&imdbrating=8`;
+          counterMood /= this.groupe.membres.length;
+          url += `?genrelist=${genre[0].genre}&genrelist=${genreFlex[counterMood]}&imdbrating=8`;
           actor.forEach((element, indexActor) => {
             url += `&starlist=${element}`;
             if (indexActor == actor.length - 1) {
