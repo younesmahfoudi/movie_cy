@@ -8,11 +8,11 @@
         :src="this.groupe.photo"
       />
     </div>
-    <!-- <div class="names-bloc">
+    <div class="names-bloc">
       <div class="names">
-        <span>{{ this.groupe.nom }} </span>
+        <span>{{ groupe.nom }} </span>
       </div>
-    </div> -->
+    </div>
 
     <el-row :gutter="12" style="display: grid">
       <el-col
@@ -39,10 +39,30 @@
             <el-col class="key" :span="12">Nom du groupe </el-col>
             <el-col :span="12">{{ groupe.nom }} </el-col>
           </el-row>
+          <el-row>
+            <el-col class="key" :span="12">Admin du groupe </el-col>
+            <el-col :span="12">
+              <div class="info-admin-groupe">
+                <img :src="findSrcOfAvatarWithLabel('Avatar')" />
+                <li class="li-membre">Nom admin</li>
+              </div></el-col
+            >
+          </el-row>
 
           <el-row>
             <el-col class="key" :span="12">Membres du groupe </el-col>
-            <!-- <el-col :span="12" v-html="getMembres(groupe)"> </el-col>   -->
+            <el-col :span="12">
+              <div class="info-membre-groupe">
+                <span style="display:flex; margin-bottom : 3%;" v-for="membre in groupe.membres_groupe" :key="membre">
+                  <img :src="findSrcOfAvatarWithLabel(membre.avatar)" />
+                  <li
+                    class="li-membre"
+                  >
+                    <span class="nom-membre">{{ membre.nom }} </span>
+                  </li>
+                </span>
+              </div>
+            </el-col>
           </el-row>
         </el-card>
       </el-col>
@@ -71,7 +91,7 @@
           :rules="rules"
           :model="this.groupe"
         >
-          <el-form-item label="Nomdu groupe" prop="nom">
+          <el-form-item label="Nom du groupe" prop="nom">
             <el-input
               input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               v-model="groupe.nom"
@@ -161,26 +181,6 @@ export default {
       const token = JSON.parse(localStorage.getItem("user"));
       GroupsService.getGroup(token, this.user.id);
     },
-    async getMembres(membres) {
-      console.log(membres);
-      if(membres){
-      return membres.map((membre) => {
-          let imgMembre = this.findSrcOfAvatarWithLabel(membre.avatar_membres);
-          return (
-            "<li><el-avatar> <img src=" +
-            membre.imgMembre +
-            " /> </el-avatar>" +
-            "<span class='info-membre'>" +
-              membre.nom_membres
-              +
-            " </span></li>"
-          );
-        });
-      }else{
-        return "";
-      }
-  
-    },
     checkNom(rule, value, callback) {
       if (!value || value === "") {
         callback(new Error("Veuillez saisir un nom."));
@@ -216,14 +216,16 @@ export default {
     },
     async getInfosMembreGroupe() {
       const token = JSON.parse(localStorage.getItem("user"));
-     
+
       for (let i = 0; i < this.groupe.membres.length; i++) {
         let user = await userService.getSpecificUser(
           token,
           this.groupe.membres[i]
         );
-        this.groupe["nom_membres"][i] = user.prenom + " " + user.nom;
-        this.groupe["avatar_membres"][i]= user.avatar;
+        this.groupe["membres_groupe"][i] = {
+          nom: user.prenom + " " + user.nom,
+          avatar: user.avatar,
+        };
       }
     },
   },
@@ -233,7 +235,7 @@ export default {
     this.groupe["nom_membres"] = [];
     this.groupe["avatar_membres"] = [];
     this.getInfosMembreGroupe();
-    this.getMembres(this.groupe);
+    this.groupe["membres_groupe"] = [];
   },
   computed: {
     isComplete() {
@@ -360,6 +362,12 @@ tr {
   justify-content: space-between;
 }
 
+.li-membre {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media screen and (max-width: 700px) {
   .entete-content {
     display: flex;
@@ -396,6 +404,26 @@ tr {
 
 .dialog-footer button:first-child {
   margin-right: 0px !important;
+}
+
+.info-admin-groupe {
+  display: flex;
+}
+
+.names-bloc {
+  display: flex;
+}
+.names {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align : center;
+}
+
+.names span {
+  font-weight: bold;
 }
 </style>
 
