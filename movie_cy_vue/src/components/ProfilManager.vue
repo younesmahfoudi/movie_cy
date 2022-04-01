@@ -97,7 +97,7 @@
           </el-row>
           <el-row>
             <el-col class="key" :span="12">Réalisateur favori </el-col>
-            <el-col :span="12">{{ user.acteur }} </el-col>
+            <el-col :span="12">{{ user.realisateur }} </el-col>
           </el-row>
         </el-card>
       </el-col>
@@ -376,7 +376,7 @@
                 content="Pour votre réalisateur favori, vous pouvez sélectionner un des choix existants ou alors en saisir un nouveau et cliquer dessus."
               >
                 <template #reference>
-                  <el-form-item label="Réalisateur favori" prop="type1"> 
+                  <el-form-item label="Réalisateur favori" prop="realisateur"> 
                     <el-select
                       v-model="user.realisateur"
                       filterable
