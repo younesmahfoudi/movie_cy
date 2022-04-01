@@ -12,7 +12,7 @@ import SideBar from "../components/SideBar.vue";
         <ToolBar />
       </div>
       <div class="form">
-        <MovieList :key="key" />
+        <MovieList :key="key.get" />
       </div>
     </div>
   </div>
@@ -29,10 +29,12 @@ export default {
   computed: {
     key: {
       get() {
+        console.log(this.movieListKey);
         return this.movieListKey;
       },
       set(id) {
         this.movieListKey = id;
+        console.log(this.movieListKey);
       },
     },
   },
