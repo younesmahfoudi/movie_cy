@@ -1,6 +1,6 @@
 <script setup>
 /* eslint-disable vue/no-mutating-props */
-import { InfoFilled, Check, Delete } from "@element-plus/icons-vue";
+import { InfoFilled } from "@element-plus/icons-vue";
 </script>
 
 <template>
@@ -44,22 +44,6 @@ import { InfoFilled, Check, Delete } from "@element-plus/icons-vue";
             </div>
             <div class="stars">Acteurs : {{ movie.stars }}</div>
             <div class="stars">Durée : {{ movie.runtimeStr }}</div>
-            <div class="icon-details">
-              <el-button
-                type="success"
-                title="J'ai vu"
-                size="large"
-                :icon="Check"
-                circle
-              />
-              <el-button
-                type="danger"
-                title="Je n'aime pas"
-                size="large"
-                :icon="Delete"
-                circle
-              />
-            </div>
           </div>
         </div>
       </div>

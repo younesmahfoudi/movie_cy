@@ -23,6 +23,8 @@ import GroupsService from "../services/GroupsService";
                   text-overflow: ellipsis;
                   overflow: hidden;
                   white-space: nowrap;
+                  max-width: 200px !important;
+                  display: inline-block;
                 "
                 >{{ movie.title }}</span
               >
@@ -46,7 +48,11 @@ import GroupsService from "../services/GroupsService";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <FilmDetails :movie="movie" :show="showDetails[index]" />
+                  <FilmDetails
+                    :index="index"
+                    :movie="movie"
+                    :show="showDetails[index]"
+                  />
                   <el-button
                     type="success"
                     title="J'ai vu"
@@ -83,6 +89,8 @@ import GroupsService from "../services/GroupsService";
                   text-overflow: ellipsis;
                   overflow: hidden;
                   white-space: nowrap;
+                  max-width: 200px !important;
+                  display: inline-block;
                 "
                 >{{ movie.title }}</span
               >
@@ -106,7 +114,11 @@ import GroupsService from "../services/GroupsService";
                   {{ movie.imDbRating }}
                 </div>
                 <div class="icon">
-                  <FilmDetails :movie="movie" :show="showDetails[index + 3]" />
+                  <FilmDetails
+                    :index="index + 3"
+                    :movie="movie"
+                    :show="showDetails[index + 3]"
+                  />
                   <el-button
                     type="success"
                     title="J'ai vu"
@@ -150,7 +162,6 @@ export default {
     async deleteItem(index) {
       const token = JSON.parse(localStorage.getItem("user"));
       let user = await userService.getUser(token);
-      console.log(user);
       if (user.films != null) {
         user.films.push(this.movies[index].id);
       } else {
@@ -400,7 +411,8 @@ h1 {
   text-align: center;
 }
 
-.image {
+.image,
+.el-card__body {
   width: 229px;
   height: 328px;
 }
@@ -459,7 +471,7 @@ h1 {
     height: 459px;
   }
 
-  .el-card {
+  .el-card__body {
     width: 322px !important;
   }
 
@@ -479,7 +491,7 @@ h1 {
     height: 459px;
   }
 
-  .el-card {
+  .el-card__body {
     width: 322px !important;
   }
 
