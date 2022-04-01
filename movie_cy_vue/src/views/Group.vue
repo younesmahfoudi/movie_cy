@@ -1,7 +1,8 @@
-<script setup>
+<script lang="ts" setup>
 import GroupManager from "../components/GroupManager.vue";
 import SideBar from "../components/SideBar.vue";
 import ToolBar from "../components/ToolBar.vue";
+import GroupsService from "../services/GroupsService";
 </script>
 
 <template>

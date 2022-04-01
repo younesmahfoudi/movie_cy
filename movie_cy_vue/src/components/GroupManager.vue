@@ -5,14 +5,14 @@
         class="iconGroup avatar-profil"
         :style="{ backgroundColor: '#faa427' }"
         :size="170"
-        :src="this.findSrcOfGroupWithLabel(group.label)"
+        :src="this.groupe.photo"
       />
     </div>
-    <div class="names-bloc">
+    <!-- <div class="names-bloc">
       <div class="names">
-        <span>{{ group.nom }} </span>
+        <span>{{ this.groupe.nom }} </span>
       </div>
-    </div>
+    </div> -->
 
     <el-row :gutter="12" style="display: grid">
       <el-col
@@ -37,12 +37,12 @@
           <hr class="ligne" />
           <el-row>
             <el-col class="key" :span="12">Nom du groupe </el-col>
-            <el-col :span="12">{{ group.nom }} </el-col>
+            <el-col :span="12">{{ groupe.nom }} </el-col>
           </el-row>
 
           <el-row>
             <el-col class="key" :span="12">Membres du groupe </el-col>
-            <el-col :span="12" v-html="getMembres(group.membres)"> </el-col>
+            <!-- <el-col :span="12" v-html="getMembres(groupe)"> </el-col>   -->
           </el-row>
         </el-card>
       </el-col>
@@ -69,18 +69,18 @@
           label-position="top"
           ref="ruleFormRef"
           :rules="rules"
-          :model="this.group"
+          :model="this.groupe"
         >
           <el-form-item label="Nomdu groupe" prop="nom">
             <el-input
               input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
-              v-model="group.nom"
+              v-model="groupe.nom"
               placeholder="Nom"
             />
           </el-form-item>
 
           <el-form-item prop="avatar" label="Avatar du groupe">
-            <el-select class="m-2" v-model="group.label" size="large">
+            <el-select class="m-2" v-model="groupe.label" size="large">
               <div class="iconGrid">
                 <el-option
                   v-for="item in iconForGroup"
@@ -107,7 +107,7 @@
               :style="{ backgroundColor: '#faa427' }"
               :size="70"
             >
-              <img :src="findSrcOfGroupWithLabel(group.label)" />
+              <img :src="findSrcOfGroupWithLabel(groupe.label)" />
             </el-avatar>
           </el-form-item>
         </el-form>
@@ -144,31 +144,7 @@ const ruleFormRef = ref<FormInstance>();
 export default {
   data() {
     return {
-      group: {
-        id: 1,
-        nom: "Groupe ICC",
-        label: "War",
-        membres: [
-          {
-            prenom: "Younes",
-            nom: "Mahfoudi",
-            email: "aaa@aaa.fr",
-            label: "Avatar",
-          },
-          {
-            prenom: "Etienne",
-            nom: "Tournier",
-            email: "aaa@aaa.fr",
-            label: "Kakashi",
-          },
-          {
-            prenom: "Tom",
-            nom: "Soulage",
-            email: "aaa@aaa.fr",
-            label: "Avatar",
-          },
-        ],
-      },
+      groupe: [],
       rules: reactive({
         nom: [{ validator: this.checkNom, trigger: "blur", required: true }],
         avatar: [
@@ -181,24 +157,29 @@ export default {
     changeImg(e) {
       this.user.icon = this.findLabelOfAvatarWithSrc(e);
     },
-    async getGroupMembres(){
-        const token = JSON.parse(localStorage.getItem("user"));
-        GroupsService.getGroup(token, this.user.id)
-    },  
-    getMembres(membres) {
+    async getGroupMembres() {
+      const token = JSON.parse(localStorage.getItem("user"));
+      GroupsService.getGroup(token, this.user.id);
+    },
+    async getMembres(membres) {
+      console.log(membres);
+      if(membres){
       return membres.map((membre) => {
-        const imgMembre = this.findSrcOfAvatarWithLabel(membre.label);
-        return (
-          "<li><el-avatar> <img src=" +
-          imgMembre +
-          " /> </el-avatar>" +
-          "<span class='info-membre'>"+
-          membre.prenom +
-          " " +
-          membre.nom +
-          " </span></li>"
-        );
-      });
+          let imgMembre = this.findSrcOfAvatarWithLabel(membre.avatar_membres);
+          return (
+            "<li><el-avatar> <img src=" +
+            membre.imgMembre +
+            " /> </el-avatar>" +
+            "<span class='info-membre'>" +
+              membre.nom_membres
+              +
+            " </span></li>"
+          );
+        });
+      }else{
+        return "";
+      }
+  
     },
     checkNom(rule, value, callback) {
       if (!value || value === "") {
@@ -233,10 +214,30 @@ export default {
       this.dialogInfosPerso = false;
       this.dialogInfosContenu = false;
     },
+    async getInfosMembreGroupe() {
+      const token = JSON.parse(localStorage.getItem("user"));
+     
+      for (let i = 0; i < this.groupe.membres.length; i++) {
+        let user = await userService.getSpecificUser(
+          token,
+          this.groupe.membres[i]
+        );
+        this.groupe["nom_membres"][i] = user.prenom + " " + user.nom;
+        this.groupe["avatar_membres"][i]= user.avatar;
+      }
+    },
+  },
+  async mounted() {
+    const token = JSON.parse(localStorage.getItem("user"));
+    this.groupe = await GroupsService.getGroup(token, this.$route.query.ref);
+    this.groupe["nom_membres"] = [];
+    this.groupe["avatar_membres"] = [];
+    this.getInfosMembreGroupe();
+    this.getMembres(this.groupe);
   },
   computed: {
     isComplete() {
-      return this.group.nom && this.group.label && this.group.membres;
+      return this.groupe.nom && this.groupe.label && this.groupe.membres;
     },
   },
 };
@@ -245,7 +246,8 @@ export default {
 
 <script lang="ts" setup>
 import { Edit } from "@element-plus/icons-vue";
-import GroupsService from '../services/GroupsService';
+import GroupsService from "../services/GroupsService";
+import userService from "../services/userService";
 </script>
 
 <style lang="scss" scoped>

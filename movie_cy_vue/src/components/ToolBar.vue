@@ -2,9 +2,24 @@
   <div>
     <div v-if="route.includes(`http://localhost:3000/movieGroupList`)">hey</div>
     <div class="button-list">
-      <el-button v-if="route.includes(`http://localhost:3000/movieGroupList`)" type="warning" class="darkGray" @click="goProfil" round
-        >Groupe : </el-button
+      <el-button
+        v-if="route.includes(`http://localhost:3000/movieGroupList`)"
+        type="warning"
+        class="darkGray"
+        @click="goProfil"
+        round
+        >Groupe :
+      </el-button>
+
+      <el-button
+        v-if="this.canAccessToGroup"
+        type="warning"
+        class="darkGray"
+        round
+        @click="goGroupe()"
+        >Groupe</el-button
       >
+
       <el-button type="warning" class="darkGray" @click="goProfil" round
         >Profil</el-button
       >
@@ -21,10 +36,14 @@ import authService from "../services/authService";
 import router from "../router/index";
 
 export default {
+  props: {
+    afficherBoutonProfil: Boolean,
+  },
   data() {
     return {
       route: this.$route.params.toString(),
       groupe: {},
+      canAccessToGroup: "",
     };
   },
   methods: {
@@ -35,6 +54,14 @@ export default {
     goProfil() {
       router.push("/profil");
     },
+    goGroupe() {
+      router.push("/group?ref=" + this.$route.query.id);
+    },
+  },
+  mounted() {
+    this.canAccessToGroup = window.location
+      .toString()
+      .includes("movieGroupList");
   },
 };
 </script>
