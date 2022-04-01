@@ -51,9 +51,10 @@
                   :key="membre"
                 >
                   <div class="admin-li" v-if="index == 0">
+                    <el-icon :size="50"><flag /></el-icon>
                     <img :src="findSrcOfAvatarWithLabel(membre.avatar)" />
                     <li class="li-membre">
-                      <span class="nom-membre">{{ membre.nom }} </span>
+                      <span class="nom-membre">{{ membre.nom }} (Admin) </span>
                     </li>
                   </div>
 
@@ -228,6 +229,7 @@ import { ref, reactive } from "vue";
 import { iconForGroup } from "./data/iconForGroup";
 import { avatarForUser } from "./data/avatarForUser";
 import { FormInstance } from "element-plus";
+import { Flag } from "@element-plus/icons-vue";
 const dialogInfosGroupe = ref(false);
 const dialogInfosContenu = ref(false);
 const ruleFormRef = ref<FormInstance>();
@@ -300,13 +302,15 @@ export default {
       const token = JSON.parse(localStorage.getItem("user"));
       //this.ruleForm.membres = this.tab_id_members;
       //this.ruleForm.admin = this.tab_id_members[0];
-      
+
       this.groupe["membres_groupe"] = [];
       // ENLEVER LE CHAMP : "membres_groupes" de this.groupe
+      delete this.groupe["membres_groupe"];
 
       // FORME DE L'OBJET this.groupe a changé : JSON.stringify?
-      
-      GroupsService.updateGroup(token,this.groupe["id"],this.groupe);
+      console.log(this.groupe)
+
+      GroupsService.updateGroup(token, this.groupe["id"], this.groupe);
     },
     async getInfosMembreGroupe() {
       const token = JSON.parse(localStorage.getItem("user"));
@@ -392,29 +396,27 @@ export default {
       userService.updateUser(JSON.parse(localStorage.getItem("user")), user);
     },
     getMembresToUpdate(groupe) {
-        const token = JSON.parse(localStorage.getItem("user"));
-        groupe.membres.forEach(async (element,index) => 
-        {
-          if(index!=0){
-            let user = await userService.getSpecificUser(token,element)
-            console.log(user);
-            this.addToMembersList(user);
-          }
-        });
-    }
+      const token = JSON.parse(localStorage.getItem("user"));
+      groupe.membres.forEach(async (element, index) => {
+        if (index != 0) {
+          let user = await userService.getSpecificUser(token, element);
+          console.log(user);
+          this.addToMembersList(user);
+        }
+      });
+    },
   },
   async mounted() {
     const token = JSON.parse(localStorage.getItem("user"));
     this.user_connecte = await userService.getUser(token);
-    
-    this.tab_members_list.push( this.user_connecte );
+
+    this.tab_members_list.push(this.user_connecte);
     this.tab_id_members.push(this.user_connecte.id);
 
     this.groupe = await GroupsService.getGroup(token, this.$route.query.ref);
     this.getInfosMembreGroupe();
     this.groupe["membres_groupe"] = [];
     this.getMembresToUpdate(this.groupe);
-    
   },
   computed: {
     isComplete() {
@@ -433,15 +435,17 @@ import userService from "../services/userService";
 const ruleForm = reactive({
   nom: "",
   photo: "",
-  membres: "", 
-  admin: "", 
+  membres: "",
+  admin: "",
 });
-
 </script>
 
 <style lang="scss" scoped>
 @import "../assets/constant.scss";
 
+.el-icon {
+  color: #faa427;
+}
 .el-select {
   width: 100%;
 }
