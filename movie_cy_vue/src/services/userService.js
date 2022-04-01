@@ -1,5 +1,6 @@
 import axios from "axios";
 import VueJwtDecode from "vue-jwt-decode";
+// import GroupsService from "./GroupsService";
 
 class UserService {
   getUser(token) {
@@ -52,17 +53,16 @@ class UserService {
 
   deleteUser(token) {
     return axios
-      .delete(
-        `http://localhost:8000/users/${
-          VueJwtDecode.decode(token.access_token).user_id
-        }`,
-        {
-          headers: {
-            Authorization: `Bearer ${token.access_token}`,
-          },
-        }
-      )
+      .delete(`http://localhost:8000/users/${this.getUserId(token)}`, {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+        },
+      })
       .then((response) => response);
+  }
+
+  getUserId(userToken) {
+    return VueJwtDecode.decode(userToken.access_token).user_id;
   }
 }
 export default new UserService();

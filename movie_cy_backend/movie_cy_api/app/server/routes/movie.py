@@ -53,9 +53,11 @@ async def get_movies_data_filtered(
     ): 
     movies = await retrieve_movies_filtered(title,genrelist,starlist,imdbrating)
     moviesFiltered = list(filter(lambda x: x["id"] not in movielist, movies))
-    if moviesFiltered:
+    if len(moviesFiltered) > 50:
         return paginate(moviesFiltered, params)
-    return paginate(await add_movie_data(title=title, genres=genrelist, userRating=imdbrating), params)
+    movies = await add_movie_data(title=title, genres=genrelist, userRating=imdbrating)
+    moviesFiltered = list(filter(lambda x: x["id"] not in movielist, movies))
+    return paginate(moviesFiltered, params)
 
 async def add_movie_data(
         title: str = None, 

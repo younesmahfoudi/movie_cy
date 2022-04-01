@@ -17,7 +17,7 @@ class UserSchema(BaseModel):
     acteur: Optional[str]
     realisateur: Optional[str]
     genre: Optional[str]
-    genreFlex: Optional[str]
+    genreFlex: Optional[int]
     ddn: str = Field()
     avatar: str = Field()
 
@@ -34,7 +34,7 @@ class UserSchema(BaseModel):
                 "acteur": "exampleIDAuteur",
                 "realisateur": "exampleIDRealisateur",
                 "genre": "comedie",
-                "genreFlex": "comedie",
+                "genreFlex": 5,
                 "ddn": date.today(),
                 "avatar": "img"
             }
@@ -53,7 +53,7 @@ class UpdateUserModel(BaseModel):
     acteur: Optional[str] 
     realisateur: Optional[str] 
     genre: Optional[str] 
-    genreFlex: Optional[str] 
+    genreFlex: Optional[int] 
     ddn: Optional[str] 
     avatar: Optional[str]
 
@@ -70,8 +70,8 @@ class UpdateUserModel(BaseModel):
                 "acteur": "exampleIDAuteur",
                 "realisateur": "exampleIDRealisateur",
                 "genre": "comedie",
-                "genreFlex": "comedie",
-                "ddn": date.today(),
+                "genreFlex": 5,
+                "ddn": "26-06-1992",
                 "avatar": "image"
 
             }
