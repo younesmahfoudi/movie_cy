@@ -12,19 +12,7 @@
       <div class="names">
         <span style="margin-right: 5%">{{ user.prenom }} </span>
         {{ user.nom }}
-        <el-popconfirm
-          confirm-button-text="Oui"
-          cancel-button-text="Non"
-          :icon="InfoFilled"
-          icon-color="red"
-          title="Vous etes sure de vouloir nous quitter?"
-          @confirm="deleteUser()"
-        >
-          <template #reference>
-            <el-button :icon="Delete" style="margin-left:2%">Supprimer</el-button>
-          </template>
-        </el-popconfirm>
-      </div>      
+      </div>
     </div>
 
     <el-row :gutter="12" style="display: grid">
@@ -113,7 +101,7 @@
           </el-row>
 
           <el-row>
-            <el-col class="key" :span="12">Type de film favori n°2 </el-col>
+            <el-col class="key" :span="12">Mood </el-col>
             <el-col :span="12">{{ user.genreFlex }} </el-col>
           </el-row>
           <el-row>
@@ -338,7 +326,7 @@
                   <template #reference>
                     <el-form-item label="Mood" prop="genreFlex">
                       <el-slider
-                        v-model="genreFlex"
+                        v-model="user.genreFlex"
                         :step="1"
                         :min="0"
                         :max="5"
@@ -448,6 +436,22 @@
         </div>
       </template>
     </el-dialog>
+    <div class="div-btn-supprimer">
+      <el-popconfirm
+        confirm-button-text="Oui"
+        cancel-button-text="Non"
+        :icon="InfoFilled"
+        icon-color="red"
+        title="Vous etes sure de vouloir nous quitter?"
+        @confirm="deleteUser()"
+      >
+        <template #reference>
+          <el-button :icon="Delete" class="btn-supprimer"
+            >Supprimer</el-button
+          >
+        </template>
+      </el-popconfirm>
+    </div>
   </div>
 </template>
 
@@ -511,7 +515,7 @@ export default {
     };
   },
   methods: {
-    deleteUser(){
+    deleteUser() {
       userService.deleteUser(this.$store.state.auth.user);
       this.$store.dispatch("auth/logout");
       this.$router.push("/");
@@ -666,6 +670,7 @@ export default {
       );
     },
     isCompleteInfosContenu() {
+      console.log(this.user.genreFlex);
       return this.user.genre && this.user.genreFlex;
     },
   },
@@ -721,6 +726,16 @@ const marks = reactive<Marks>({
 
 .el-select-dropdown__item {
   height: 55px !important;
+}
+
+.div-btn-supprimer{
+  display: flex;
+}
+
+.btn-supprimer{
+  margin-left: auto;
+  margin-right : auto;
+  color : red;
 }
 
 .names {
