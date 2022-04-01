@@ -610,6 +610,9 @@ export default {
     },
   },
   computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
     isCompleteInfosPerso() {
       return (
         this.user.prenom &&
@@ -626,6 +629,9 @@ export default {
     },
   },
   async mounted() {
+    if (!this.currentUser) {
+      this.$router.push('/login');
+    }
     this.listeGenres1 = listeGenres;
     this.listeGenres2 = listeGenres;
     const token = JSON.parse(localStorage.getItem("user"));

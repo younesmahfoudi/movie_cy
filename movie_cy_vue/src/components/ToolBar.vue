@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import authService from "../services/authService";
+import authService from "../services/auth.service";
 import router from "../router/index";
 
 export default {
@@ -48,7 +48,9 @@ export default {
   },
   methods: {
     logout() {
-      authService.logout();
+      // authService.logout();
+      this.$store.dispatch("auth/logout");
+      this.$router.push("/");
     },
 
     goProfil() {
