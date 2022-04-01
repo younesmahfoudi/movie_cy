@@ -107,7 +107,7 @@
           </el-form-item>
 
           <el-form-item prop="avatar" label="Avatar du groupe">
-            <el-select class="m-2" v-model="groupe.label" size="large">
+            <el-select class="m-2" v-model="this.label" size="large">
               <div class="iconGrid">
                 <el-option
                   v-for="item in iconForGroup"
@@ -245,6 +245,8 @@ export default {
       tab_members_list: [],
       tab_id_members: [],
       string_entered: "",
+      avatar_groupe_src: "",
+      label: "",
       request_not_null: false,
       rules: reactive({
         nom: [{ validator: this.checkNom, trigger: "blur", required: true }],
@@ -261,7 +263,7 @@ export default {
   },
   methods: {
     changeImg(e) {
-      this.user.icon = this.findLabelOfAvatarWithSrc(e);
+      this.groupe.photo = e;
     },
     async getGroupMembres() {
       const token = JSON.parse(localStorage.getItem("user"));
@@ -285,30 +287,30 @@ export default {
       return groupObject[0].label;
     },
 
+    findLabelOfGroupWithSrc(src) {
+      const groupObject = iconForGroup.filter((group) => group.photo === src);
+      return groupObject[0].label;
+    },
+
     findSrcOfAvatarWithLabel(label) {
       const avatarObject = avatarForUser.filter(
         (avatar) => avatar.label === label
       );
       return avatarObject[0].photo;
     },
-
-    findSrcOfGroupWithLabel(label) {
-      const groupObject = iconForGroup.filter((group) => group.label === label);
-      return groupObject[0].photo;
+    async findSrcOfGroupWithLabel() {
+      const groupeOject = iconForGroup.filter(
+        (groupe) => groupe["label"] === this.label
+      );
+      this.avatar_groupe_src = groupeOject[0].photo;
     },
     updateGroup() {
       this.dialogInfosGroupe = false;
-      // this.dialogInfosContenu = false;
       const token = JSON.parse(localStorage.getItem("user"));
-      //this.ruleForm.membres = this.tab_id_members;
-      //this.ruleForm.admin = this.tab_id_members[0];
-
-      this.groupe["membres_groupe"] = [];
       // ENLEVER LE CHAMP : "membres_groupes" de this.groupe
       delete this.groupe["membres_groupe"];
-
       // FORME DE L'OBJET this.groupe a changé : JSON.stringify?
-      console.log(this.groupe)
+      console.log(this.groupe);
 
       GroupsService.updateGroup(token, this.groupe["id"], this.groupe);
     },
@@ -384,11 +386,8 @@ export default {
       this.tab_users_list = this.arrayRemove(this.tab_users_list, user);
     },
     removeToMembersList(user) {
-      console.log(this.tab_users_list);
-      console.log(user);
-      console.log("c'est remove");
+      debugger
       this.tab_users_list.push(user);
-      console.log(this.tab_users_list);
       this.tab_id_members = this.arrayRemove(this.tab_id_members, user["id"]);
       this.tab_members_list = this.arrayRemove(this.tab_members_list, user);
     },
@@ -400,7 +399,6 @@ export default {
       groupe.membres.forEach(async (element, index) => {
         if (index != 0) {
           let user = await userService.getSpecificUser(token, element);
-          console.log(user);
           this.addToMembersList(user);
         }
       });
@@ -417,10 +415,12 @@ export default {
     this.getInfosMembreGroupe();
     this.groupe["membres_groupe"] = [];
     this.getMembresToUpdate(this.groupe);
+    this.avatar_groupe_src = this.groupe.photo;
+    this.label = this.findLabelOfGroupWithSrc(this.avatar_groupe_src) 
   },
   computed: {
     isComplete() {
-      return this.groupe.nom && this.groupe.label && this.groupe.membres;
+      return this.groupe.nom && this.label && this.groupe.membres;
     },
   },
 };
@@ -442,6 +442,40 @@ const ruleForm = reactive({
 
 <style lang="scss" scoped>
 @import "../assets/constant.scss";
+
+
+.box-card {
+  width: 480px;
+}
+
+.div-add-and-research-user {
+  display: flex;
+}
+
+.div-add-and-research-user {
+  display: block;
+}
+
+.div-add-and-research-user {
+  width: 100%;
+}
+
+.box-card {
+  width: 100%;
+}
+.el-card__header {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.el-card {
+  margin-bottom: 5%;
+}
+
+.card-header {
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .el-icon {
   color: #faa427;
