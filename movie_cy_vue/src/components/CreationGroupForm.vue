@@ -4,10 +4,21 @@
       custom-class="dialog"
       v-model="dialogGroupCreation"
       width="35%"
-      :close-on-click-modal="false"
       :show-close="false"
       :close-on-press-escape="false"
     >
+      <div class="dialog-header">
+        <el-button
+          type="primary"
+          class="retour-profil"
+          title="Retour"
+          size="large"
+          @click="goProfil"
+          circle
+        ><span class="croix-close">X </span>
+        </el-button>
+      </div>
+
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
@@ -192,6 +203,9 @@ export default {
     changeImg(e) {
       this.imageSrc = e;
     },
+    goProfil() {
+      router.push("/profil");
+    },
     async createGroup() {
       const token = JSON.parse(localStorage.getItem("user"));
       this.ruleForm.membres = this.tab_id_members;
@@ -203,7 +217,7 @@ export default {
         element["groupes"].push(new_groupe.data.data[0]["id"]);
         UserService.updateUser(token, JSON.parse(JSON.stringify(element)));
       });
-      router.push("/group?ref="+new_groupe.data.data[0].id);
+      router.push("/group?ref=" + new_groupe.data.data[0].id);
     },
     async searchUser(string_entered) {
       const token = JSON.parse(localStorage.getItem("user"));
@@ -271,9 +285,10 @@ export default {
 </script>
   
   <script lang="ts" setup>
+import { Close } from "@element-plus/icons-vue";
 import { iconForGroup } from "./data/iconForGroup";
 import userService from "../services/userService.js";
-import router from '../router/index.js';
+import router from "../router/index.js";
 
 const ruleForm = reactive({
   nom: "",
@@ -303,6 +318,17 @@ const value = ref("");
 </script>
   
   <style lang="css" scoped>
+.croix-close{
+  font-size : 20px
+}
+.dialog-header{
+  margin-left : auto;
+}
+
+.retour-profil{
+  background-color : transparent ; 
+  border : none;
+}
 .el-select {
   width: 100% !important;
 }

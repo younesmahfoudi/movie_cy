@@ -56,7 +56,20 @@
           </el-row>
           <el-row>
             <el-col class="key" :span="12"> Groupes </el-col>
-            <el-col :span="12" v-html="getGroupes()"> </el-col>
+            <el-col :span="12">
+              <div class="info-membre-groupe">
+                <span
+                  style="display: flex; margin-bottom: 3%"
+                  v-for="groupe in this.groupes"
+                  :key="groupe"
+                >
+                  <img :src="groupe.photo" width="48"/>
+                  <li class="li-groupe">
+                    <span class="nom-groupe">{{ groupe.nom }} </span>
+                  </li>
+                </span>
+              </div>
+            </el-col>
           </el-row>
         </el-card>
       </el-col>
@@ -191,7 +204,7 @@
           <el-form-item prop="avatar" label="Avatar">
             <el-select
               class="m-2"
-              v-model="user.icon"
+              v-model="user.avatar"
               size="large"
               :placeholder="user.avatar"
             >
@@ -376,7 +389,7 @@
                 content="Pour votre réalisateur favori, vous pouvez sélectionner un des choix existants ou alors en saisir un nouveau et cliquer dessus."
               >
                 <template #reference>
-                  <el-form-item label="Réalisateur favori" prop="realisateur"> 
+                  <el-form-item label="Réalisateur favori" prop="realisateur">
                     <el-select
                       v-model="user.realisateur"
                       filterable
@@ -423,6 +436,7 @@
 <script lang="ts">
 import { ref, reactive } from "vue";
 import { avatarForUser } from "./data/avatarForUser";
+import { iconForGroup } from "./data/iconForGroup";
 import { listeGenres } from "./data/listeGenres";
 import { listeActeurs } from "./data/listeActeurs";
 import { listeRealisateurs } from "./data/listeRealisateurs";
@@ -601,15 +615,22 @@ export default {
       );
       this.avatar_src = avatarObject[0].photo;
     },
+    findSrcOfGroupWithLabel(label) {
+      debugger;
+      const groupObject = iconForGroup.filter((group) => group.label === label);
+      return groupObject[0].photo;
+    },
     updateUser() {
       this.dialogInfosPerso = false;
       this.dialogInfosContenu = false;
       const token = JSON.parse(localStorage.getItem("user"));
-      userService.updateUser(token,this.user);
-      
+      userService.updateUser(token, this.user);
     },
   },
   computed: {
+    currentUser() {
+      return this.$store.state.auth.user;
+    },
     isCompleteInfosPerso() {
       return (
         this.user.prenom &&
@@ -626,6 +647,9 @@ export default {
     },
   },
   async mounted() {
+    if (!this.currentUser) {
+      this.$router.push('/login');
+    }
     this.listeGenres1 = listeGenres;
     this.listeGenres2 = listeGenres;
     const token = JSON.parse(localStorage.getItem("user"));
@@ -634,7 +658,8 @@ export default {
     this.user.checkMdpInput = this.user.mdp;
     this.label = this.user.avatar;
     this.findSrcOfAvatarWithLabel();
-    this.dialogInfosContenu = ( (this.user.genre == null) || (this.user.genreFlex == null)  );
+    this.dialogInfosContenu =
+      this.user.genre == null || this.user.genreFlex == null;
     this.displayedDateFormat = this.user.ddn.substring(0, 10);
   },
 };
@@ -713,6 +738,12 @@ tr {
 
 .nom {
   font-size: 20px;
+}
+
+.li-groupe {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .entete {

@@ -427,7 +427,7 @@ tr {
   font-size: 25px;
   margin-top: 10px;
   margin-bottom: 10px;
-  text-align : center;
+  text-align: center;
 }
 
 .names span {
