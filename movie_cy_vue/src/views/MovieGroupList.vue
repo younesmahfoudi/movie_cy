@@ -29,12 +29,10 @@ export default {
   computed: {
     key: {
       get() {
-        console.log(this.movieListKey);
         return this.movieListKey;
       },
       set(id) {
         this.movieListKey = id;
-        console.log(this.movieListKey);
       },
     },
   },
