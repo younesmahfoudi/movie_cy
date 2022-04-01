@@ -53,11 +53,13 @@
             <el-col class="key" :span="12">Membres du groupe </el-col>
             <el-col :span="12">
               <div class="info-membre-groupe">
-                <span style="display:flex; margin-bottom : 3%;" v-for="membre in groupe.membres_groupe" :key="membre">
+                <span
+                  style="display: flex; margin-bottom: 3%"
+                  v-for="membre in groupe.membres_groupe"
+                  :key="membre"
+                >
                   <img :src="findSrcOfAvatarWithLabel(membre.avatar)" />
-                  <li
-                    class="li-membre"
-                  >
+                  <li class="li-membre">
                     <span class="nom-membre">{{ membre.nom }} </span>
                   </li>
                 </span>
@@ -419,7 +421,7 @@ tr {
   font-size: 25px;
   margin-top: 10px;
   margin-bottom: 10px;
-  text-align : center;
+  text-align: center;
 }
 
 .names span {
