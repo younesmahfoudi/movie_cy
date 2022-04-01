@@ -10,7 +10,11 @@
       Connexion
     </el-button>
 
-    <el-dialog custom-class="dialog dialog-connect" v-model="dialogVisible" width="30%">
+    <el-dialog
+      custom-class="dialog dialog-connect"
+      v-model="dialogVisible"
+      width="30%"
+    >
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
@@ -74,16 +78,17 @@ const ruleFormRef = ref<FormInstance>();
 </script>
 
 <script lang="ts">
-import AuthService  from "../services/auth.service";
+import AuthService from "../services/auth.service";
+import { ElNotification } from "element-plus";
 
 export default {
   data: function () {
     return {
-      ruleForm : reactive({
+      ruleForm: reactive({
         email: "",
         mdp: "",
-      })
-    }
+      }),
+    };
   },
   methods: {
     login() {
@@ -94,9 +99,14 @@ export default {
         },
         (error) => {
           console.log(error);
+          ElNotification({
+            title: "Erreur d'authentification",
+            message: "Identifiants incorrects.",
+            type: "error",
+          });
         }
       );
-    }
+    },
   },
   computed: {
     isComplete() {
@@ -131,10 +141,9 @@ const rules = reactive({
 </script>
 
 <style lang="scss">
-
 @import "../assets/constant.scss";
 
-.dialog-connect{
+.dialog-connect {
   margin-top: 10%;
 }
 
@@ -243,7 +252,7 @@ const rules = reactive({
   margin-left: auto !important;
   margin-right: auto !important;
 }
-.el-popper.is-light{
+.el-popper.is-light {
   word-break: keep-all;
 }
 </style>

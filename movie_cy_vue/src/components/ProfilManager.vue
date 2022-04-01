@@ -63,7 +63,7 @@
                   v-for="groupe in this.groupes"
                   :key="groupe"
                 >
-                  <img :src="groupe.photo" width="48"/>
+                  <img :src="groupe.photo" width="48" />
                   <li class="li-groupe">
                     <span class="nom-groupe">{{ groupe.nom }} </span>
                   </li>
@@ -315,22 +315,28 @@
               :lg="12"
               :xl="12"
             >
-              <el-form-item label="Genre préféré n°2" prop="genreFlex">
-                <el-select
-                  @change="changeListeGenres1()"
-                  v-model="user.genreFlex"
-                  class="m-2 contenu-fav"
-                  placeholder="Genre préféré n°2"
-                  size="large"
+              <div class="slider-demo-block">
+                <el-popover
+                  placement="top-start"
+                  title="Mood"
+                  :width="200"
+                  trigger="hover"
+                  content="Pour votre mood, 0 veut dire que tu n'es pas dans ton meilleur jour et 5 que tu vis ta Best Life (feat Naps) !"
                 >
-                  <el-option
-                    v-for="item in listeGenres2"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </el-form-item>
+                  <template #reference>
+                    <el-form-item label="Mood" prop="genreFlex">
+                      <el-slider
+                        v-model="genreFlex"
+                        :step="1"
+                        :min="0"
+                        :max="5"
+                        :marks="marks"
+                        show-stops
+                      />
+                    </el-form-item>
+                  </template>
+                </el-popover>
+              </div>
             </el-col>
           </el-row>
 
@@ -648,7 +654,7 @@ export default {
   },
   async mounted() {
     if (!this.currentUser) {
-      this.$router.push('/login');
+      this.$router.push("/login");
     }
     this.listeGenres1 = listeGenres;
     this.listeGenres2 = listeGenres;
@@ -667,9 +673,25 @@ export default {
 
 
 <script lang="ts" setup>
+import type { CSSProperties } from "vue";
 import { Edit } from "@element-plus/icons-vue";
 import userService from "../services/userService";
 import GroupsService from "../services/GroupsService";
+interface Mark {
+  style: CSSProperties;
+  label: string;
+}
+
+type Marks = Record<number, Mark | string>;
+
+const marks = reactive<Marks>({
+  0: "0",
+  1: "1",
+  2: "2",
+  3: "3",
+  4: "4",
+  5: "5",
+});
 </script>
 
 <style lang="scss" scoped>
@@ -847,5 +869,17 @@ tr {
 
 .names span {
   font-weight: bold;
+}
+
+.el-slider__bar {
+  background-color: #faa427;
+}
+
+.el-slider__button {
+  border-color: black;
+}
+
+.el-slider__marks-text {
+  color: black;
 }
 </style>
