@@ -150,7 +150,7 @@
 
 <script lang="ts">
 import ProfilManager from "./ProfilManager.vue"
-import AuthService  from "../services/authService.js";
+import AuthService  from "../services/auth.service";
 
 export default {
   data() {
@@ -179,14 +179,26 @@ export default {
     changeImg(e) {
       this.defaultLabel = this.findLabelOfAvatarWithSrc(e);
     },
+   
     register() {
       delete this.ruleForm["checkPass"];
-      AuthService.register(this.ruleForm);
+      // AuthService.register(this.ruleForm);
+      this.$store.dispatch("auth/register", this.ruleForm).then(
+        () => {
+          this.$router.push("/profil")
+        },
+        (error) => {
+          console.log(error)
+        }
+      );
     }
   },
   
 
   computed: {
+    loggedIn() {
+      return this.$store.state.auth.status.loggedIn;
+    },
     isComplete() {
       return (
         this.ruleForm.prenom &&
@@ -198,6 +210,11 @@ export default {
       );
     },
   },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push("/profil");
+    }
+  }
 };
 </script>
 
