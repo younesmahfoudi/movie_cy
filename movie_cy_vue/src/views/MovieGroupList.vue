@@ -12,11 +12,32 @@ import SideBar from "../components/SideBar.vue";
         <ToolBar />
       </div>
       <div class="form">
-        <MovieList />
+        <MovieList :key="key" />
       </div>
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { ref } from "vue";
+export default {
+  data() {
+    return {
+      movieListKey: ref(0),
+    };
+  },
+  computed: {
+    key: {
+      get() {
+        return this.movieListKey;
+      },
+      set(id) {
+        this.movieListKey = id;
+      },
+    },
+  },
+};
+</script>
 
 <style scoped>
 .toolbar {

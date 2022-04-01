@@ -26,7 +26,9 @@ async def check_user(data: UserLoginSchema):
 async def add_user_data(user: UserSchema = Body(...)):
     user = jsonable_encoder(user)
     new_user = await add_user(user)
-    return signJWT(new_user["id"])
+    if new_user:
+        return signJWT(new_user["id"])
+    return ErrorResponseModel("An error occurred.", 404, "User already exist.")
 
 
 @router.post("/login")

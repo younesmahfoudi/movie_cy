@@ -57,13 +57,18 @@ export default {
       router.push("/profil");
     },
     goGroupe() {
-      router.push("/group?ref=" + this.$route.query.id);
+      router.push("/group?ref=" + this.$route.params.id);
+    },
+    pathVerify(string) {
+      return !window.location.toString().includes(string);
     },
   },
   mounted() {
-    this.canAccessToGroup = window.location
-      .toString()
-      .includes("movieGroupList");
+    this.canAccessToGroup =
+      this.pathVerify("/profil") &&
+      this.pathVerify("/groupCreation") &&
+      this.pathVerify("/groups") &&
+      this.pathVerify("/group");
   },
 };
 </script>
