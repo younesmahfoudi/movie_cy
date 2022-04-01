@@ -4,7 +4,7 @@ from app.auth.auth_handler import signJWT
 from app.auth.auth_bearer import JWTBearer
 
 from app.server.database import (
-    add_user, retrieve_user, retrieve_users, retrieve_users_filtered,update_user,delete_user
+    add_user, retrieve_group, retrieve_user, retrieve_users, retrieve_users_filtered, update_group,update_user,delete_user
 )
 from app.server.models.user import (
     ErrorResponseModel,
@@ -77,6 +77,13 @@ async def update_user_data(id: str, req: UpdateUserModel = Body(...)):
 
 @router.delete("/{id}", dependencies=[Depends(JWTBearer())],response_description="User data deleted from the database")
 async def delete_user_data(id: str):
+    user = await get_user_data(id)
+    if user: 
+        for group in user["data"][0]["groupes"]: 
+            item = await retrieve_group(group)
+            if item:
+                item["membres"] = list(filter(lambda user: user!=id, item["membres"]))
+                await update_group(item["id"], item)
     deleted_user = await delete_user(id)
     if deleted_user:
         return ResponseModel(
