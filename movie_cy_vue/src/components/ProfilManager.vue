@@ -670,8 +670,7 @@ export default {
       );
     },
     isCompleteInfosContenu() {
-      console.log(this.user.genreFlex);
-      return this.user.genre && this.user.genreFlex;
+      return this.user.genre ;
     },
   },
   async mounted() {
