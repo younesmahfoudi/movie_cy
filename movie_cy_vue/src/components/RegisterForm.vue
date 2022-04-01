@@ -49,12 +49,12 @@
             </el-form-item>
           </div>
 
-          <el-form-item label="Age" prop="age">
-            <el-input
-              type="number"
-              input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
-              v-model.number="ruleForm.age"
-              placeholder="Age"
+          <el-form-item label="Date de naissance" prop="ddn">
+            <el-date-picker
+              v-model="ruleForm.ddn"
+              type="date"
+              placeholder="Date de naissance"
+              style="width: 100%"
             />
           </el-form-item>
           <el-form-item prop="email" label="Adresse email">
@@ -66,9 +66,9 @@
             />
           </el-form-item>
 
-          <el-form-item prop="pass" label="Mot de passe">
+          <el-form-item prop="mdp" label="Mot de passe">
             <el-input
-              v-model="ruleForm.pass"
+              v-model="ruleForm.mdp"
               input-style="font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password"
               type="password"
@@ -91,16 +91,16 @@
           </el-form-item>
           <el-form-item prop="avatar" label="Avatar">
             <el-select
-              v-model="photo"
+              v-model="ruleForm.avatar"
               class="m-2"
-              :placeholder="defaultLabel"
+              :placeholder="this.defaultLabel"
               size="large"
             >
               <div class="iconGrid">
                 <el-option
                   v-for="item in avatarForUser"
                   :key="item.value"
-                  :value="item.photo"
+                  :value="item.label"
                   :label="item.label"
                   @click="changeImg(item.photo)"
                 >
@@ -120,9 +120,9 @@
               class="iconGroup"
               id="iconChoosenForChange"
               :style="{ backgroundColor: '#faa427' }"
-              :size="60"
+              :size="50"
             >
-              <img :src="imageSrc" />
+              <img :src="this.findSrcOfAvatarWithLabel(defaultLabel)" />
             </el-avatar>
           </el-form-item>
         </el-form>
@@ -134,8 +134,9 @@
             <el-button
               class="validate"
               type="warning"
-              @click="createUser()"
+              @click="register()"
               round
+              :disabled="!isComplete"
             >
               Valider
             </el-button>
@@ -148,23 +149,53 @@
 
 
 <script lang="ts">
-import UsersService from "../services/UsersService.js";
+import ProfilManager from "./ProfilManager.vue"
+import AuthService  from "../services/authService.js";
 
 export default {
   data() {
     return {
-      imageSrc: "./src/components/icon/CharacterIcon/alien.png",
-      defaultLabel: "Alien",
+      defaultLabel: "Avatar",
       listImages: [],
     };
   },
   methods: {
-    changeImg(e) {
-      this.imageSrc = e;
+    findLabelOfAvatarWithSrc(src) {
+      if (src.substring(0, 1) !== ".") {
+        src = "." + src;
+      }
+      const avatarObject = avatarForUser.filter(
+        (avatar) => avatar.photo === src
+      );
+      return avatarObject[0].label;
     },
-    createUser() {
-      console.log(this.ruleForm);
-      UsersService.createUser(this.ruleForm);
+
+    findSrcOfAvatarWithLabel(label) {
+      const avatarObject = avatarForUser.filter(
+        (avatar) => avatar["label"] === label
+      );
+      return avatarObject[0].photo;
+    },
+    changeImg(e) {
+      this.defaultLabel = this.findLabelOfAvatarWithSrc(e);
+    },
+    register() {
+      delete this.ruleForm["checkPass"];
+      AuthService.register(this.ruleForm);
+    }
+  },
+  
+
+  computed: {
+    isComplete() {
+      return (
+        this.ruleForm.prenom &&
+        this.ruleForm.email &&
+        this.ruleForm.nom &&
+        this.ruleForm.ddn &&
+        this.ruleForm.mdp &&
+        this.ruleForm.checkPass
+      );
     },
   },
 };
@@ -176,32 +207,34 @@ import { ref, reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 import { FormInstance } from "element-plus";
 import { avatarForUser } from "./data/avatarForUser";
+
 const dialogVisible = ref(false);
 const inputMail = ref("");
 const inputMdp = ref("");
 const ruleFormRef = ref<FormInstance>();
 
-const submitForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.validate((valid) => {
-    if (valid) {
-      //createUser(formEl);
-    } else {
-      console.log("error submit!");
-      return false;
-    }
-  });
+const calculateAgeFromDate = (birthday: any) => {
+  // birthday is a date
+  var ageDifMs = Date.now() - birthday.getTime();
+  var ageDate = new Date(ageDifMs); // miliseconds from epoch
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+};
+
+const isDateBeforeToday = (date) => {
+  if (date) {
+    return new Date(date.toDateString()) < new Date(new Date().toDateString());
+  }
 };
 
 const checkAge = (rule: any, value: any, callback: any) => {
   setTimeout(() => {
     if (!value) {
-      callback(new Error("Veuillez saisir un âge."));
+      callback(new Error("Veuillez choisir une date."));
     }
-    if (!Number.isInteger(value)) {
-      callback(new Error("Veuillez saisir un nombre correct."));
+    if (!isDateBeforeToday(value)) {
+      callback(new Error("Veuillez choisir une date de naissance correcte."));
     } else {
-      if (value < 18) {
+      if (calculateAgeFromDate(value) < 18) {
         callback(new Error("Vous devez avoir plus de 18 ans."));
       } else {
         callback();
@@ -223,7 +256,6 @@ const checkNom = (rule: any, value: any, callback: any) => {
 };
 
 const checkAvatar = (rule: any, value: any, callback: any) => {
-  debugger;
   if (!value || value === "") {
     callback(new Error("Veuillez choisir un avatar."));
   }
@@ -231,9 +263,16 @@ const checkAvatar = (rule: any, value: any, callback: any) => {
 
 const validatePass = (rule: any, value: any, callback: any) => {
   if (value === "") {
-    callback(new Error("Saisissez votre mot de passe"));
+    callback(new Error("Veuillez saisir un mot de passe"));
   } else {
-    if (ruleForm.checkPass !== "") {
+    if (ruleForm.mdp !== "") {
+      if (value.length < 6 || !/\d/.test(value)) {
+        callback(
+          new Error(
+            "Votre mot de passe doit être composé d'au moins 6 caractères et d'au moins un chiffre"
+          )
+        );
+      }
       if (!ruleFormRef.value) return;
       ruleFormRef.value.validateField("checkPass", () => null);
     }
@@ -243,7 +282,7 @@ const validatePass = (rule: any, value: any, callback: any) => {
 const validatePass2 = (rule: any, value: any, callback: any) => {
   if (value === "") {
     callback(new Error("Réessayez"));
-  } else if (value !== ruleForm.pass) {
+  } else if (value !== ruleForm.mdp) {
     callback(new Error("Les mots de passe sont différents"));
   } else {
     callback();
@@ -254,9 +293,10 @@ const ruleForm = reactive({
   prenom: "",
   nom: "",
   email: "",
-  age: "",
-  pass: "",
+  ddn: "",
+  mdp: "",
   checkPass: "",
+  avatar: "",
 });
 
 const rules = reactive({
@@ -274,8 +314,8 @@ const rules = reactive({
       trigger: ["blur", "change"],
     },
   ],
-  age: [{ validator: checkAge, trigger: "blur", required: true }],
-  pass: [{ validator: validatePass, trigger: "blur", required: true }],
+  ddn: [{ validator: checkAge, trigger: "blur", required: true }],
+  mdp: [{ validator: validatePass, trigger: "blur", required: true }],
   checkPass: [{ validator: validatePass2, trigger: "blur", required: true }],
   avatar: [{ validator: checkAvatar, trigger: "blur", required: true }],
 });
@@ -433,5 +473,10 @@ input {
   font-size: 20px;
   font-weight: bold;
 }
+
+.el-form-item__label {
+  margin-bottom: 5px !important;
+}
+
 </style>
 

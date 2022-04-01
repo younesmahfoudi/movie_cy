@@ -1,132 +1,153 @@
 <template>
-  <div class="sidenav">
+  <div class="sidebar-container">
+    <el-avatar
+      class="photo-logo"
+      :style="{ backgroundColor: $gray }"
+      :size="5"
+      src="./src/components/icon/utilIcon/logo.svg"
+    />
     <el-menu
-      active-text-color="#faa427"
-      background-color="#5a6075"
       class="el-menu-vertical-demo"
-      default-active="2"
-      text-color="#ffffff"
-      :style="{ height: '100%' }"
+      collapse="true"
+      background-color="#5a6075"
+      text-color="#faa427"
     >
-      <div class="logo">
-        <router-link to="/">
-          <el-menu-item class="logoImg" index="0">
-            <el-avatar
-              id="photoGroup"
-              :style="{ backgroundColor: '#faa427' }"
-              shape="square"
-              :size="50"
-              src="./src/components/icon/utilIcon/logo.png"
-            />
-          </el-menu-item>
-        </router-link>
+      <div v-for="(group, index) in groups" :key="group">
+        <el-sub-menu class="arrow" :index="index.toString()">
+          <template #title>
+            <router-link :to="{ path: group.id }">
+              <el-icon>
+                <el-avatar
+                  id="photoGroup"
+                  :style="{ backgroundColor: '#faa427' }"
+                  :size="25"
+                  :src="group.photo"
+                />
+              </el-icon>
+            </router-link>
+          </template>
+          <el-menu-item-group>
+            <template #title>
+              <span>Membres du groupe</span>
+            </template>
+            <el-menu-item
+              v-for="(membre, membreIndex) in groups[index].nom_membres"
+              :key="membre"
+              :index="membreIndex.toString()"
+            >
+              {{ membre }}
+            </el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
       </div>
-      <div class="logo">
-        <router-link to="/movieGroupList">
-          <el-menu-item v-for="group in groups" :key="group" index="1">
+      <el-menu-item index="1245">
+        <router-link to="groupCreation">
+          <el-icon>
             <el-avatar
-              :key="group"
-              id="photoGroup"
-              :alt="group.nom"
-              :style="{ backgroundColor: '#faa427' }"
-              :size="50"
-              :src="group.photo"
-            />
-          </el-menu-item>
-        </router-link>
-      </div>
-      <div class="logo">
-        <router-link to="/groupCreation">
-          <el-menu-item index="15" class="plus">
-            <el-avatar
-              id="photoGroup"
+              id="photoPlus"
               :style="{ backgroundColor: '#faa427' }"
               :size="25"
               src="./src/components/icon/utilIcon/plus.png"
             />
-          </el-menu-item>
+          </el-icon>
         </router-link>
-      </div>
+        <template #title>Créer un groupe</template>
+      </el-menu-item>
     </el-menu>
+    <router-view />
   </div>
-  <router-view />
 </template>
 
-<script>
+<script lang="ts" setup>
+import userService from "../services/userService";
+import GroupsService from "../services/GroupsService";
+</script>
+
+<script lang="ts">
 export default {
   data() {
     return {
-      groups: [
-        {
-          id: 1,
-          nom: "groupe 1",
-          membres: ["Jean", "Bernard", "Louis"],
-          admin: "Bernard",
-          photo: "./src/components/icon/ThemeIcon/animation.png",
-        },
-        {
-          id: 2,
-          nom: "Groupe 2",
-          membres: ["Jean", "Bernard", "Louis"],
-          admin: "Bernard",
-          photo: "./src/components/icon/ThemeIcon/horreur.png",
-        },
-        {
-          id: 3,
-          nom: "Groupe 3",
-          membres: ["Jean", "Bernard", "Louis"],
-          admin: "Louis",
-          photo: "./src/components/icon/ThemeIcon/drame.png",
-        },
-      ],
+      groups: [],
     };
+  },
+  methods: {
+    async afficherGroupe(user) {
+      const token = JSON.parse(localStorage.getItem("user"));
+      //On récupère les id des groupes des utilisateurs
+      const groupes_id = user.groupes;
+
+      // Pour chaque groupe, on récupère les id des membres
+      for (let i = 0; i < groupes_id.length; i++) {
+        this.groups[i] = await GroupsService.getGroup(
+          JSON.parse(localStorage.getItem("user")),
+          groupes_id[i]
+        );
+        this.groups[i]["nom_membres"] = [];
+
+        for (let j = 0; j < this.groups[i].membres.length; j++) {
+          let user = await userService.getSpecificUser(
+            token,
+            this.groups[i].membres[j]
+          );
+          this.groups[i]["nom_membres"][j] = user.prenom + " " + user.nom;
+        }
+      }
+    },
+  },
+  async mounted() {
+    const token = JSON.parse(localStorage.getItem("user"));
+    let user = await userService.getUser(token);
+    this.afficherGroupe(user);
   },
 };
 </script>
 
-<style lang="css" scoped>
-.sidenav {
+<style lang="scss" scoped>
+@import "../assets/constant.scss";
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
+
+.el-menu {
+  width: 101%;
+}
+
+.el-icon {
+  width: 100%;
+}
+
+.el-avatar {
+  --el-avatar-size: 50px !important;
+}
+
+.sidebar-container {
   height: 100%;
-  width: 7%;
-  min-width: 40px;
   position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  overflow-x: hidden;
-  display: flex;
+  background-color: $darkGray;
 }
 
-#photoGroup {
-  filter: contrast(200%);
+.name-groupe {
+  visibility: hidden;
 }
 
-.plus {
-  display: flex;
-  justify-content: center;
+#photoPlus {
+  height: 130%;
+  width: 100%;
+  max-width: 30px;
+}
+</style>
+
+<style lang="scss">
+.photo-logo > img {
+  height: 33% !important;
 }
 
-.logo {
-  padding-top: 10%;
-}
-
-.logoImg {
-  padding-top: 10%;
-  padding-bottom: 10%;
-}
-
-@media screen and (max-height: 450px) {
-  .sidenav {
-    padding-top: 15px;
-  }
-  .sidenav .el-menu {
-    font-size: 18px;
-  }
-}
-
-@media screen and (height: 320px) {
-  .logo {
-    size: 10;
-  }
+.el-sub-menu .el-sub-menu__icon-arrow {
+  position: inherit !important;
+  top: 0 !important;
+  right: 0 !important;
+  margin-top: 0 !important;
 }
 </style>

@@ -10,7 +10,7 @@
       Connexion
     </el-button>
 
-    <el-dialog custom-class="dialog" v-model="dialogVisible" width="30%">
+    <el-dialog custom-class="dialog dialog-connect" v-model="dialogVisible" width="30%">
       <img
         class="imgForm"
         :style="{ maxWidth: '30%' }"
@@ -20,46 +20,26 @@
       <span class="title"> Connexion</span>
 
       <div class="formulaire">
-        <el-form model="formLogin" label-position="top">
-          <el-form-item
-            prop="email"
-            label="Adresse email"
-            :rules="[
-              {
-                required: true,
-                message: 'Entrer une adresse email.',
-                trigger: 'blur',
-              },
-              {
-                type: 'email',
-                message: 'Entrer une adresse email correcte.',
-                trigger: ['blur', 'change'],
-              },
-            ]"
-          >
+        <el-form
+          ref="ruleFormRef"
+          :model="ruleForm"
+          :rules="rules"
+          label-position="top"
+        >
+          <el-form-item prop="email" label="Adresse email">
             <el-input
               input-style="border-radius:20px; font-family:'Raleway', sans-serif; font-weight: bold;"
               name="email"
-              v-model="inputMail"
+              v-model="ruleForm.email"
               placeholder="Adresse email"
             />
           </el-form-item>
 
-          <el-form-item
-            prop="password"
-            label="Mot de passe"
-            :rules="[
-              {
-                required: true,
-                message: 'Entrer un mot de passe.',
-                trigger: 'blur',
-              },
-            ]"
-          >
+          <el-form-item prop="password" label="Mot de passe">
             <el-input
               input-style="border-radius:20px ; font-family:'Raleway', sans-serif; font-weight: bold;"
               name="password"
-              v-model="inputMdp"
+              v-model="ruleForm.mdp"
               type="password"
               placeholder="Mot de passe"
               show-password
@@ -74,7 +54,7 @@
             <el-button
               type="warning"
               class="btnValider validate"
-              @click="dialogVisible = false"
+              @click="login()"
               round
               >Valider</el-button
             >
@@ -86,14 +66,61 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import { FormInstance } from "element-plus";
+
 const dialogVisible = ref(false);
-const inputMail = ref("");
-const inputMdp = ref("");
+const ruleFormRef = ref<FormInstance>();
+</script>
+
+<script lang="ts">
+import AuthService  from "../services/authService.js";
+
+export default {
+  data: function () {
+    return {
+      ruleForm : reactive({
+        email: "",
+        mdp: "",
+      })
+    }
+  },
+  methods: {
+    login() {
+      AuthService.login(this.ruleForm);
+    }
+  },
+  computed: {
+    isComplete() {
+      return this.ruleForm.email && this.ruleForm.mdp;
+    },
+  },
+};
+
+const rules = reactive({
+  email: [
+    {
+      required: true,
+      message: "Veuillez saisir une adresse email.",
+      trigger: "blur",
+    },
+    {
+      type: "email",
+      message: "Veuillez saisir une adresse email correcte.",
+      trigger: ["blur", "change"],
+    },
+  ],
+  mdp: [{ trigger: "blur", required: true }],
+});
 </script>
 
 <style lang="scss">
+
 @import "../assets/constant.scss";
+
+.dialog-connect{
+  margin-top: 10%;
+}
 
 .validate {
   font-size: 20px !important;
@@ -140,6 +167,7 @@ const inputMdp = ref("");
 
 .title {
   display: flex;
+  justify-content: center;
   margin-left: auto;
   margin-right: auto;
   font-weight: bold;
@@ -147,6 +175,8 @@ const inputMdp = ref("");
   font-size: 24px;
   color: white;
   margin-top: -10px;
+  word-break: keep-all;
+  text-align: center;
 }
 
 .formulaire {
@@ -196,6 +226,9 @@ const inputMdp = ref("");
 .dialog-footer {
   margin-left: auto !important;
   margin-right: auto !important;
+}
+.el-popper.is-light{
+  word-break: keep-all;
 }
 </style>
 

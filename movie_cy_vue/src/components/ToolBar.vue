@@ -1,15 +1,70 @@
 <template>
-  <div class="button-list">
-    <router-link to="/profil">
-      <el-button type="warning" class="darkGray" round>Profil</el-button>
-    </router-link>
+  <div>
+    <div v-if="route.includes(`http://localhost:3000/movieGroupList`)">hey</div>
+    <div class="button-list">
+      <el-button
+        v-if="route.includes(`http://localhost:3000/movieGroupList`)"
+        type="warning"
+        class="darkGray"
+        @click="goProfil"
+        round
+        >Groupe :
+      </el-button>
 
-    <router-link to="/">
-      <el-button type="warning" class="darkGray" round>Déconnexion</el-button>
-    </router-link>
+      <el-button
+        v-if="this.canAccessToGroup"
+        type="warning"
+        class="darkGray"
+        round
+        @click="goGroupe()"
+        >Groupe</el-button
+      >
+
+      <el-button type="warning" class="darkGray" @click="goProfil" round
+        >Profil</el-button
+      >
+
+      <el-button type="warning" class="darkGray" @click="logout" round
+        >Déconnexion</el-button
+      >
+    </div>
   </div>
-  <router-view />
 </template>
+
+<script lang="ts">
+import authService from "../services/authService";
+import router from "../router/index";
+
+export default {
+  props: {
+    afficherBoutonProfil: Boolean,
+  },
+  data() {
+    return {
+      route: this.$route.params.toString(),
+      groupe: {},
+      canAccessToGroup: "",
+    };
+  },
+  methods: {
+    logout() {
+      authService.logout();
+    },
+
+    goProfil() {
+      router.push("/profil");
+    },
+    goGroupe() {
+      router.push("/group?ref=" + this.$route.query.id);
+    },
+  },
+  mounted() {
+    this.canAccessToGroup = window.location
+      .toString()
+      .includes("movieGroupList");
+  },
+};
+</script>
 
 <style lang="scss">
 @import "../assets/constant.scss";
@@ -19,7 +74,6 @@
 }
 
 .darkGray {
-  color: $darkGray;
   margin: 10px;
 }
 </style>
