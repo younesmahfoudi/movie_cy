@@ -12,7 +12,19 @@
       <div class="names">
         <span style="margin-right: 5%">{{ user.prenom }} </span>
         {{ user.nom }}
-      </div>
+        <el-popconfirm
+          confirm-button-text="Oui"
+          cancel-button-text="Non"
+          :icon="InfoFilled"
+          icon-color="red"
+          title="Vous etes sure de vouloir nous quitter?"
+          @confirm="deleteUser()"
+        >
+          <template #reference>
+            <el-button :icon="Delete" style="margin-left:2%">Supprimer</el-button>
+          </template>
+        </el-popconfirm>
+      </div>      
     </div>
 
     <el-row :gutter="12" style="display: grid">
@@ -446,7 +458,7 @@ import { iconForGroup } from "./data/iconForGroup";
 import { listeGenres } from "./data/listeGenres";
 import { listeActeurs } from "./data/listeActeurs";
 import { listeRealisateurs } from "./data/listeRealisateurs";
-import { InfoFilled } from "@element-plus/icons-vue";
+import { InfoFilled, Delete } from "@element-plus/icons-vue";
 
 import { FormInstance } from "element-plus";
 const dialogInfosPerso = ref(false);
@@ -499,6 +511,11 @@ export default {
     };
   },
   methods: {
+    deleteUser(){
+      userService.deleteUser(this.$store.state.auth.user);
+      this.$store.dispatch("auth/logout");
+      this.$router.push("/");
+    },
     changeImg(e) {
       this.avatar_src = e;
     },
