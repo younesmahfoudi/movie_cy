@@ -23,8 +23,8 @@ class GroupSchema(BaseModel):
 
 class UpdateGroupModel(BaseModel):
     nom: Optional[str]
-    membres: Optional[str]
-    admin: Optional[int]
+    membres: Optional[List[str]]
+    admin: Optional[str]
     photo: Optional[str]
 
     class Config:

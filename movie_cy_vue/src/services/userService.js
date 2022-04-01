@@ -51,20 +51,14 @@ class UserService {
       });
   }
 
-  deleteUser(token, user) {
-    // GroupsService.deleteUserFromGroups(user);
-    // return axios
-    //   .delete(
-    //     `http://localhost:8000/users/${
-    //       VueJwtDecode.decode(token.access_token).user_id
-    //     }`,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${token.access_token}`,
-    //       },
-    //     }
-    //   )
-    //   .then((response) => response);
+  deleteUser(token) {
+    return axios
+      .delete(`http://localhost:8000/users/${this.getUserId(token)}`, {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+        },
+      })
+      .then((response) => response);
   }
 
   getUserId(userToken) {
