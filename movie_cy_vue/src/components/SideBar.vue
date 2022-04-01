@@ -15,7 +15,10 @@
       <div v-for="(group, index) in groups" :key="group">
         <el-sub-menu class="arrow" :index="index.toString()">
           <template #title>
-            <router-link :to="{ path: group.id }">
+            <router-link
+              :to="{ path: group.id }"
+              @click="updateMovieList(group.id)"
+            >
               <el-icon>
                 <el-avatar
                   id="photoGroup"
@@ -61,6 +64,7 @@
 <script lang="ts" setup>
 import userService from "../services/userService";
 import GroupsService from "../services/GroupsService";
+import movieGroupList from "../views/MovieGroupList.vue";
 </script>
 
 <script lang="ts">
@@ -71,6 +75,10 @@ export default {
     };
   },
   methods: {
+    updateMovieList(id) {
+      movieGroupList.computed.key.set(id);
+      console.log("update");
+    },
     async afficherGroupe(user) {
       const token = JSON.parse(localStorage.getItem("user"));
       //On récupère les id des groupes des utilisateurs
