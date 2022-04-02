@@ -1,9 +1,9 @@
 import axios from "axios";
 
 class MovieService {
-  async getMovies(token, url, limit) {
+  async getMovies(token, url,page, limit) {
     return axios
-      .get(`${url}&page=1&size=${limit}`, {
+      .get(`${url}&page=${page}&size=${limit}`, {
         headers: {
           Authorization: `Bearer ${token.access_token}`,
         },
