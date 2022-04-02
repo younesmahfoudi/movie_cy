@@ -311,8 +311,10 @@ export default {
       delete this.groupe["membres_groupe"];
       // FORME DE L'OBJET this.groupe a changé : JSON.stringify?
       console.log(this.groupe);
-
+      this.groupe.membres = this.tab_id_members;
       GroupsService.updateGroup(token, this.groupe["id"], this.groupe);
+      this.groupe["membres_groupe"] = [];
+      this.getInfosMembreGroupe();
     },
     async getInfosMembreGroupe() {
       const token = JSON.parse(localStorage.getItem("user"));
@@ -386,7 +388,6 @@ export default {
       this.tab_users_list = this.arrayRemove(this.tab_users_list, user);
     },
     removeToMembersList(user) {
-      debugger
       this.tab_users_list.push(user);
       this.tab_id_members = this.arrayRemove(this.tab_id_members, user["id"]);
       this.tab_members_list = this.arrayRemove(this.tab_members_list, user);
