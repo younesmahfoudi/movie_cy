@@ -155,11 +155,12 @@ export default {
       groupe: {},
     };
   },
-  async created() {
+  async mounted() {
     this.getMovies(this.$route.params.id);
   },
   methods: {
     async deleteItem(index) {
+      console.log(this.movies.length);
       const token = JSON.parse(localStorage.getItem("user"));
       let user = await userService.getUser(token);
       if (user.films != null) {
@@ -169,6 +170,10 @@ export default {
       }
       await userService.updateUser(token, { id: user.id, films: user.films });
       this.movies.splice(index, 1);
+
+      if (this.movies.length <= 5) {
+        this.$router.go();
+      }
     },
     async getMovies(id) {
       const token = JSON.parse(localStorage.getItem("user"));
@@ -289,14 +294,16 @@ export default {
             return 0;
           });
           counterMood /= this.groupe.membres.length;
-          url += `?genrelist=${genre[0].genre}&genrelist=${genreFlex[counterMood]}&imdbrating=8`;
+          url += `?genrelist=${genre[0].genre}&genrelist=${
+            genreFlex[Math.round(counterMood) - 1]
+          }&imdbrating=8`;
           actor.forEach((element, indexActor) => {
             url += `&starlist=${element}`;
             if (indexActor == actor.length - 1) {
               filmVu.forEach(async (e, indexFilm) => {
                 url += `&movielist=${e}`;
                 if (indexFilm == filmVu.length - 1) {
-                  this.movies = await movieService.getMovies(token, url, 50);
+                  this.movies = await movieService.getMovies(token, url, 1, 50);
                 }
               });
             }
