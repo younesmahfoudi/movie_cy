@@ -58,7 +58,7 @@ import GroupsService from "../services/GroupsService";
                     title="J'ai vu"
                     size="large"
                     :icon="Check"
-                    @click="deleteItem(index)"
+                    @click="deleteItem(index, true)"
                     circle
                   />
                   <el-button
@@ -66,7 +66,7 @@ import GroupsService from "../services/GroupsService";
                     title="Je n'aime pas"
                     size="large"
                     :icon="Delete"
-                    @click="deleteItem(index)"
+                    @click="deleteItem(index, true)"
                     circle
                   />
                 </div>
@@ -78,11 +78,11 @@ import GroupsService from "../services/GroupsService";
       <div class="row">
         <div
           class="movie"
-          v-for="(movie, index) in movies.slice(3, 6)"
-          :key="movie"
+          v-for="(movieBis, indexBis) in moviesBis.slice(0, 3)"
+          :key="movieBis"
         >
           <el-card :body-style="{ padding: '0px' }">
-            <img :src="movie.image" class="image" />
+            <img :src="movieBis.image" class="image" />
             <div style="padding: 14px">
               <span
                 style="
@@ -92,14 +92,14 @@ import GroupsService from "../services/GroupsService";
                   max-width: 200px !important;
                   display: inline-block;
                 "
-                >{{ movie.title }}</span
+                >{{ movieBis.title }}</span
               >
               <div class="bottom">
                 <div class="info">
                   <div class="iconGenre">
                     <div
                       class="iconSpace"
-                      v-for="genre in movie.genreList"
+                      v-for="genre in movieBis.genreList"
                       :key="genre"
                     >
                       <el-avatar
@@ -111,20 +111,20 @@ import GroupsService from "../services/GroupsService";
                       />
                     </div>
                   </div>
-                  {{ movie.imDbRating }}
+                  {{ movieBis.imDbRating }}
                 </div>
                 <div class="icon">
                   <FilmDetails
-                    :index="index + 3"
-                    :movie="movie"
-                    :show="showDetails[index + 3]"
+                    :index="indexBis"
+                    :movie="movieBis"
+                    :show="showDetails[indexBis]"
                   />
                   <el-button
                     type="success"
                     title="J'ai vu"
                     size="large"
                     :icon="Check"
-                    @click="deleteItem(index + 3)"
+                    @click="deleteItem(indexBis, false)"
                     circle
                   />
                   <el-button
@@ -132,7 +132,7 @@ import GroupsService from "../services/GroupsService";
                     title="Je n'aime pas"
                     size="large"
                     :icon="Delete"
-                    @click="deleteItem(index + 3)"
+                    @click="deleteItem(indexBis, false)"
                     circle
                   />
                 </div>
@@ -150,16 +150,17 @@ export default {
   data() {
     return {
       movies: [],
+      moviesBis: [],
       showDetails: [false, false, false, false, false, false],
       user: "",
       groupe: {},
     };
   },
-  async created() {
+  async mounted() {
     this.getMovies(this.$route.params.id);
   },
   methods: {
-    async deleteItem(index) {
+    async deleteItem(index, bool) {
       const token = JSON.parse(localStorage.getItem("user"));
       let user = await userService.getUser(token);
       if (user.films != null) {
@@ -168,7 +169,15 @@ export default {
         user.films = [this.movies[index].id];
       }
       await userService.updateUser(token, { id: user.id, films: user.films });
-      this.movies.splice(index, 1);
+      if (bool) {
+        this.movies.splice(index, 1);
+      } else {
+        this.moviesBis.splice(index, 1);
+      }
+
+      if (this.movies.length <= 5) {
+        this.$router.go();
+      }
     },
     async getMovies(id) {
       const token = JSON.parse(localStorage.getItem("user"));
@@ -260,9 +269,13 @@ export default {
       ];
       const genreFlex = ["Romance", "Fantasy", "Drama", "Action", "Comedy"];
       let counterMood = 0;
-      const filmVu = ["1"];
+      let filmVu = ["1"];
       const actor = [""];
       let url = "http://localhost:8000/movies/";
+      let genreUrl = "";
+      let genreUrlBis = "";
+      let actorUrl = "";
+      let movieUrl = "";
       this.groupe = await GroupsService.getGroup(token, id);
 
       await this.groupe.membres.forEach(async (element, index) => {
@@ -274,7 +287,11 @@ export default {
           actor.push(user.realisateur);
         }
         if (user.films != null) {
-          user.films.forEach((element) => filmVu.push(element));
+          user.films.forEach((element) => {
+            if (filmVu.length <= 300) {
+              filmVu.push(element);
+            }
+          });
         }
         genre.forEach((e) => {
           if (user.genre == e.genre) {
@@ -289,14 +306,49 @@ export default {
             return 0;
           });
           counterMood /= this.groupe.membres.length;
-          url += `?genrelist=${genre[0].genre}&genrelist=${genreFlex[counterMood]}&imdbrating=8`;
+          genreUrl = `?genrelist=${genre[0].genre}&genrelist=${
+            genreFlex[Math.round(counterMood) - 1]
+          }&imdbrating=8`;
+          genreUrlBis = `?genrelist=${genre[0].genre}&genrelist=${genre[1].genre}&imdbrating=8`;
           actor.forEach((element, indexActor) => {
-            url += `&starlist=${element}`;
+            actorUrl += `&starlist=${element}`;
             if (indexActor == actor.length - 1) {
               filmVu.forEach(async (e, indexFilm) => {
-                url += `&movielist=${e}`;
+                movieUrl += `&movielist=${e}`;
                 if (indexFilm == filmVu.length - 1) {
-                  this.movies = await movieService.getMovies(token, url, 50);
+                  console.log(url + genreUrl + actorUrl + movieUrl);
+                  this.movies = await movieService.getMovies(
+                    token,
+                    url + genreUrl + actorUrl + movieUrl,
+                    1,
+                    50
+                  );
+                  this.moviesBis = await movieService.getMovies(
+                    token,
+                    url + genreUrlBis + actorUrl + movieUrl,
+                    1,
+                    50
+                  );
+                  if (this.movies.length < 7) {
+                    genreUrl = `?genrelist=${genre[1].genre}&genrelist=${
+                      genreFlex[Math.round(counterMood) - 1]
+                    }&imdbrating=8`;
+                    this.movies = await movieService.getMovies(
+                      token,
+                      url + genreUrl + actorUrl + movieUrl,
+                      1,
+                      50
+                    );
+                  }
+                  if (this.moviesBis.length < 7) {
+                    genreUrlBis = `?genrelist=${genre[0].genre}&imdbrating=8`;
+                    this.movies = await movieService.getMovies(
+                      token,
+                      url + genreUrl + actorUrl + movieUrl,
+                      1,
+                      50
+                    );
+                  }
                 }
               });
             }
