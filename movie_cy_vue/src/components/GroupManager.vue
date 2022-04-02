@@ -307,11 +307,21 @@ export default {
     updateGroup() {
       this.dialogInfosGroupe = false;
       const token = JSON.parse(localStorage.getItem("user"));
-      // ENLEVER LE CHAMP : "membres_groupes" de this.groupe
       delete this.groupe["membres_groupe"];
-      // FORME DE L'OBJET this.groupe a changé : JSON.stringify?
-      console.log(this.groupe);
-      this.groupe.membres = this.tab_id_members;
+      //update les groupes des anciens membres du groupe
+      console.log(this.groupe["membres"]);
+      this.groupe["membres"].map(async (element) => {
+        if (!element.includes(this.tab_id_members)) {
+          let user_to_update = await userService.getSpecificUser(
+            token,
+            element
+          );
+          user_to_update.groupes = this.arrayRemove( user_to_update.groupes, this.groupe["id"]);
+          userService.updateUser(token, user_to_update);
+        }
+      });
+
+      this.groupe["membres"] = this.tab_id_members;
       GroupsService.updateGroup(token, this.groupe["id"], this.groupe);
       this.groupe["membres_groupe"] = [];
       this.getInfosMembreGroupe();
@@ -417,7 +427,7 @@ export default {
     this.groupe["membres_groupe"] = [];
     this.getMembresToUpdate(this.groupe);
     this.avatar_groupe_src = this.groupe.photo;
-    this.label = this.findLabelOfGroupWithSrc(this.avatar_groupe_src) 
+    this.label = this.findLabelOfGroupWithSrc(this.avatar_groupe_src);
   },
   computed: {
     isComplete() {
@@ -443,7 +453,6 @@ const ruleForm = reactive({
 
 <style lang="scss" scoped>
 @import "../assets/constant.scss";
-
 
 .box-card {
   width: 480px;

@@ -87,10 +87,7 @@ export default {
 
       // Pour chaque groupe, on récupère les id des membres
       for (let i = 0; i < groupes_id.length; i++) {
-        this.groups[i] = await GroupsService.getGroup(
-          JSON.parse(localStorage.getItem("user")),
-          groupes_id[i]
-        );
+        this.groups[i] = await GroupsService.getGroup(token, groupes_id[i]);
         this.groups[i]["nom_membres"] = [];
 
         for (let j = 0; j < this.groups[i].membres.length; j++) {

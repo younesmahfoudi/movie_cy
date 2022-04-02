@@ -8,8 +8,10 @@ from app.server.database import (
     delete_group,
     retrieve_group,
     retrieve_groups,
+    retrieve_user,
     update_group,
-    add_user_to_a_group
+    add_user_to_a_group,
+    update_user
 )
 from app.server.models.group import (
     ErrorResponseModel,
@@ -51,6 +53,15 @@ async def update_group_data(id: str, req: UpdateGroupModel = Body(...)):
     req = {k: v for k, v in req.dict().items() if v is not None}
     updated_group = await update_group(id, req)
     if updated_group:
+        group = await retrieve_group(id)
+        # Update les groupes des utilisateurs
+        for user_id in group["membres"]:
+            user = await retrieve_user(user_id);
+            if ((group["id"]) not in user["groupes"]): 
+                user["groupes"].append(group["id"])
+                user = await update_user(user["id"],user)
+                print(user);
+
         return ResponseModel(
             "Group with ID: {} name update is successful".format(id),
             "Group name updated successfully",
